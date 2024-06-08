@@ -1,0 +1,154 @@
+:root {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+  /* color-scheme: light dark; */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --primary: #fffdef; /* background */
+  --gold: rgba(187, 171, 0, 0.849); /* teal  */
+  --links: hsl(5, 85%, 63%); /* soft red */
+  --text: #554128 ; /* goldish brown */
+  --secondary: #ebde93; /* darker yellowish */
+
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* ensure it is at least the height of the viewport */
+  background-color: var(--primary);
+}
+
+/* --------- */
+/* defaults */
+/* --------- */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  font-size: 100%; 
+}
+
+body {
+  margin: 0;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  text-align: center;
+  /* color: rgb(49, 206, 230); */
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+  color: var(--text);
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+#root, #__next {
+  isolation: isolate;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  text-decoration: none;
+}
+
+/* other  */
+
+nav ul,
+footer ul {
+    display: flex;
+    flex-direction: row;
+}
+  
+nav ul li,
+footer ul li {
+  margin-left: 3em;
+}
+
+.uppercased,
+nav ul,
+footer ul {
+  text-transform: uppercase;
+  font-size: 0.8em;
+}
+
+.font-styled,
+nav ul,
+footer,
+form button {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+header, 
+footer,
+main {
+  width: 100%;
+}
+
+main {
+  flex: 1; /* expands main content */
+}
+
+header {
+  margin-bottom: 2em;
+}
+
+header, 
+footer {
+  padding: 1.5rem 0;
+  grid-column: 1 / 4;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns:
+    1fr
+    min(110ch, 100%)
+    1fr;
+}
+
+.wrapper > * {
+  grid-column: 2;
+}

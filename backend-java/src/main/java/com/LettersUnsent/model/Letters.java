@@ -1,5 +1,5 @@
 package com.LettersUnsent.model;
 
-public class Category {
+public class Letters {
 
 }

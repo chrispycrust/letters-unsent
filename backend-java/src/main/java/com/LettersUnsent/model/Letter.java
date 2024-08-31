@@ -3,38 +3,38 @@ package com.LettersUnsent.model;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class Letters {
+public class Letter {
 	
-	// letter_id
-	// foreign key writer_id
-	
-	// foreign key status_id - letter status
+	// letterId
+	// foreign key writerId, also optional
+	// foreign key letterStatusId
 	
 	private String intendedRecipient;
 	
 	// stored as Text annotation - long format in database
 	private String content;
 	
-	// when was the letter was actually penned in real life, if user wants to manually set date
-	private Optional<LocalDateTime> writtenDate;
+	// if user wants to manually set a date for the letter e.g. backdating purposes
+	// change to setDate
+	private LocalDateTime writtenDate;
 	
 	// nullable annotation?
 	// when letter was published to platform
-	private LocalDateTime publishedDate;
-	
+	// maybe change to submittedDate
+	private LocalDateTime submittedDate;
 	// necessary if a user has an account and saved their letter in a draft status
 	private LocalDateTime createdDate;
 
 	private LocalDateTime updatedDate;
 	
 	// constructor
-	public Letters(String intendedRecipient, String content, Optional<LocalDateTime> writtenDate,
-			LocalDateTime publishedDate, LocalDateTime createdDate, LocalDateTime updatedDate) {
+	public Letter(String intendedRecipient, String content, LocalDateTime writtenDate,
+			LocalDateTime submittedDate, LocalDateTime createdDate, LocalDateTime updatedDate) {
 		super();
 		this.intendedRecipient = intendedRecipient;
 		this.content = content;
 		this.writtenDate = writtenDate;
-		this.publishedDate = publishedDate;
+		this.submittedDate = submittedDate;
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 	}
@@ -63,22 +63,22 @@ public class Letters {
 	
 	// WRITTEN DATE
 	
-	public Optional<LocalDateTime> getWritten_date() {
-		return writtenDate;
+	public Optional<LocalDateTime> getWrittenDate() {
+		return Optional.ofNullable(writtenDate);
 	}
 
-	public void setWritten_date(Optional<LocalDateTime> written_date) {
-		this.writtenDate = written_date;
+	public void setWrittenDate(LocalDateTime writtenDate) {
+		this.writtenDate = writtenDate;
 	}
 	
 	// PUBLISHED DATE
 
-	public LocalDateTime getPublishedDate() {
-		return publishedDate;
+	public LocalDateTime getSubmittedDate() {
+		return submittedDate;
 	}
 
-	public void setPublishedDate(LocalDateTime publishedDate) {
-		this.publishedDate = publishedDate;
+	public void setSubmittedDate(LocalDateTime submittedDate) {
+		this.submittedDate = submittedDate;
 	}
 	
 	// CREATED DATE

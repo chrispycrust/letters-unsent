@@ -6,7 +6,7 @@ import java.util.Optional;
 public class Letter {
 	
 	/**
-	 * Final because id is assigned, it can't be changed
+	 * Final because once id is assigned, it can't be changed
 	 */
 	private final long letterId;
 	
@@ -25,12 +25,12 @@ public class Letter {
 	 * Nullable
 	 */
 	
-	private LocalDateTime setDate;
+	private LocalDateTime chosenDate;
 	
 	
 	/**
 	 * Stores date when letter was published to platform.
-	 * Not displayed if setDate isn't null
+	 * Not displayed if chosenDate isn't null
 	 */
 	
 	private LocalDateTime submittedDate;
@@ -45,13 +45,13 @@ public class Letter {
 
 	private LocalDateTime updatedDate;
 	
-	public Letter(long letterId, String intendedRecipient, String content, LocalDateTime setDate,
+	public Letter(long letterId, String intendedRecipient, String content, LocalDateTime chosenDate,
 			LocalDateTime submittedDate, LocalDateTime createdDate, LocalDateTime updatedDate) {
 		super();
 		this.letterId = letterId;
 		this.intendedRecipient = intendedRecipient;
 		this.content = content;
-		this.setDate = setDate;
+		this.chosenDate = chosenDate;
 		this.submittedDate = submittedDate;
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
@@ -79,7 +79,7 @@ public class Letter {
 		return intendedRecipient;
 	}
 
-	public void setIntended_recipient(String intendedRecipient) {
+	public void setIntendedRecipient(String intendedRecipient) {
 		this.intendedRecipient = intendedRecipient;
 	}
 	
@@ -93,34 +93,33 @@ public class Letter {
 		this.content = content;
 	};
 	
-	// WRITTEN DATE
+	// CHOSEN DATE
 	
-	public Optional<LocalDateTime> getsetDate() {
-		return Optional.ofNullable(setDate);
+	public Optional<LocalDateTime> getchosenDate() {
+		return Optional.ofNullable(chosenDate);
 	}
 
-	public void setsetDate(LocalDateTime setDate) {
-		this.setDate = setDate;
+	public void setChosenDate(LocalDateTime chosenDate) {
+		this.chosenDate = chosenDate;
 	}
 	
-	// PUBLISHED DATE
+	/**
+	 * Date letter submitted
+	 * 
+	 * After published the first time, cannot be set again.
+	 * If letter updated and resubmitted, this info would be stored in updatedDate instead of overriding submittedDate.
+	 * 
+	 * @return LocalDateTime
+	 */
 
 	public LocalDateTime getSubmittedDate() {
 		return submittedDate;
-	}
-
-	public void setSubmittedDate(LocalDateTime submittedDate) {
-		this.submittedDate = submittedDate;
 	}
 	
 	// CREATED DATE
 
 	public LocalDateTime getCreatedDate() {
 		return createdDate;
-	}
-
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
 	}
 	
 	// UPDATED DATE

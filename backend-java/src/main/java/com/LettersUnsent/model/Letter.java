@@ -6,24 +6,33 @@ import java.util.Optional;
 import org.springframework.data.annotation.Id;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
+/**
+ * Letter class describing each created letter.
+ * 
+ * @author Christine Nguyen
+ */
 
 @Entity // This tells Hibernate to make a table out of this class
 public class Letter {
 	
 	/**
-	 * Final. Once id is assigned, it can't be changed
+	 * Final. Once id is assigned, it can't be changed.
 	 */
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private final long letterId;
 	
 	// foreign key writerId, also optional
 	// foreign key letterStatusId
 	
 	/**
-	 * Who was the letter intended to
+	 * Who the writer intended to address the letter to.
 	 * 
-	 * Not sure whether this may be nullable, writer may choose to keep recipient anonymous
+	 * Writer may choose to keep the recipient anonymous, but it means the letter will appear blank on frontend.
 	 */
 	private String intendedRecipient;
 	 
@@ -47,7 +56,7 @@ public class Letter {
 	 * Stores date when letter was published to platform.
 	 * Not displayed if chosenDate isn't null
 	 */
-	private ZonedDateTime submittedDate;
+	private final ZonedDateTime submittedDate;
 	
 	
 	/**
@@ -57,7 +66,7 @@ public class Letter {
 	 * Field used to sort letter by this data
 	 * might i want to locate a letter by these times as well?
 	 */
-	private ZonedDateTime createdDate;
+	private final ZonedDateTime createdDate;
 	
 	/**
 	 * If a writer updates the letter
@@ -73,6 +82,8 @@ public class Letter {
 	 */
 	protected Letter() {
 		this.letterId = 0;
+		this.submittedDate = null;
+		this.createdDate = null;
 	}
 	
 	/**
@@ -167,7 +178,7 @@ public class Letter {
 	/**
 	 * Submitted date
 	 * 
-	 * No setter - published date is considered the first time
+	 * No setter - the first time a writer submits a letters cannot be changed
 	 * If letter updated and resubmitted, this info would be stored in updatedDate instead of overriding submittedDate.
 	 * 
 	 * @return submittedDate
@@ -178,7 +189,7 @@ public class Letter {
 	
 	/**
 	 * Created date
-	 * Don't need to provide a setter
+	 * Don't need to provide a setter, as once a letter is created, it can't be "recreated" so the timestamp should remain as is.
 	 * 
 	 * @return createdDate
 	 */

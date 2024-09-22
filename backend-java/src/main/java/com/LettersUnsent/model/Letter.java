@@ -5,12 +5,13 @@ import java.util.Optional;
 
 import org.springframework.data.annotation.Id;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 /**
- * Letter class describing each created letter.
+ * Letter class describing each created letter object.
  * 
  * @author Christine Nguyen
  */
@@ -34,60 +35,69 @@ public class Letter {
 	 * 
 	 * Writer may choose to keep the recipient anonymous, but it means the letter will appear blank on frontend.
 	 */
+	@Column(nullable = true)
 	private String intendedRecipient;
 	 
 	/**
-	 * Letter content
+	 * Letter content is required for submission.
 	 * 
-	 * stored as Text annotation - long format in database
+	 * Stored as Text annotation - long format in database
 	 */
+	@Column(nullable = false)
 	private String content;
 	
 	
 	/**
-	 * Stores date if user chooses to manually set a date for a letter (e.g. backdating purposes)
-	 * Should override submittedDate in display if this is not null
-	 * Nullable
+	 * Stores date if user chooses to manually set a date for a letter (e.g. backdating purposes).
+	 * If this is null, then submittedDate would be displayed instead.
 	 */
+	@Column(nullable = true)
 	private ZonedDateTime chosenDate;
 	
-	
 	/**
-	 * Stores date when letter was published to platform.
-	 * Not displayed if chosenDate isn't null
+	 * Stores date when letter was published to platform i.e. writer hits "submit" button on frontend.
+	 * Displayed if chosenDate is null. 
 	 */
+	@Column(nullable = false)
 	private final ZonedDateTime submittedDate;
-	
 	
 	/**
 	 * Necessary if a visitor clicked "submit letter" on front end
 	 * 
 	 * Data may be useful if they've saved their letter in a draft status 
-	 * Field used to sort letter by this data
+	 * Field can be used to sort letters.
 	 * might i want to locate a letter by these times as well?
 	 */
+	@Column(nullable = false)
 	private final ZonedDateTime createdDate;
 	
 	/**
-	 * If a writer updates the letter
-	 * Only applied if there is already a created date.
-	 * Otherwise can be null, writer may never update the letter
+	 * Displayed if a non-anonymous writer updates the letter. (Only non-anonymous writers can update a letter for security reasons.)
+	 * Otherwise can be null, a writer may never update the letter.
 	 */
+	@Column(nullable = true)
 	private ZonedDateTime updatedDate;
+	
+	/**
+	 * Letter is flagged to warn readers that it contains sensitive material. 
+	 * Not sure how granular the warning should be.
+	 */
+	@Column(nullable = false)
+	private boolean flagged = false;
 	
 	/**
 	 * Letter constructor
 	 * 
-	 * For JPA's use
+	 * Spring tutorial/documentation recommends this is protected for JPA's use.
 	 */
 	protected Letter() {
 		this.letterId = 0;
-		this.submittedDate = null;
+		this.submittedDate = null; // not really sure why these two fields have to be initialised to null??
 		this.createdDate = null;
 	}
 	
 	/**
-	 * Constructor to create letter objects to save to database
+	 * Constructor to create letter objects and save to database.
 	 * 
 	 * @param letterId
 	 * @param intendedRecipient
@@ -119,7 +129,7 @@ public class Letter {
 	 * letterId
 	 * No setter as letterId cannot be changed once created
 	 * 
-	 * what if a letter is deleted?
+	 * what if a letter is deleted? then the id is deleted too
 	 * 
 	 * @return letterId
 	 */
@@ -144,7 +154,7 @@ public class Letter {
 	}
 	
 	/**
-	 * Content
+	 * CONTENT
 	 * 
 	 * @return content
 	 */
@@ -176,10 +186,10 @@ public class Letter {
 	}
 	
 	/**
-	 * Submitted date
+	 * SUBMITTED DATE
 	 * 
-	 * No setter - the first time a writer submits a letters cannot be changed
-	 * If letter updated and resubmitted, this info would be stored in updatedDate instead of overriding submittedDate.
+	 * No setter. The first time a writer submits a letters cannot be changed.
+	 * If letter updated and resubmitted, the resubmitted date would be stored in updatedDate instead of overriding submittedDate.
 	 * 
 	 * @return submittedDate
 	 */
@@ -188,8 +198,8 @@ public class Letter {
 	}
 	
 	/**
-	 * Created date
-	 * Don't need to provide a setter, as once a letter is created, it can't be "recreated" so the timestamp should remain as is.
+	 * CREATED DATE
+	 * No setter. Once a letter is created, it can't be "recreated" so the timestamp should remain as is.
 	 * 
 	 * @return createdDate
 	 */
@@ -198,7 +208,7 @@ public class Letter {
 	}
 	
 	/**
-	 * Updated date
+	 * UPDATED DATE
 	 * 
 	 * @return updatedDate or null
 	 */
@@ -207,6 +217,8 @@ public class Letter {
 	}
 
 	/**
+	 * Updated date
+	 * 
 	 * @param updatedDate
 	 */
 	public void setUpdatedDate(ZonedDateTime updatedDate) {

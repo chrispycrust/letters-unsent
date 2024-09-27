@@ -28,4 +28,8 @@ dist-ssr
 # Ignore Maven/Gradle target directory
 backend-java/target/
 
+# Ignore application props file
 backend-java/src/main/resources/application.properties
+
+# Ignore env file
+.env

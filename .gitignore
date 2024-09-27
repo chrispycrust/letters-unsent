@@ -26,4 +26,6 @@ dist-ssr
 *storybook.log
 
 # Ignore Maven/Gradle target directory
-target/
+backend-java/target/
+
+backend-java/src/main/resources/application.properties

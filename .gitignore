@@ -27,3 +27,4 @@ dist-ssr
 
 # Ignore Maven/Gradle target directory
 target/
+.env

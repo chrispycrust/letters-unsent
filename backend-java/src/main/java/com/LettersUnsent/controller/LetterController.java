@@ -22,7 +22,7 @@ import com.LettersUnsent.model.Letter;
  */
 
 @RestController // vs @Controller?
-@RequestMapping("/")
+@RequestMapping("/letter/")
 public class LetterController {
 	
 	/**
@@ -43,7 +43,7 @@ public class LetterController {
 	 * @return
 	 */
 	@GetMapping
-	public Letter getAllLetters(@PathVariable Long id) {
+	public Letter getAllLetters(Long id) {
 		return null;
 	}
 	

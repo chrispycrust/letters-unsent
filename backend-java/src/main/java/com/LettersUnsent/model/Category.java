@@ -1,10 +1,23 @@
 package com.LettersUnsent.model;
 
+import java.time.ZonedDateTime;
+
+import jakarta.persistence.Id;
+
+/**
+ * Categorises the relationship type e.g. romantic, friends, family, stranger/neighbour
+ * 
+ * @author Christine Nguyen
+ */
+
 public class Category {
 	
+	@Id
 	public int categoryId;
 	public String categoryName;
 	public String description;
+	public ZonedDateTime createdDate;
+	public ZonedDateTime updatedDate;
 	
 	
 	

@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// Install Prisma extension on VS Code for formatting assistance
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Letter {
+  id          BigInt    @id @default(autoincrement())
+  recipient   String? // intended named recipient is optional
+  content     String // letter must have content, default String type - text variable unlimited length
+  chosenDate  DateTime? @db.Timestamptz() // "timestamp with time zone", includes both date, time, and time zone, no need for precision value so far as I can see
+  publishedAt DateTime  @db.Timestamptz()
+  createdAt   DateTime  @default(now()) @map(name: "created_at")
+  updatedAt   DateTime? @map(name: "updated_at")
+  flagged     Boolean   @default(false)
+  // Flag        Flag?     @relation(fields: [flagId], references: [id])
+  // flagId      Int?
+  //   Category    Category? @relation(fields: [categoryId], references: [id])
+  //   categoryId  Int?
+  //   User        User?     @relation(fields: [userId], references: [id]) // only a writer can submit letters
+  //   userId      String?
+  //   status      Status
+  // Category    Category? @relation(fields: [categoryId], references: [id])
+  // categoryId  Int?
+}
+
+// model User {
+//   id        String   @id @default(cuid())
+//   username  String   @unique
+//   email     String   @unique
+//   createdAt DateTime @default(now()) @map(name: "created_at")
+//   updatedAt DateTime @updatedAt @map(name: "updated_at")
+//   letters   Letter[]
+//   role      Role @default(WRITER)
+
+//   @@map(name: "users")
+// }
+
+// model Category {
+//   id        Int          @id
+//   type      CategoryType
+//   letters   Letter[]
+//   createdAt DateTime
+// }
+
+// enum CategoryType {
+//   FRIENDSHIP
+//   ROMANTIC
+//   FAMILY
+//   NEIGHBOURS
+//   OTHER
+// }
+
+// enum Role {
+//   WRITER
+//   MODERATOR
+//   ADMIN
+// }
+
+// // Differentiation: 
+// // allowable, but mature content for a select audience prepared to read those things is given a label
+// // "other" is a catch all for definitely unallowable content as defined in community guidelines
+// // clear community guidelines to be determined
+// enum FlagType {
+//   EXPLICIT
+//   SEXUAL_CONTENT
+//   TRIGGER
+//   OTHER
+// }
+
+// // not sure if this is needed if the enum already specified
+// model Flag {
+//   id          Int      @id @default(autoincrement())
+//   type        FlagType
+//   description String
+//   letters     Letter[]
+// }
+
+// enum Status {
+//   DRAFT
+//   PUBLISHED
+//   ARCHIVED
+// }

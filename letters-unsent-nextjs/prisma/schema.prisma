@@ -17,24 +17,23 @@ datasource db {
 }
 
 model Letter {
-  id          BigInt    @id @default(autoincrement())
-  recipient   String? // intended named recipient is optional
-  content     String // letter must have content, default String type - text variable unlimited length
-  chosenDate  DateTime? @db.Timestamptz() // "timestamp with time zone", includes both date, time, and time zone, no need for precision value so far as I can see
-  publishedAt DateTime  @db.Timestamptz()
-  createdAt   DateTime  @default(now()) @map(name: "created_at")
-  updatedAt   DateTime? @map(name: "updated_at")
-  flagged     Boolean   @default(false)
-  // Flag        Flag?     @relation(fields: [flagId], references: [id])
+  id        Int     @id @default(autoincrement())
+  recipient String? // intended named recipient is optional
+  content   String // letter must have content, default String type - text variable unlimited length
+  // chosenDate  DateTime? @db.Timestamptz() @map(name: "chosen_date") // "timestamp with time zone", includes both date, time, and time zone, no need for precision value so far as I can see
+  // publishedAt DateTime  @db.Timestamptz() @map(name: "published_at")
+  // createdAt   DateTime  @default(now()) @db.Timestamptz(6)  @map(name: "created_at") 
+  // updatedAt   DateTime? @default(now()) @db.Timestamptz(6) @map(name: "updated_at") 
+  //   author        User?     @relation(fields: [userId], references: [id]) // only a user with writer role can submit letters
+  //   authorId      String?
+  // Category    Category @relation(fields: [categoryId], references: [id])
+  // categoryId  Int
+  // flagged     Boolean   @default(false)
+  // flag        Flag?     @relation(fields: [flagId], references: [id])
   // flagId      Int?
-  //   Category    Category? @relation(fields: [categoryId], references: [id])
-  //   categoryId  Int?
-  //   User        User?     @relation(fields: [userId], references: [id]) // only a writer can submit letters
-  //   userId      String?
-  //   status      Status
-  // Category    Category? @relation(fields: [categoryId], references: [id])
-  // categoryId  Int?
 }
+
+// model writer public profile? 
 
 // model User {
 //   id        String   @id @default(cuid())

@@ -1,0 +1,334 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ScappleDocument Version="1.2" ID="FA822AEA-46C0-4390-A891-1B4C3F6A2069">
+   <Notes>
+      <Note Width="164.209" ID="0" Position="475.7,20.0" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>Entry point: “Let a letter go”</String>
+         <ConnectedNoteIDs>1</ConnectedNoteIDs>
+         <PointsToNoteIDs>1</PointsToNoteIDs>
+      </Note>
+      <Note Width="167.3" ID="1" Position="474.2,77.7" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>Cove reviews states:
+- hasVisited
+- storedDraft
+ie. has the user saved a letter draft before?</String>
+         <ConnectedNoteIDs>0, 3, 37</ConnectedNoteIDs>
+         <PointsToNoteIDs>3</PointsToNoteIDs>
+      </Note>
+      <Note Width="173" ID="2" Position="431.7,201.9" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>welcome prompts 
+thank you for being here
+let’s begin with your letter
+what words have you been holding onto?
+we can stop at any time</String>
+         <ConnectedNoteIDs>7</ConnectedNoteIDs>
+         <PointsToNoteIDs>7</PointsToNoteIDs>
+      </Note>
+      <Note Width="267" ID="3" Position="836.5,143.3" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“you’ve returned. the letter is still here”
+“I’ve kept it safe, just as you left it.”
+“No need to start again. Unless you wish to.”
+“The tide hasn’t touched it. It’s still yours”
+““It’s still here, just where you left it. No pressure.”
+
+fades in the old letter like something gently unearthed
+
+we can stop at any time</String>
+         <ConnectedNoteIDs>1, 4</ConnectedNoteIDs>
+      </Note>
+      <Note Width="191.296" ID="4" Position="907.8,391.4" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>do you want to continue writing?</String>
+         <ConnectedNoteIDs>3, 7, 25</ConnectedNoteIDs>
+         <PointsToNoteIDs>7, 25</PointsToNoteIDs>
+      </Note>
+      <Note Width="200" ID="7" Position="415.7,323.5" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>blank text area for letter writing 
+ambient sound (distant tide, gentle animation over still image, low cost moving repeatable gif)</String>
+         <ConnectedNoteIDs>2, 4, 33</ConnectedNoteIDs>
+         <PointsToNoteIDs>33</PointsToNoteIDs>
+      </Note>
+      <Note Width="229.4" ID="8" Position="718.9,560.3" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>soft exit option - can happen at any time
+“not today” in a corner
+allow safe word e.g. “stop” or “i don’t want to continue”?
+</String>
+         <ConnectedNoteIDs>36</ConnectedNoteIDs>
+      </Note>
+      <Note Width="169.104" ID="9" Position="441.5,498.1" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“are you ready to continue?”</String>
+         <ConnectedNoteIDs>28, 33</ConnectedNoteIDs>
+         <PointsToNoteIDs>28</PointsToNoteIDs>
+      </Note>
+      <Note Width="200" ID="11" Position="443.8,1234.3" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>otherwise we can keep looking at the letters</String>
+      </Note>
+      <Note Width="178" ID="12" Position="456.7,1209.1" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>we can just sit here if you like</String>
+      </Note>
+      <Note Width="200" ID="13" Position="753.7,882.9" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>would you like me to keep this safe until you return?</String>
+         <ConnectedNoteIDs>14, 18, 39</ConnectedNoteIDs>
+         <PointsToNoteIDs>14, 18</PointsToNoteIDs>
+      </Note>
+      <Note Width="152.393" ID="14" Position="617.6,1011.2" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“I’ll hold onto this for you”
+add to localstorage</String>
+         <ConnectedNoteIDs>13, 20</ConnectedNoteIDs>
+         <PointsToNoteIDs>20</PointsToNoteIDs>
+      </Note>
+      <Note Width="158" ID="16" Position="133.1,959.6" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>success cue
+Subtle Confirmation Sound or Animation</String>
+         <ConnectedNoteIDs>30, 32</ConnectedNoteIDs>
+         <PointsToNoteIDs>30</PointsToNoteIDs>
+      </Note>
+      <Note Width="70.5078" ID="17" Position="442.4,964.0" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>failure cue</String>
+         <ConnectedNoteIDs>31-32</ConnectedNoteIDs>
+         <PointsToNoteIDs>31</PointsToNoteIDs>
+      </Note>
+      <Note Width="200" ID="18" Position="884.0,1001.4" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“I’ll let you return when you're ready. I won’t hold this for you.”
+</String>
+         <ConnectedNoteIDs>13, 20</ConnectedNoteIDs>
+         <PointsToNoteIDs>20</PointsToNoteIDs>
+      </Note>
+      <Note Width="200" ID="21" Position="91.6,478.5" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“when you’re ready, let me know”
+fade in visual gesture (swipe up) or assume they press enter?</String>
+      </Note>
+      <Note Width="200" ID="23" Position="745.7,57.7" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“You’ve returned. Last time, you paused here.”
+“I remember. You were close.”
+“Would you like to try again?”</String>
+      </Note>
+      <Note Width="171.851" ID="25" Position="891.5,484.6" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>retrieve content in letter area</String>
+         <ConnectedNoteIDs>4, 33</ConnectedNoteIDs>
+         <PointsToNoteIDs>33</PointsToNoteIDs>
+      </Note>
+      <Note Width="201.721" ID="28" Position="427.5,543.6" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>user types some form of yes or no</String>
+         <ConnectedNoteIDs>9, 35</ConnectedNoteIDs>
+         <PointsToNoteIDs>35</PointsToNoteIDs>
+      </Note>
+      <Note Width="177.405" ID="30" Position="114.0,1051.5" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“your words are safe with me”
+“it won’t be forgotten”</String>
+         <ConnectedNoteIDs>16, 20</ConnectedNoteIDs>
+         <PointsToNoteIDs>20</PointsToNoteIDs>
+      </Note>
+      <Note Width="200" ID="31" Position="376.5,1025.8" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“i’m so sorry - something unexpected happened”</String>
+         <ConnectedNoteIDs>17, 41</ConnectedNoteIDs>
+      </Note>
+      <Note Width="200" ID="32" Position="298.0,891.0" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>attempt to send letter to supabase db</String>
+         <ConnectedNoteIDs>16-17, 39</ConnectedNoteIDs>
+         <PointsToNoteIDs>16-17</PointsToNoteIDs>
+      </Note>
+      <Note Width="200" ID="33" Position="425.6,427.4" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>letter review: ““This is what you’ve written</String>
+         <ConnectedNoteIDs>7, 9, 25</ConnectedNoteIDs>
+         <PointsToNoteIDs>9</PointsToNoteIDs>
+      </Note>
+      <Note Width="200" ID="34" Position="140.1,379.6" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>gentle reassurances: ““This letter won’t be linked to you. You can be as honest as you like.”</String>
+      </Note>
+      <Note Width="200" ID="35" Position="428.1,610.7" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>moves onto the next questions for the form e.g. 
+- recipient name: “Who is this for? (You can keep it anonymous if you like.)”
+- “Do you want to sign off on this form?” 
+- when did you write this letter? (optional)</String>
+         <ConnectedNoteIDs>28, 39</ConnectedNoteIDs>
+         <PointsToNoteIDs>39</PointsToNoteIDs>
+      </Note>
+      <Note Width="159.106" ID="36" Position="1011.0,585.5" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“I’ll let you go now, gently.”</String>
+         <ConnectedNoteIDs>8</ConnectedNoteIDs>
+      </Note>
+      <Note Width="157.996" ID="37" Position="144.0,70.3" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>Expanded states in future 
+- hasVisitedArchive
+- startedLetter
+- wasHereBefore
+- submitted</String>
+         <ConnectedNoteIDs>1</ConnectedNoteIDs>
+      </Note>
+      <Note Width="200" ID="38" Position="171.7,581.7" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>free form natural language
+GPT powered parser</String>
+      </Note>
+      <Note Width="200" ID="39" Position="439.5,785.3" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>“are you ready to release this letter? or hold onto it a little longer?”</String>
+         <ConnectedNoteIDs>13, 32, 35, 40</ConnectedNoteIDs>
+         <PointsToNoteIDs>13, 32</PointsToNoteIDs>
+      </Note>
+      <Note Width="88.562" ID="40" Position="195.7,784.5" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>soft check ins</String>
+         <ConnectedNoteIDs>39</ConnectedNoteIDs>
+      </Note>
+      <Note Width="200" ID="41" Position="370.9,1101.8" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+         </Appearance>
+         <String>is it possible to reload at the last saved state? think this is a design pattern - memento?</String>
+         <ConnectedNoteIDs>31</ConnectedNoteIDs>
+      </Note>
+      <Note Width="156.25" ID="5" Position="151.0,182.0" FontSize="12">
+         <Appearance>
+            <Alignment>Left</Alignment>
+            <Border Weight="0" Style="Rounded"/>
+         </Appearance>
+         <String>skip this if the user has been here before, but hasn’t tried submitting a letter</String>
+      </Note>
+   </Notes>
+   <BackgroundShapes>
+      <Shape Width="247.4" Shadow="No" ID="20" Sticky="No" Position="420.2,1196.9" Faded="No" Height="92">
+         <Appearance>
+            <Border Weight="1"/>
+         </Appearance>
+         <ConnectedNoteIDs>14, 18, 30</ConnectedNoteIDs>
+      </Shape>
+   </BackgroundShapes>
+   <Labels>
+      <Label IDs="13,18">no</Label>
+      <Label IDs="32,39">yes</Label>
+      <Label IDs="4,25">yes</Label>
+      <Label IDs="13,14">yes</Label>
+      <Label IDs="1,3">yes</Label>
+      <Label IDs="13,39">no</Label>
+      <Label IDs="4,7">no - let it go and begin again</Label>
+   </Labels>
+   <AutoFit>0, 4, 9, 14, 17, 25, 28, 30, 36-37, 40</AutoFit>
+   <NoteStyles>
+      <Style AffectAlignment="No" ID="BDA64D4F-81EB-44D9-877F-75F42A3B7987" AffectNoteBody="Yes" AffectFontStyle="No" AffectTextColor="No" AffectFade="No" AffectSize="No" Name="Bubble (Green)" AffectSticky="No">
+         <BorderThickness>1</BorderThickness>
+         <BorderColor>0.719982 0.897475 0.633677</BorderColor>
+         <FillColor>0.783703 0.975799 0.690303</FillColor>
+      </Style>
+      <Style AffectAlignment="No" ID="36FC7F52-DB53-4F8F-90AB-1180724922E1" AffectNoteBody="Yes" AffectFontStyle="No" AffectTextColor="No" AffectFade="No" AffectSize="No" Name="Bubble (Pink)" AffectSticky="No">
+         <BorderThickness>1</BorderThickness>
+         <BorderColor>0.918914 0.762753 0.765805</BorderColor>
+         <FillColor>0.994797 0.857694 1.0</FillColor>
+      </Style>
+      <Style AffectAlignment="No" ID="35C8DD0F-580F-4354-B1E4-10CD775ED5C2" AffectNoteBody="Yes" AffectFontStyle="No" AffectTextColor="No" AffectFade="No" AffectSize="No" Name="Bubble (Red)" AffectSticky="No">
+         <BorderThickness>1</BorderThickness>
+         <BorderColor>0.918914 0.762753 0.765805</BorderColor>
+         <FillColor>1.0 0.829999 0.833295</FillColor>
+      </Style>
+      <Style AffectAlignment="No" ID="60B5E3E4-83B4-480F-86AA-647204B58FFA" AffectNoteBody="No" AffectFontStyle="Yes" AffectTextColor="No" AffectFade="No" AffectSize="No" Name="Title Text" AffectSticky="No">
+         <IsBold>Yes</IsBold>
+         <FontSize>28.0</FontSize>
+      </Style>
+      <Style AffectAlignment="No" ID="A16CD1F6-B8C5-4D12-8BD1-AB0C4B6AD9B8" AffectNoteBody="No" AffectFontStyle="No" AffectTextColor="Yes" AffectFade="No" AffectSize="No" Name="Red Text" AffectSticky="No">
+         <TextColor>1.0 0.0 0.0</TextColor>
+      </Style>
+      <Style AffectAlignment="No" ID="4DDF405C-7C98-4986-B63C-AB0A0746FEA9" AffectNoteBody="Yes" AffectFontStyle="No" AffectTextColor="No" AffectFade="No" AffectSize="No" Name="Bubble (Blue)" AffectSticky="No">
+         <BorderThickness>1</BorderThickness>
+         <BorderColor>0.722103 0.846296 0.916243</BorderColor>
+         <FillColor>0.786007 0.920394 0.996094</FillColor>
+      </Style>
+      <Style AffectAlignment="No" ID="134C1A32-2688-43A4-896E-D144FC425871" AffectNoteBody="Yes" AffectFontStyle="No" AffectTextColor="No" AffectFade="No" AffectSize="No" Name="Bubble (Yellow)" AffectSticky="No">
+         <BorderThickness>1</BorderThickness>
+         <BorderColor>0.902464 0.855528 0.62887</BorderColor>
+         <FillColor>0.981201 0.930404 0.6851</FillColor>
+      </Style>
+   </NoteStyles>
+   <UISettings>
+      <BackgroundColor>1.0 0.990005 0.960006</BackgroundColor>
+      <DefaultFont>Helvetica</DefaultFont>
+      <DefaultTextColor/>
+      <NoteXPadding>8.00</NoteXPadding>
+   </UISettings>
+   <PrintSettings ScaleFactor="1.000000" HorizontallyCentered="Yes" TopMargin="90.000000" PaperType="iso-a4" PagesDown="1" VerticalPagination="Auto" PagesAcross="1" BottomMargin="90.000000" Orientation="Portrait" VerticallyCentered="Yes" PaperSize="595.000000,842.000000" LeftMargin="72.000000" HorizontalPagination="Clip" Collates="Yes" RightMargin="72.000000"/>
+</ScappleDocument>

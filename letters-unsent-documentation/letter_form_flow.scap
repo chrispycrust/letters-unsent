@@ -16,7 +16,7 @@
         <Fill>0.783703 0.975799 0.690303</Fill>
       </Appearance>
       <String>Cove reviews hasVisited state</String>
-      <ConnectedNoteIDs>0,2,23,37</ConnectedNoteIDs>
+      <ConnectedNoteIDs>0,2,23</ConnectedNoteIDs>
       <PointsToNoteIDs>2,23</PointsToNoteIDs>
       <Formatting>
         <FormatRange Bold="Yes">13,10</FormatRange>
@@ -45,24 +45,15 @@ thank you for being here</String>
       <ConnectedNoteIDs>4,42</ConnectedNoteIDs>
       <PointsToNoteIDs>4</PointsToNoteIDs>
     </Note>
-    <Note ID="4" FontSize="12.0" Position="1088.6,393.5" Width="188.0">
+    <Note ID="4" FontSize="12.0" Position="1142.7,627.1" Width="188.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>do you want to continue writing?</String>
-      <ConnectedNoteIDs>3,7,33</ConnectedNoteIDs>
-      <PointsToNoteIDs>7,33</PointsToNoteIDs>
+      <ConnectedNoteIDs>3,33,66</ConnectedNoteIDs>
+      <PointsToNoteIDs>33,66</PointsToNoteIDs>
     </Note>
-    <Note ID="7" FontSize="12.0" Position="682.2,357.9" Width="200.0">
-      <Appearance>
-        <Alignment>Left</Alignment>
-      </Appearance>
-      <String>blank text area for letter writing 
-ambient sound (distant tide, gentle animation over still image, low cost moving repeatable gif)</String>
-      <ConnectedNoteIDs>4,33,43</ConnectedNoteIDs>
-      <PointsToNoteIDs>33</PointsToNoteIDs>
-    </Note>
-    <Note ID="9" FontSize="12.0" Position="679.4,577.2" Width="167.0">
+    <Note ID="9" FontSize="12.0" Position="665.0,857.8" Width="167.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -70,37 +61,37 @@ ambient sound (distant tide, gentle animation over still image, low cost moving 
       <ConnectedNoteIDs>13,33,35</ConnectedNoteIDs>
       <PointsToNoteIDs>13,35</PointsToNoteIDs>
     </Note>
-    <Note ID="11" FontSize="12.0" Position="683.0,1317.3" Width="200.0">
+    <Note ID="11" FontSize="12.0" Position="688.8,1758.4" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>otherwise we can keep looking at the letters</String>
     </Note>
-    <Note ID="12" FontSize="12.0" Position="692.5,1287.2" Width="178.0">
+    <Note ID="12" FontSize="12.0" Position="698.0,1728.0" Width="178.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>we can just sit here if you like</String>
     </Note>
-    <Note ID="13" FontSize="12.0" Position="1025.8,862.4" Width="200.0">
+    <Note ID="13" FontSize="12.0" Position="1061.4,1152.4" Width="192.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
-      <String>would you like me to keep this safe until you return?
-“do you want me to hold onto what you’ve written here?”</String>
-      <ConnectedNoteIDs>9,14,39,51</ConnectedNoteIDs>
-      <PointsToNoteIDs>14,51</PointsToNoteIDs>
+      <String>“do you want to hold onto what you’ve written here?”
+option to export letter somewhere safe so they can review in their own time</String>
+      <ConnectedNoteIDs>9,39,73,76</ConnectedNoteIDs>
+      <PointsToNoteIDs>73,76</PointsToNoteIDs>
     </Note>
-    <Note ID="14" FontSize="12.0" Position="860.9,1087.3" Width="151.0">
+    <Note ID="14" FontSize="12.0" Position="1010.8,1553.4" Width="151.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>“I’ll hold onto this for you”
 add to localstorage</String>
-      <ConnectedNoteIDs>13,20</ConnectedNoteIDs>
+      <ConnectedNoteIDs>20,76</ConnectedNoteIDs>
       <PointsToNoteIDs>20</PointsToNoteIDs>
     </Note>
-    <Note ID="16" FontSize="12.0" Position="339.7,1044.0" Width="158.0">
+    <Note ID="16" FontSize="12.0" Position="365.8,1472.6" Width="158.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -109,7 +100,7 @@ Subtle Confirmation Sound or Animation</String>
       <ConnectedNoteIDs>30,32</ConnectedNoteIDs>
       <PointsToNoteIDs>30</PointsToNoteIDs>
     </Note>
-    <Note ID="17" FontSize="12.0" Position="684.9,1040.3" Width="72.0">
+    <Note ID="17" FontSize="12.0" Position="690.7,1481.4" Width="72.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -125,7 +116,7 @@ Subtle Confirmation Sound or Animation</String>
       <ConnectedNoteIDs>1,42</ConnectedNoteIDs>
       <PointsToNoteIDs>42</PointsToNoteIDs>
     </Note>
-    <Note ID="30" FontSize="12.0" Position="319.5,1119.8" Width="175.0">
+    <Note ID="30" FontSize="12.0" Position="325.3,1560.9" Width="175.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -134,30 +125,30 @@ Subtle Confirmation Sound or Animation</String>
       <ConnectedNoteIDs>16,59</ConnectedNoteIDs>
       <PointsToNoteIDs>59</PointsToNoteIDs>
     </Note>
-    <Note ID="31" FontSize="12.0" Position="622.1,1097.1" Width="200.0">
+    <Note ID="31" FontSize="12.0" Position="627.9,1538.2" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>“i’m so sorry - something unexpected happened”</String>
       <ConnectedNoteIDs>17,41</ConnectedNoteIDs>
     </Note>
-    <Note ID="32" FontSize="12.0" Position="524.6,966.3" Width="200.0">
+    <Note ID="32" FontSize="12.0" Position="500.0,1395.0" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>attempt to send letter to supabase db</String>
-      <ConnectedNoteIDs>16,17,39</ConnectedNoteIDs>
+      <ConnectedNoteIDs>16,17,69</ConnectedNoteIDs>
       <PointsToNoteIDs>16,17</PointsToNoteIDs>
     </Note>
-    <Note ID="33" FontSize="12.0" Position="666.7,487.6" Width="200.0">
+    <Note ID="33" FontSize="12.0" Position="687.2,777.8" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>letter review: ““This is what you’ve written”</String>
-      <ConnectedNoteIDs>4,7,9</ConnectedNoteIDs>
+      <ConnectedNoteIDs>4,9,62,65</ConnectedNoteIDs>
       <PointsToNoteIDs>9</PointsToNoteIDs>
     </Note>
-    <Note ID="35" FontSize="12.0" Position="597.8,680.0" Width="200.0">
+    <Note ID="35" FontSize="12.0" Position="583.4,960.6" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -168,39 +159,28 @@ Subtle Confirmation Sound or Animation</String>
       <ConnectedNoteIDs>9,39</ConnectedNoteIDs>
       <PointsToNoteIDs>39</PointsToNoteIDs>
     </Note>
-    <Note ID="36" FontSize="12.0" Position="703.4,1363.1" Width="157.0">
+    <Note ID="36" FontSize="12.0" Position="709.2,1804.2" Width="157.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>“I’ll let you go now, gently.”</String>
     </Note>
-    <Note ID="37" FontSize="12.0" Position="174.4,64.0" Width="156.0">
-      <Appearance>
-        <Alignment>Left</Alignment>
-      </Appearance>
-      <String>Expanded states in future 
-- hasVisitedArchive
-- startedLetter
-- wasHereBefore
-- submitted</String>
-      <ConnectedNoteIDs>1</ConnectedNoteIDs>
-    </Note>
-    <Note ID="39" FontSize="12.0" Position="641.9,860.2" Width="200.0">
+    <Note ID="39" FontSize="12.0" Position="627.5,1140.8" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>“are you ready to release this letter?”</String>
-      <ConnectedNoteIDs>13,32,35,40</ConnectedNoteIDs>
-      <PointsToNoteIDs>13,32</PointsToNoteIDs>
+      <ConnectedNoteIDs>13,35,40,69</ConnectedNoteIDs>
+      <PointsToNoteIDs>13,69</PointsToNoteIDs>
     </Note>
-    <Note ID="40" FontSize="12.0" Position="346.3,855.8" Width="89.0">
+    <Note ID="40" FontSize="12.0" Position="331.9,1136.4" Width="89.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>soft check ins</String>
       <ConnectedNoteIDs>39</ConnectedNoteIDs>
     </Note>
-    <Note ID="41" FontSize="12.0" Position="623.0,1159.0" Width="200.0">
+    <Note ID="41" FontSize="12.0" Position="628.8,1600.1" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -220,25 +200,24 @@ Subtle Confirmation Sound or Animation</String>
         <FormatRange Bold="Yes">13,11</FormatRange>
       </Formatting>
     </Note>
-    <Note ID="43" FontSize="12.0" Position="693.2,200.4" Width="193.0">
+    <Note ID="43" FontSize="12.0" Position="664.4,181.8" Width="193.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>“when you’re ready to begin, let me know”
 fade in visual gesture (swipe up) or assume they press enter?
 
-“let’s begin with your letter
-what words have you been holding onto?”</String>
-      <ConnectedNoteIDs>2,7,42</ConnectedNoteIDs>
-      <PointsToNoteIDs>7</PointsToNoteIDs>
+“let’s begin with your letter</String>
+      <ConnectedNoteIDs>2,42,66</ConnectedNoteIDs>
+      <PointsToNoteIDs>66</PointsToNoteIDs>
     </Note>
-    <Note ID="44" FontSize="12.0" Position="989.2,455.2" Width="200.0">
+    <Note ID="44" FontSize="12.0" Position="1028.3,734.3" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>fades in the old letter like something gently unearthed</String>
     </Note>
-    <Note ID="51" FontSize="12.0" Position="1171.0,1009.7" Width="200.0">
+    <Note ID="51" FontSize="12.0" Position="1239.4,1497.4" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
         <Border Weight="1">0.719982 0.897475 0.633677</Border>
@@ -249,13 +228,13 @@ what words have you been holding onto?”</String>
 storedDraft - if visitor chooses No, then clear memory, but note that the user has been here before but backed out AGAIN - this would be noted i.e. would a counter be set as well? 
 
 hasAttemptedSubmit (count)</String>
-      <ConnectedNoteIDs>13,53</ConnectedNoteIDs>
+      <ConnectedNoteIDs>53,76</ConnectedNoteIDs>
       <PointsToNoteIDs>53</PointsToNoteIDs>
       <Formatting>
         <FormatRange Bold="Yes">223,26</FormatRange>
       </Formatting>
     </Note>
-    <Note ID="53" FontSize="12.0" Position="1036.2,1235.3" Width="200.0">
+    <Note ID="53" FontSize="12.0" Position="1057.6,1728.8" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -264,7 +243,7 @@ hasAttemptedSubmit (count)</String>
       <ConnectedNoteIDs>20,51</ConnectedNoteIDs>
       <PointsToNoteIDs>20</PointsToNoteIDs>
     </Note>
-    <Note ID="54" FontSize="12.0" Position="356.1,1343.2" Width="181.0">
+    <Note ID="54" FontSize="12.0" Position="361.9,1784.3" Width="181.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -272,7 +251,7 @@ hasAttemptedSubmit (count)</String>
       <ConnectedNoteIDs>20,58,59</ConnectedNoteIDs>
       <PointsToNoteIDs>20,58</PointsToNoteIDs>
     </Note>
-    <Note ID="58" FontSize="12.0" Position="380.4,1436.5" Width="126.0">
+    <Note ID="58" FontSize="12.0" Position="386.2,1877.6" Width="126.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -280,7 +259,7 @@ hasAttemptedSubmit (count)</String>
 redirect to public link</String>
       <ConnectedNoteIDs>54</ConnectedNoteIDs>
     </Note>
-    <Note ID="59" FontSize="12.0" Position="345.7,1188.8" Width="200.0">
+    <Note ID="59" FontSize="12.0" Position="351.5,1629.9" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -291,16 +270,95 @@ shows a long, unguessable delete URL (token only shown once)
       <ConnectedNoteIDs>30,54,60</ConnectedNoteIDs>
       <PointsToNoteIDs>54</PointsToNoteIDs>
     </Note>
-    <Note ID="60" FontSize="12.0" Position="72.5,1213.0" Width="200.0">
+    <Note ID="60" FontSize="12.0" Position="84.9,1662.9" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>this part can be skipped or adjusted if a user hasSubmitted a letter before</String>
       <ConnectedNoteIDs>59</ConnectedNoteIDs>
     </Note>
+    <Note ID="61" FontSize="12.0" Position="642.7,450.7" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>what words have you been holding onto?</String>
+      <ConnectedNoteIDs>62,63,66</ConnectedNoteIDs>
+      <PointsToNoteIDs>62</PointsToNoteIDs>
+    </Note>
+    <Note ID="62" FontSize="12.0" Position="548.7,604.8" Width="142.8">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>guide to blank space</String>
+      <ConnectedNoteIDs>33,61</ConnectedNoteIDs>
+      <PointsToNoteIDs>33</PointsToNoteIDs>
+    </Note>
+    <Note ID="63" FontSize="12.0" Position="809.7,564.1" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>begin a series of questions to gently elicit responses to kick start the letter writing process</String>
+      <ConnectedNoteIDs>61,65</ConnectedNoteIDs>
+    </Note>
+    <Note ID="65" FontSize="12.0" Position="834.3,641.0" Width="177.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>lets look at the bits and pieces</String>
+      <ConnectedNoteIDs>33,63</ConnectedNoteIDs>
+      <PointsToNoteIDs>33</PointsToNoteIDs>
+    </Note>
+    <Note ID="66" FontSize="12.0" Position="654.3,312.4" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>blank text area for writing responses
+ambient sound (distant tide, gentle animation over still image, low cost moving repeatable gif)</String>
+      <ConnectedNoteIDs>4,43,61</ConnectedNoteIDs>
+      <PointsToNoteIDs>61</PointsToNoteIDs>
+    </Note>
+    <Note ID="69" FontSize="12.0" Position="503.0,1250.5" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>ethics layer check - does the letter contain referrences to a real person and doxxes them etc?
+flag letter for human review</String>
+      <ConnectedNoteIDs>32,39,70</ConnectedNoteIDs>
+      <PointsToNoteIDs>32,70</PointsToNoteIDs>
+    </Note>
+    <Note ID="70" FontSize="12.0" Position="761.2,1354.9" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>your letter has been sent for review, we’ll hold onto your letter for you, when you come back</String>
+      <ConnectedNoteIDs>69,71</ConnectedNoteIDs>
+    </Note>
+    <Note ID="71" FontSize="12.0" Position="812.0,1449.0" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>review process? does the visitor just have to come back to get a notice on the outcome of their letter?</String>
+      <ConnectedNoteIDs>70</ConnectedNoteIDs>
+    </Note>
+    <Note ID="73" FontSize="12.0" Position="1008.0,1289.0" Width="181.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>export out the file as .txt or .md</String>
+      <ConnectedNoteIDs>13,76</ConnectedNoteIDs>
+      <PointsToNoteIDs>76</PointsToNoteIDs>
+    </Note>
+    <Note ID="76" FontSize="12.0" Position="1174.2,1338.2" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>would you like me to keep this safe until you return?</String>
+      <ConnectedNoteIDs>13,14,51,73</ConnectedNoteIDs>
+      <PointsToNoteIDs>14,51</PointsToNoteIDs>
+    </Note>
   </Notes>
   <BackgroundShapes>
-    <Shape ID="20" Position="664.0,1273.0" Width="248.0" Sticky="No" Height="129.0">
+    <Shape ID="20" Position="669.8,1714.1" Width="248.0" Sticky="No" Height="129.0">
       <Appearance>
         <Border Weight="1"/>
       </Appearance>
@@ -308,22 +366,28 @@ shows a long, unguessable delete URL (token only shown once)
     </Shape>
   </BackgroundShapes>
   <Labels>
-    <Label IDs="32,39">yes</Label>
-    <Label IDs="13,14">yes</Label>
     <Label IDs="13,39">no</Label>
-    <Label IDs="4,7">no - let it go and begin again</Label>
     <Label IDs="3,42">storedDraft = Y</Label>
     <Label IDs="42,43">storedDraft = N</Label>
     <Label IDs="4,33">Yes</Label>
     <Label IDs="9,35">Yes</Label>
     <Label IDs="9,13">No</Label>
-    <Label IDs="13,51">no</Label>
     <Label IDs="20,54">no</Label>
     <Label IDs="54,58">yes</Label>
     <Label IDs="1,23">hasVisited = yes</Label>
     <Label IDs="1,2">hasVisited = no</Label>
+    <Label IDs="61,63">i don't know where to begin/i have some words</Label>
+    <Label IDs="61,62">i know what to say</Label>
+    <Label IDs="4,66">no - let it go and begin again</Label>
+    <Label IDs="39,69">yes</Label>
+    <Label IDs="69,70">yes</Label>
+    <Label IDs="32,69">no</Label>
+    <Label IDs="13,73">yes</Label>
+    <Label IDs="13,76">no</Label>
+    <Label IDs="14,76">yes</Label>
+    <Label IDs="51,76">no</Label>
   </Labels>
-  <AutoFit>0,2,4,9,14,17,30,36,37,40,42,54,58</AutoFit>
+  <AutoFit>0,2,4,9,14,17,30,36,40,42,54,58,65,73</AutoFit>
   <NoteStyles>
     <Style Name="Bubble (Blue)" ID="4DDF405C-7C98-4986-B63C-AB0A0746FEA9" AffectFontStyle="No" AffectAlignment="No" AffectTextColor="No" AffectNoteBody="Yes" AffectFade="No">
       <BorderThickness>1</BorderThickness>

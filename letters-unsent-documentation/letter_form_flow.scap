@@ -132,7 +132,7 @@ Subtle Confirmation Sound or Animation</String>
       <String>“i’m so sorry - something unexpected happened”</String>
       <ConnectedNoteIDs>17,41</ConnectedNoteIDs>
     </Note>
-    <Note ID="32" FontSize="12.0" Position="500.0,1395.0" Width="200.0">
+    <Note ID="32" FontSize="12.0" Position="490.0,1408.7" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -270,7 +270,7 @@ shows a long, unguessable delete URL (token only shown once)
       <ConnectedNoteIDs>30,54,60</ConnectedNoteIDs>
       <PointsToNoteIDs>54</PointsToNoteIDs>
     </Note>
-    <Note ID="60" FontSize="12.0" Position="84.9,1662.9" Width="200.0">
+    <Note ID="60" FontSize="12.0" Position="106.4,1689.0" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -282,7 +282,7 @@ shows a long, unguessable delete URL (token only shown once)
         <Alignment>Left</Alignment>
       </Appearance>
       <String>what words have you been holding onto?</String>
-      <ConnectedNoteIDs>62,63,66</ConnectedNoteIDs>
+      <ConnectedNoteIDs>62,63,66,77</ConnectedNoteIDs>
       <PointsToNoteIDs>62</PointsToNoteIDs>
     </Note>
     <Note ID="62" FontSize="12.0" Position="548.7,604.8" Width="142.8">
@@ -300,11 +300,11 @@ shows a long, unguessable delete URL (token only shown once)
       <String>begin a series of questions to gently elicit responses to kick start the letter writing process</String>
       <ConnectedNoteIDs>61,65</ConnectedNoteIDs>
     </Note>
-    <Note ID="65" FontSize="12.0" Position="834.3,641.0" Width="177.0">
+    <Note ID="65" FontSize="12.0" Position="834.0,641.0" Width="185.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
-      <String>lets look at the bits and pieces</String>
+      <String>“lets look at the bits and pieces”</String>
       <ConnectedNoteIDs>33,63</ConnectedNoteIDs>
       <PointsToNoteIDs>33</PointsToNoteIDs>
     </Note>
@@ -317,16 +317,18 @@ ambient sound (distant tide, gentle animation over still image, low cost moving 
       <ConnectedNoteIDs>4,43,61</ConnectedNoteIDs>
       <PointsToNoteIDs>61</PointsToNoteIDs>
     </Note>
-    <Note ID="69" FontSize="12.0" Position="503.0,1250.5" Width="200.0">
+    <Note ID="69" FontSize="12.0" Position="492.4,1223.0" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
-      <String>ethics layer check - does the letter contain referrences to a real person and doxxes them etc?
-flag letter for human review</String>
+      <String>checks: 
+- ethics: does the letter contain referrences to a real person and doxxes them etc?
+flag letter for human review
+- crisis detection (handling edge case for suicidal submission)</String>
       <ConnectedNoteIDs>32,39,70</ConnectedNoteIDs>
       <PointsToNoteIDs>32,70</PointsToNoteIDs>
     </Note>
-    <Note ID="70" FontSize="12.0" Position="761.2,1354.9" Width="200.0">
+    <Note ID="70" FontSize="12.0" Position="806.5,1362.3" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -356,6 +358,140 @@ flag letter for human review</String>
       <ConnectedNoteIDs>13,14,51,73</ConnectedNoteIDs>
       <PointsToNoteIDs>14,51</PointsToNoteIDs>
     </Note>
+    <Note ID="77" FontSize="12.0" Position="309.5,510.5" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>consent for autosave into localStorage memory</String>
+      <ConnectedNoteIDs>61,78</ConnectedNoteIDs>
+    </Note>
+    <Note ID="78" FontSize="12.0" Position="291.0,614.2" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>warning that the draft will only be saved to current device - no cross device detection
+
+offer export</String>
+      <ConnectedNoteIDs>77</ConnectedNoteIDs>
+    </Note>
+    <Note ID="79" FontSize="12.0" Position="282.0,746.0" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>allow reverse for autosave if user changes mind e.g. settings toggle</String>
+    </Note>
+    <Note ID="80" FontSize="12.0" Position="1779.9,474.7" Width="115.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>orchestration hook</String>
+      <ConnectedNoteIDs>81,86,88</ConnectedNoteIDs>
+      <PointsToNoteIDs>81,86,88</PointsToNoteIDs>
+    </Note>
+    <Note ID="81" FontSize="12.0" Position="1705.5,547.0" Width="129.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>state machine (rules)</String>
+      <ConnectedNoteIDs>80,83</ConnectedNoteIDs>
+      <PointsToNoteIDs>83</PointsToNoteIDs>
+    </Note>
+    <Note ID="82" FontSize="12.0" Position="1705.7,696.3" Width="79.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>state model</String>
+      <ConnectedNoteIDs>83</ConnectedNoteIDs>
+    </Note>
+    <Note ID="83" FontSize="12.0" Position="1685.5,612.0" Width="105.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>reducer (update)</String>
+      <ConnectedNoteIDs>81,82</ConnectedNoteIDs>
+      <PointsToNoteIDs>82</PointsToNoteIDs>
+    </Note>
+    <Note ID="84" FontSize="12.0" Position="1891.7,738.6" Width="87.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>tool schemas</String>
+      <ConnectedNoteIDs>86,89</ConnectedNoteIDs>
+      <PointsToNoteIDs>89</PointsToNoteIDs>
+    </Note>
+    <Note ID="85" FontSize="12.0" Position="1912.7,599.1" Width="95.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>system prompt</String>
+      <ConnectedNoteIDs>86</ConnectedNoteIDs>
+    </Note>
+    <Note ID="86" FontSize="12.0" Position="1896.9,577.5" Width="79.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>Cove (LLM)</String>
+      <ConnectedNoteIDs>80,84,85</ConnectedNoteIDs>
+      <PointsToNoteIDs>80,84</PointsToNoteIDs>
+    </Note>
+    <Note ID="88" FontSize="12.0" Position="1824.2,362.8" Width="28.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>UI</String>
+      <ConnectedNoteIDs>80,91</ConnectedNoteIDs>
+      <PointsToNoteIDs>80</PointsToNoteIDs>
+    </Note>
+    <Note ID="89" FontSize="12.0" Position="2029.5,750.1" Width="83.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>localStorage</String>
+      <ConnectedNoteIDs>84,97</ConnectedNoteIDs>
+      <PointsToNoteIDs>97</PointsToNoteIDs>
+    </Note>
+    <Note ID="90" FontSize="12.0" Position="1870.8,415.8" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>user input goes down, updated data comes back up</String>
+    </Note>
+    <Note ID="91" FontSize="12.0" Position="1796.3,294.1" Width="81.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>visitor/writer</String>
+      <ConnectedNoteIDs>88</ConnectedNoteIDs>
+      <PointsToNoteIDs>88</PointsToNoteIDs>
+    </Note>
+    <Note ID="92" FontSize="12.0" Position="1573.0,496.6" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>make sure we’re at right step in flow</String>
+    </Note>
+    <Note ID="93" FontSize="12.0" Position="1901.7,503.1" Width="200.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>sends messages, receives text + structured outputs</String>
+    </Note>
+    <Note ID="95" FontSize="12.0" Position="1430.3,659.9" Width="191.0">
+      <Appearance/>
+      <String>all updates pass through reducer</String>
+    </Note>
+    <Note ID="100" FontSize="12.0" Position="1661.0,732.0" Width="81.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>APP STATE</String>
+    </Note>
+    <Note ID="102" FontSize="12.0" Position="1890.0,792.0" Width="170.0">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>COVE’S BRAIN &amp; MEMORY</String>
+    </Note>
   </Notes>
   <BackgroundShapes>
     <Shape ID="20" Position="669.8,1714.1" Width="248.0" Sticky="No" Height="129.0">
@@ -363,6 +499,24 @@ flag letter for human review</String>
         <Border Weight="1"/>
       </Appearance>
       <ConnectedNoteIDs>14,53,54</ConnectedNoteIDs>
+    </Shape>
+    <Shape ID="97" Position="1885.5,561.0" Width="134.3" Sticky="No" Height="79.0">
+      <Appearance>
+        <Border Weight="1"/>
+      </Appearance>
+      <ConnectedNoteIDs>89</ConnectedNoteIDs>
+    </Shape>
+    <Shape ID="99" Position="1642.5,540.8" Width="206.4" Sticky="No" Height="221.2">
+      <Appearance>
+        <Border Weight="1">0.722103 0.846296 0.916243</Border>
+        <Fill>0.786007 0.920394 0.996094</Fill>
+      </Appearance>
+    </Shape>
+    <Shape ID="101" Position="1861.4,555.4" Width="264.1" Sticky="No" Height="271.5">
+      <Appearance>
+        <Border Weight="1">0.722103 0.846296 0.916243</Border>
+        <Fill>0.786007 0.920394 0.996094</Fill>
+      </Appearance>
     </Shape>
   </BackgroundShapes>
   <Labels>
@@ -387,7 +541,7 @@ flag letter for human review</String>
     <Label IDs="14,76">yes</Label>
     <Label IDs="51,76">no</Label>
   </Labels>
-  <AutoFit>0,2,4,9,14,17,30,36,40,42,54,58,65,73</AutoFit>
+  <AutoFit>0,2,4,9,14,17,30,36,40,42,54,58,65,73,80-86,88,89,91,95,100,102</AutoFit>
   <NoteStyles>
     <Style Name="Bubble (Blue)" ID="4DDF405C-7C98-4986-B63C-AB0A0746FEA9" AffectFontStyle="No" AffectAlignment="No" AffectTextColor="No" AffectNoteBody="Yes" AffectFade="No">
       <BorderThickness>1</BorderThickness>

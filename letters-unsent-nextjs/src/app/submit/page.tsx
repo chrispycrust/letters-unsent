@@ -1,3 +1,5 @@
+'use client';
+
 /* 
 -------------------------------------------------------------------------------------------------
 
@@ -6,7 +8,8 @@
 -------------------------------------------------------------------------------------------------
 */
 
-
+import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
+import { useEffect, useState } from "react";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -25,12 +28,26 @@
 ------------------------------------------------------------------------------------------------- 
 */
 
-export default async function Submit() {
+export default function Submit() {
+
+  const [coveMessage, setCoveMessage] = useState('')
+
+  useEffect(() => {
+    async function fetchCoveMessage() {
+      const res = await fetch("/api/guardian")
+      const data = await res.json()
+      setCoveMessage(data.output)
+    }
+    fetchCoveMessage()
+  }, []);
 
   return (
     <div>
         <h1>Submit a letter</h1>
 
+        <GuardianPanel
+          message={coveMessage}
+        />
     </div>
   );
 }

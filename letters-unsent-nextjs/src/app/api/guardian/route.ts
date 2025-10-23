@@ -12,8 +12,8 @@ export async function GET(request: Request) {
 
   const visitorPrompt = 
     visitCount <= 1
-      ? "The visitor is new and has never been here before. Please greet them accordingly."
-      : "The visitor has returned again. Please greet them accordingly."
+      ? "The visitor is new and has never been here before. Please greet them accordingly - try finding new ways to greet them."
+      : "The visitor has returned again. Please greet them accordingly - try finding new ways to welcome them back."
 
   const response = await openai.responses.create({
     model: "gpt-4.1-mini",

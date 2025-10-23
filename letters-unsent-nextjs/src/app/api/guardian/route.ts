@@ -1,15 +1,9 @@
 import OpenAI from "openai";
+import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN
 });
-
-const baseInstructions = `
-  You are Cove, a calm, gentle, slightly poetic guide for Letters Unsent - a world where unsent letters are held for safekeeping unless the author decides to forget it. 
-  Goals: help user draft an unsent letter; reduce friction; be concise; never force.
-  Do not use emojis in your response.
-  Avoid generic often said things that sound robotic and unnatural or customer service-y e.g. "how may I assist you today?"
-`
 
 export async function GET(request: Request) {
 
@@ -19,11 +13,11 @@ export async function GET(request: Request) {
   const visitorPrompt = 
     visitCount <= 1
       ? "The visitor is new and has never been here before. Please greet them accordingly."
-      : "The visitor has returned again. Welcome them back. Please greet them accordingly."
+      : "The visitor has returned again. Please greet them accordingly."
 
   const response = await openai.responses.create({
     model: "gpt-4.1-mini",
-    instructions: baseInstructions,
+    instructions: guardianSystemPrompt,
     input: [
       { role: "developer", content: visitorPrompt },
     ]

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -16,29 +16,30 @@ import { useEffect, useState } from "react";
   
   PURPOSE 
   Letter submission page
-  
-  
-  “Thank you for being here.”  
-  (1s delay)  
-  “Let’s begin with your letter…”  
-  (1s delay)  
-  “What would you like to say?”
-  
 
 ------------------------------------------------------------------------------------------------- 
 */
 
 export default function Submit() {
 
-  const [coveMessage, setCoveMessage] = useState('')
+  const [coveMessage, setCoveMessage] = useState('');
 
   useEffect(() => {
-    async function fetchCoveMessage() {
-      const res = await fetch("/api/guardian")
+
+    localStorage.setItem("visitCount", "1");
+
+    async function greetVisitor() {
+
+      // Step 1: Send visitCount
+      const visitCount = localStorage.getItem("visitCount")
+      const res = await fetch(`/api/guardian?visitCount=${visitCount}`)
+
+      // Step 2: Fetch Cove's message
       const data = await res.json()
       setCoveMessage(data.output)
     }
-    fetchCoveMessage()
+    greetVisitor()
+
   }, []);
 
   return (

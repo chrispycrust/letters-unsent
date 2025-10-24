@@ -9,8 +9,6 @@ export default function GuardianPanel({ message }: GuardianPanelProps) {
             height: 200
         }}
         >
-            <h2>guardian response
-            </h2>
             <p>
                 {message}
             </p>

@@ -56,11 +56,7 @@ export default function Submit() {
   async function handleSubmit(e) {
     e.preventDefault() // stops the default page reload
 
-    console.log("Visitor input:", visitorInput)
-
     const updatedConversation = [...conversation, { role: "user", content: visitorInput }]
-
-    // console.log("updated conversation:", updatedConversation)
 
     // fetch Cove's message in response to visitorInput
     const res = await fetch("/api/guardian/", {

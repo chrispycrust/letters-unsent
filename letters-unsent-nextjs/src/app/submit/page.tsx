@@ -11,6 +11,7 @@
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
 import { useEffect, useState } from "react";
+import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -25,15 +26,22 @@ export default function Submit() {
 
   const [coveMessage, setCoveMessage] = useState('');
   const [visitorInput, setVisitorInput ] = useState("");
+  const [conversation, setConversation] = useState([
+    {
+        role: "system",
+        content: guardianSystemPrompt // not sure if I should be calling the system prompt from client?
+    },
+  ]);
 
   // immediately on page load, guardian greets the visitor
   useEffect(() => {
 
-    localStorage.setItem("visitCount", "1");
-
     async function greetVisitor() {
 
-      // Step 1: Send visitCount
+      localStorage.setItem("visitCount", "1");
+      localStorage.setItem("letterDraft", "hey you"); // without formatting
+
+      // Step 1: Send visitCount and letterDraft
       const visitCount = localStorage.getItem("visitCount")
       const res = await fetch(`/api/guardian?&visitCount=${visitCount}`)
 
@@ -50,17 +58,22 @@ export default function Submit() {
 
     console.log("Visitor input:", visitorInput)
 
+    const updatedConversation = [...conversation, { role: "user", content: visitorInput }]
+
+    // console.log("updated conversation:", updatedConversation)
+
     // fetch Cove's message in response to visitorInput
     const res = await fetch("/api/guardian/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ visitorInput })
+      body: JSON.stringify( {updatedConversation} )
     })
 
     // update Cove's message with new response
     const data = await res.json()
+    setConversation([...updatedConversation, { role: "assistant", content: data.output }])
     setCoveMessage(data.output)
 
     // reset visitor input to blank

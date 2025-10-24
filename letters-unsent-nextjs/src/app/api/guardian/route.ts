@@ -5,12 +5,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN
 });
 
-let conversation = [
-  {
-      role: "system",
-      content: guardianSystemPrompt
-  },
-];
+// let conversation = [
+//   {
+//       role: "system",
+//       content: guardianSystemPrompt
+//   },
+// ];
 
 export async function GET(request: Request) {
     
@@ -35,26 +35,28 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
 
-  console.log(conversation);
+  // console.log(conversation);
 
   try {
-    const { visitorInput } = await request.json()
+    // const { visitorInput } = await request.json()
+    const { updatedConversation } = await request.json()
+    console.log("updated conversation:", updatedConversation)
 
-    conversation.push({
-      role: "user",
-      content: visitorInput,
-    });
+    // conversation.push({
+    //   role: "user",
+    //   content: visitorInput,
+    // });
 
     const GuardianResponse = await openai.responses.create({
         model: "gpt-4o-mini",
-        input: conversation,
+        input: updatedConversation,
         store: true, // disable later in prod
     });
 
-    conversation.push({
-      role: "assistant",
-      content: GuardianResponse.output_text,
-    });
+    // conversation.push({
+    //   role: "assistant",
+    //   content: GuardianResponse.output_text,
+    // });
 
     return Response.json({ output: GuardianResponse.output_text }) 
   } catch (error) {

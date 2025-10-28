@@ -33,6 +33,8 @@ export default function Submit() {
     },
   ]);
 
+  const [letterContent, setLetterContent] = useState("default letter content");
+
   // immediately on page load, guardian greets the visitor
   useEffect(() => {
 
@@ -76,6 +78,33 @@ export default function Submit() {
     setVisitorInput("")
   }
 
+  async function handleSubmitLetter(e) {
+    e.preventDefault()
+
+    console.log("submitting letter")
+
+    const letter = {
+      content: letterContent, 
+      intended_recipient: "",
+      author_name: "",
+      created_at: new Date().toISOString()
+    }
+
+    console.log(letter)
+
+    const res = await fetch("/api/supabase/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify( letter )
+    })
+
+    const data = await res.json()
+    console.log(data)
+
+  }
+
   return (
     <div>
 
@@ -90,6 +119,12 @@ export default function Submit() {
           setVisitorInput={setVisitorInput}
           handleSubmit={handleSubmit}
         />
+
+        <button
+          onClick={handleSubmitLetter}
+        >
+          Submit letter
+        </button>
 
     </div>
   );

@@ -33,7 +33,9 @@ export default function Submit() {
     },
   ]);
 
-  const [letterContent, setLetterContent] = useState("default letter content");
+  const [letterContent, setLetterContent] = useState("");
+  const [intendedRecipient, setIntendedRecipient] = useState("");
+  const [authorName, setAuthorName] = useState("");
 
   // immediately on page load, guardian greets the visitor
   useEffect(() => {
@@ -76,32 +78,12 @@ export default function Submit() {
 
     // reset visitor input to blank
     setVisitorInput("")
-  }
 
-  async function handleSubmitLetter(e) {
-    e.preventDefault()
+    // if user gives letter content
+      // setLetterContent(data.output)
 
-    console.log("submitting letter")
-
-    const letter = {
-      content: letterContent, 
-      intended_recipient: "",
-      author_name: "",
-      created_at: new Date().toISOString()
-    }
-
-    console.log(letter)
-
-    const res = await fetch("/api/supabase/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify( letter )
-    })
-
-    const data = await res.json()
-    console.log(data)
+    // if ConversationStage === "CONSENT" && visitorInput is normalised to yes, I want to release this letter to the public archive
+      // make call to api/supabase
 
   }
 
@@ -119,12 +101,6 @@ export default function Submit() {
           setVisitorInput={setVisitorInput}
           handleSubmit={handleSubmit}
         />
-
-        <button
-          onClick={handleSubmitLetter}
-        >
-          Submit letter
-        </button>
 
     </div>
   );

@@ -1,3 +1,5 @@
+"use client" 
+
 /* 
 -------------------------------------------------------------------------------------------------
 
@@ -6,9 +8,8 @@
 -------------------------------------------------------------------------------------------------
 */
 
-import styles from "./page.module.css";
-import { createClient } from '../utils/supabase/server'
-import { cookies } from 'next/headers'
+import NavBar from "@/components/NavBar";
+import { useState, useEffect } from "react";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -20,31 +21,55 @@ import { cookies } from 'next/headers'
 ------------------------------------------------------------------------------------------------- 
 */
 
-export default async function Home() {
+export default function Home() {
 
-  const supabase = await createClient()
+  const [letters, setLetters] = useState([])  
 
-  const { data: letters, error } = await supabase.from('letter').select()
+  useEffect(() => {
 
-  if (error) {
-    console.error("Supabase error:", error)
-  }
+    async function loadAllLetters() {
+
+      try {
+        const res = await fetch("/api/supabase", { method: "GET" })
+        const data = await res.json()
+        if (data.success) {
+          setLetters(data.letters)
+        } else {
+          console.error('Failed to load letters:', data.error)
+        }
+      } catch (err) {
+        console.error('Network error:', err)
+      }
+    }
+
+    loadAllLetters()
+
+  }, []);
 
   return (
     <div>
 
-      <ul>
-        {letters?.map((letter) => (
-          <li key={letter.id}>
+      <NavBar />
+
+      <ul className="letterDisplay">
+        {letters.length > 0 ? (
+          letters.map((letter) => (
+          <li 
+            className="letter"
+            key={letter.id}
+          >
 
             <div>
-              <h2>{letter.intendedRecipient}</h2>
+              <h2>{letter.intended_recipient}</h2>
               <p>{letter.created_at}</p>
               <p>{letter.content}</p>
             </div>
           </li>
           
-        ))}
+        ))
+        ) : (
+          <p>Loading letteers...</p>
+        )}
       </ul>
 
     </div>

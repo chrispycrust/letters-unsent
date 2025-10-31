@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from '@/utils/supabase/server'
 
+// retrieves all letters from landing page
 export async function GET() {
 
     const supabase = await createClient()
@@ -24,7 +25,6 @@ export async function GET() {
 }
 
 // insert a new row into the letters table 
-
 export async function POST(request: Request) {
 
     const supabase = await createClient()

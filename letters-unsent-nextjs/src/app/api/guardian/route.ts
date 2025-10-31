@@ -5,14 +5,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN
 });
 
-enum ConversationStage {
-  "GREETING",
-  "WRITING",
-  "REFLECTION",
-  "CONSENT",
-  "RELEASE"
-}
-
 const tools = [
   {
     type: "function",
@@ -41,7 +33,6 @@ const tools = [
   }
 ];
 
-// define function the model will call when at the right time
 async function submit_to_supabase(args) {
 
   console.log("Object received from model:", args);
@@ -107,7 +98,6 @@ export async function GET(request: Request) {
 
   return Response.json({ output: GuardianResponse.output_text }) 
 }
-
 
 export async function POST(request: Request) {
 

@@ -1,5 +1,5 @@
 :root {
-  --background: #ffffff;
+  --background: #90f0ff;
   --foreground: #171717;
 }
 
@@ -29,6 +29,10 @@ body {
   padding: 0;
   margin: 0;
 }
+  
+main {
+  background-color: beige;
+}
 
 a {
   color: inherit;
@@ -45,7 +49,13 @@ ul {
   list-style: none;
 }
 
-.navbar, ul.letterDisplay {
+.body-exc-navbar {
+  background-color: bisque;
+  margin: 0 80px;
+  padding: 0;
+}
+
+.navbar, .letterDisplay {
   padding: 30px;
 }
 
@@ -56,6 +66,15 @@ ul {
   margin-bottom: 2em;
 }
 
-ul.letterDisplay li.letter {
-  margin-bottom: 1.5rem;
+.letterDisplay {
+  padding: 0;
+}
+
+.letter {
+  padding: 30px;
+}
+
+.letter:hover {
+  background-color: rgb(135, 255, 253);
+  padding: 30px;
 }

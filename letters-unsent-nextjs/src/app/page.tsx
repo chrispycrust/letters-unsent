@@ -10,6 +10,7 @@
 
 import NavBar from "@/components/NavBar";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -51,27 +52,30 @@ export default function Home() {
 
       <NavBar />
 
-      <ul className="letterDisplay">
-        {letters.length > 0 ? (
-          letters.map((letter) => (
-          <li 
-            className="letter"
-            key={letter.id}
-          >
+      <div className="body-exc-navbar">
+        <div className="letterDisplay">
+        
+          {letters.length > 0 ? (
 
-            <div>
-              <h2>{letter.intended_recipient}</h2>
-              <p>{letter.created_at}</p>
-              <p>{letter.content}</p>
-            </div>
-          </li>
-          
-        ))
-        ) : (
-          <p>Loading letteers...</p>
-        )}
-      </ul>
+            letters.map((letter) => (
 
+              <Link 
+                href={`/${letter.id}`}
+                key={letter.id}
+              >
+                <div className="letter">
+                  <h2>{letter.intended_recipient}</h2>
+                  <p>{letter.created_at}</p>
+                  <p>{letter.content}</p>
+                </div>
+              </Link>
+            
+            ))
+          ) : (
+            <p>Loading letteers...</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -8,6 +8,7 @@
 -------------------------------------------------------------------------------------------------
 */
 
+import NavBar from "@/components/NavBar";
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
 import { useEffect, useState } from "react";
@@ -79,29 +80,25 @@ export default function Submit() {
     // reset visitor input to blank
     setVisitorInput("")
 
-    // if user gives letter content
-      // setLetterContent(data.output)
-
-    // if ConversationStage === "CONSENT" && visitorInput is normalised to yes, I want to release this letter to the public archive
-      // make call to api/supabase
-
   }
 
   return (
-    <div>
+      <div>
 
-        <h1>Submit a letter</h1>
+          <NavBar />
 
-        <GuardianPanel
-          message={coveMessage}
-        />
+          <h1>Submit a letter</h1>
 
-        <VisitorPanel
-          visitorInput={visitorInput}
-          setVisitorInput={setVisitorInput}
-          handleSubmit={handleSubmit}
-        />
+          <GuardianPanel
+            message={coveMessage}
+          />
 
-    </div>
+          <VisitorPanel
+            visitorInput={visitorInput}
+            setVisitorInput={setVisitorInput}
+            handleSubmit={handleSubmit}
+          />
+
+      </div>
   );
 }

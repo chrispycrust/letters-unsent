@@ -40,3 +40,22 @@ a {
     color-scheme: dark;
   }
 }
+
+ul {
+  list-style: none;
+}
+
+.navbar, ul.letterDisplay {
+  padding: 30px;
+}
+
+.navbar {
+  background-color: rgb(221, 221, 221);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2em;
+}
+
+ul.letterDisplay li.letter {
+  margin-bottom: 1.5rem;
+}

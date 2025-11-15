@@ -18,11 +18,6 @@ export default async function LetterPage({
   return (
     <div>
         <NavBar />
-
-        <button>
-          Update letter
-        </button>
-
         <div>
             <h2>{data.letter[0].intended_recipient}</h2>
             <p>{data.letter[0].created_at}</p>

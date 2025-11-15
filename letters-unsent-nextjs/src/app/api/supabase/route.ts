@@ -16,7 +16,7 @@ export async function GET() {
             console.error("Supabase error:", error)
         }
 
-        return NextResponse.json({ success: true, letters })
+        return NextResponse.json({ success: true, letters: letters ?? []})
 
     } catch (error) {
         console.error("Supabase error:", error)

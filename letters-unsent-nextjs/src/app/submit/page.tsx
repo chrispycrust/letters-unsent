@@ -84,9 +84,6 @@ export default function Submit() {
 
   return (
       <div>
-
-          <NavBar />
-
           <h1>Submit a letter</h1>
 
           <GuardianPanel
@@ -98,7 +95,6 @@ export default function Submit() {
             setVisitorInput={setVisitorInput}
             handleSubmit={handleSubmit}
           />
-
       </div>
   );
 }

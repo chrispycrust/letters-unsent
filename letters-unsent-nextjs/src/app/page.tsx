@@ -11,6 +11,7 @@
 import NavBar from "@/components/NavBar";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -59,8 +60,6 @@ export default function Home() {
 
   return (
     <div>
-
-      <NavBar />
 
       <div className="body-exc-navbar">
         <div className="letterDisplay">

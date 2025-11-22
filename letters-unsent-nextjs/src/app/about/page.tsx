@@ -30,7 +30,7 @@ export default function About() {
             </ul>
 
             <p>
-                But I wanted to amplify and honour such personal experiences through a dedicated home built according to my own vision. The Unsent Project also focuses on only texts never sent, specifically in a romantic context. 
+                But I wanted to amplify and honour such personal experiences through a dedicated home built according to my own vision while also learning hands-on experience with full stack (leaning towards front end) development. The Unsent Project also focuses on only texts never sent, specifically in a romantic context. 
                 I wanted to capture a diversity of human experiences—our great loves aren’t limited to romance but extend to friendships, family, neighbours, even complete strangers. 
             </p><p>
                 There’s also something uniquely powerful about letters; their inherent introspection, the way they demand our full attention make them stand apart in a world dominated by fleeting tweets, short texts, and split-second engagements. 
@@ -78,7 +78,7 @@ export default function About() {
                 Engineer (code) but still an artist at heart, and writer of several letters myself. You can get more insight about me on my personal website <Link href="https://www.bychristine.au/">here</Link>.
             </p>
             <p>
-                Feel free to reach me via <strong>cngu5872@protonmail.com</strong>, or any of my social media outlets.
+                Feel free to reach me via <strong>cngu5872@protonmail.com</strong> @letters-unsent.com, or any of my social media outlets.
             </p>
 
         </div>  

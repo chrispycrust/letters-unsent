@@ -84,3 +84,22 @@ a {
   background-color: rgb(135, 255, 253);
   padding: 30px;
 }
+
+@keyframes spin {
+  from {
+    transform:
+      scale(1)
+  }
+  to {
+    transform:
+      scale(1.5)
+  }
+}
+
+.spinner {
+  background: orange;
+  border-radius: 50%;
+  width: 0.8em;
+  height: 0.8em;
+  animation: spin 1000ms linear infinite;
+}

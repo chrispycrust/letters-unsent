@@ -11,6 +11,7 @@
 import NavBar from "@/components/NavBar";
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
+import Spinner from "@/components/Spinner";
 import { useEffect, useState } from "react";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 
@@ -85,6 +86,8 @@ export default function Submit() {
   return (
       <div>
           <h1>Submit a letter</h1>
+
+          <Spinner />
 
           <GuardianPanel
             message={coveMessage}

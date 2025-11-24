@@ -11,7 +11,6 @@
 import NavBar from "@/components/NavBar";
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
-import Spinner from "@/components/Spinner";
 import { useEffect, useState } from "react";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 
@@ -38,6 +37,7 @@ export default function Submit() {
   const [letterContent, setLetterContent] = useState("");
   const [intendedRecipient, setIntendedRecipient] = useState("");
   const [authorName, setAuthorName] = useState("");
+  const [responseOk, setResponseOk] = useState(false)
 
   // immediately on page load, guardian greets the visitor
   useEffect(() => {
@@ -51,8 +51,13 @@ export default function Submit() {
       const visitCount = localStorage.getItem("visitCount")
       const res = await fetch(`/api/guardian?&visitCount=${visitCount}`)
 
+      if (res.ok === true) {
+        setResponseOk(true);
+      }
+
       // Step 2: Fetch Cove's message
       const data = await res.json()
+
       setCoveMessage(data.output)
     }
     greetVisitor()
@@ -61,6 +66,8 @@ export default function Submit() {
 
   async function handleSubmit(e) {
     e.preventDefault() // stops the default page reload
+
+    setResponseOk(false);
 
     const updatedConversation = [...conversation, { role: "user", content: visitorInput }]
 
@@ -72,6 +79,12 @@ export default function Submit() {
       },
       body: JSON.stringify( {updatedConversation} )
     })
+
+    if (res.ok === false) {
+      setCoveMessage("")
+    } else {
+      setResponseOk(true);
+    }
 
     // update Cove's message with new response
     const data = await res.json()
@@ -87,10 +100,9 @@ export default function Submit() {
       <div>
           <h1>Submit a letter</h1>
 
-          <Spinner />
-
           <GuardianPanel
             message={coveMessage}
+            responseStatus={responseOk}
           />
 
           <VisitorPanel

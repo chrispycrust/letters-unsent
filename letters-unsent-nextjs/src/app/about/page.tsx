@@ -54,7 +54,18 @@ export default function About() {
                     submit letters containing: violent, hateful, threatening, harrassment, illicit, self-harming, sexual material involving minors
                 </li>
             </ul>
-            <p>Submission of this type of content will be prevented. If you're convinced your letter doesn't violate any of the above guidelines but still have issues submitting, please reach out to me personally via the contact below.</p>
+            <p>Submission of this type of content will be prevented.
+
+            </p><p>
+                Please reach out to me personally if you come across these situations:
+            </p>
+            <ul>
+                <li>
+                    If you're convinced your letter doesn't violate any of the above guidelines but still have issues submitting.
+                </li><li>
+                    If you read a letter and thinks it should not be displayed publicly
+                </li>
+            </ul>
 
             {/* -------------------------------------------------------- */}
 
@@ -62,7 +73,7 @@ export default function About() {
                 Roadmap & Features
             </h2>
             <p>
-                I'm currently expanding the ability to <strong>update</strong> and <strong>delete</strong> submitted letters anonymously in v2.0.
+                I'm currently expanding the ability to <strong>update</strong> and <strong>delete</strong> submitted letters anonymously in v1.1.
             </p><p>
                 If you want to see what I've planned for the patform, please see my <Link href="https://chrispycrust.notion.site/Letters-Unsent-Solo-Scrum-Board-d5e248a545a7494ba36961b0daec45cc">solo sprint board</Link>.
             </p><p>

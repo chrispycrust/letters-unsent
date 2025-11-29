@@ -11,6 +11,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
+import ErrorDisplay from "@/components/ErrorDisplay";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -26,6 +27,7 @@ export default function Home() {
 
   const [letters, setLetters] = useState([])
   const [responseOk, setResponseOk] = useState(false)  
+  const [ErrorMessage, setErrorMessage] = useState("")
 
   async function loadAllLetters() {
     try {
@@ -40,14 +42,18 @@ export default function Home() {
 
       const data = await res.json()
 
+      console.log("load letters:", data)
+
       if (data.success) {
         setLetters(data.letters)
       } else {
         console.error('Failed to load letters:', data.error)
+        setErrorMessage(`Failed to load letters: ${data.error}`)
       }
 
     } catch (err) {
       console.error('Network error:', err)
+      setErrorMessage(`Network error: ${err}`)
     }
   }
 
@@ -61,6 +67,10 @@ export default function Home() {
       return <Spinner />
     } else if (letters.length === 0) {
       return <p>No letters</p>
+    } else if (ErrorMessage != "") {
+      return <ErrorDisplay 
+        message={ErrorMessage}
+      />
     } else {
       return letters.map((Letter) => (
         <Link 

@@ -42,19 +42,40 @@ export default function About() {
             {/* -------------------------------------------------------- */}
 
             <h2>
+                Privacy & Safety
+            </h2>
+            <p>
+                Anonymity and consent is highly important. None of your details are stored on this website other than what you choose to share. Nothing is tracked.
+            </p>
+
+            {/* -------------------------------------------------------- */}
+
+            <h2>
                 Submission Guidelines
             </h2>
             <p>
-                All letters of any content and tones are welcome on this website. However, you cannot:
+                I want to honour letters of a diverse range of content and tones on this website. However, this is also a public space. You cannot:
             </p>
             <ul>
                 <li>
-                    publicly share someone else's personal details like address, phone number, email etc
+                    publicly share identifying sensitive details without consent (for example: what appears to be full names, addresses, phone numbers, emails etc)
                 </li><li>
-                    submit letters containing: violent, hateful, threatening, harrassment, illicit, self-harming, sexual material involving minors
+                    explicit sexual content with anatomical detail intended to arouse or excite (pornographic material) - there are other platforms for that already
+                </li><li>
+                    descriptions of non-consensual activity
+                </li><li>
+                    graphic descriptions of violent or traumatic detail
+                </li><li>
+                    hate speech or extremist praise
+                </li><li>
+                    suicidal intentions or thoughts or self-harm instructions
+                </li><li>
+                    any of the above involving minors
+                </li><li>
+                    any combination of the above
                 </li>
             </ul>
-            <p>Submission of this type of content will be prevented.
+            <p>Attempted submissions of this type of content will be prevented.
 
             </p><p>
                 Please reach out to me personally if you come across these situations:
@@ -64,6 +85,8 @@ export default function About() {
                     If you're convinced your letter doesn't violate any of the above guidelines but still have issues submitting.
                 </li><li>
                     If you read a letter and thinks it should not be displayed publicly
+                </li><li>
+                    If you're convinced any of the disallowed content above should be reconsidered
                 </li>
             </ul>
 
@@ -86,10 +109,10 @@ export default function About() {
                 Creator & Contact
             </h2>
             <p>
-                Engineer (code) but still an artist at heart, and writer of several letters myself. You can get more insight about me on my personal website <Link href="https://www.bychristine.au/">here</Link>.
+                Engineer (code) but still an artist at heart, and writer of several letters myself. You can find out more about me on my personal website <Link href="https://www.bychristine.au/">here</Link>.
             </p>
             <p>
-                Feel free to reach me via <strong>cngu5872@protonmail.com</strong> @letters-unsent.com, or any of my social media outlets.
+                Feel free to reach me via <strong>letters-unsent@protonmail.com</strong>, or any of my social media outlets.
             </p>
 
         </div>  

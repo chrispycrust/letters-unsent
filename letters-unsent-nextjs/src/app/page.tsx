@@ -12,6 +12,7 @@ import NavBar from "@/components/NavBar";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import Spinner from "@/components/Spinner";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -32,7 +33,8 @@ type Letter = {
 
 export default function Home() {
 
-  const [letters, setLetters] = useState([])  
+  const [letters, setLetters] = useState([])
+  const [responseOk, setResponseOk] = useState(false)  
 
   async function loadAllLetters() {
     try {
@@ -40,6 +42,10 @@ export default function Home() {
       const res = await fetch("/api/supabase", { 
         method: "GET" 
       })
+
+      if (res.ok === true) {
+        setResponseOk(true)
+      }
 
       const data = await res.json()
 
@@ -58,31 +64,36 @@ export default function Home() {
     loadAllLetters()
   }, []);
 
+  function determineLetterDisplay() {
+
+    if (responseOk === false) {
+      return <Spinner />
+    } else if (letters.length === 0) {
+      return <p>No letters</p>
+    } else {
+      return letters.map((Letter) => (
+        <Link 
+          href={`/${Letter.id}`}
+          key={Letter.id}
+        >
+          <div className="letter">
+            <h2>{Letter.intended_recipient}</h2>
+            <p>{Letter.created_at}</p>
+            <p>{Letter.content}</p>
+          </div>
+        </Link>
+      ))
+    }
+
+  }
+
   return (
     <div>
 
       <div className="body-exc-navbar">
         <div className="letterDisplay">
 
-          {
-            letters.length === 0 ? (
-              <p>No letters</p>
-            ) : (
-
-              letters.map((Letter) => (
-                <Link 
-                  href={`/${Letter.id}`}
-                  key={Letter.id}
-                >
-                  <div className="letter">
-                    <h2>{Letter.intended_recipient}</h2>
-                    <p>{Letter.created_at}</p>
-                    <p>{Letter.content}</p>
-                  </div>
-                </Link>
-              ))
-            )
-          }
+          { determineLetterDisplay() }
 
         </div>
       </div>

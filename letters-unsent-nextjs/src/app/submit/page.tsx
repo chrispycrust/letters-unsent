@@ -8,7 +8,6 @@
 -------------------------------------------------------------------------------------------------
 */
 
-import NavBar from "@/components/NavBar";
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
 import { useEffect, useState } from "react";
@@ -34,9 +33,6 @@ export default function Submit() {
     },
   ]);
 
-  const [letterContent, setLetterContent] = useState("");
-  const [intendedRecipient, setIntendedRecipient] = useState("");
-  const [authorName, setAuthorName] = useState("");
   const [responseOk, setResponseOk] = useState(false)
 
   // immediately on page load, guardian greets the visitor

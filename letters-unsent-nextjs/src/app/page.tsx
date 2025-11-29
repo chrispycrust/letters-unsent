@@ -8,10 +8,8 @@
 -------------------------------------------------------------------------------------------------
 */
 
-import NavBar from "@/components/NavBar";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Footer from "@/components/Footer";
 import Spinner from "@/components/Spinner";
 
 /* 
@@ -23,13 +21,6 @@ import Spinner from "@/components/Spinner";
 
 ------------------------------------------------------------------------------------------------- 
 */
-
-type Letter = {
-  intendedRecipient: string;
-  createdAt: Date;
-  content: string;
-  authorName: string;
-}
 
 export default function Home() {
 

@@ -23,14 +23,13 @@ export default function NavBar() {
   return (
     <nav className="navbar">
       <Link href="/">Letters Unsent</Link>
-      <ul className="navLinks">
-        <li>
+      <div className="nav-links">
+        <div>
           <Link href="/submit">Release A Letter</Link>
-        </li>
-        <li>
+        </div><div>
           <Link href="/about">About</Link>
-        </li>
-      </ul>
+        </div>
+      </div>
     </nav>
   );
 };

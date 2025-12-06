@@ -16,13 +16,19 @@ export default async function LetterPage({
     console.log("letter return on client side: ", data)
  
   return (
-    <div>
-        <div>
-            <h2>{data.letter[0].intended_recipient}</h2>
-            <p>{data.letter[0].created_at}</p>
-            <p>{data.letter[0].content}</p>
-            <p>{data.letter[0].author_name}</p>
-        </div>
+    <div className="single-letter-container">
+      <div className="single-letter">
+          <p className="single-letter-date">
+            {data.letter[0].created_at}
+          </p>
+          <h2>
+            {data.letter[0].intended_recipient}
+          </h2> 
+          <p className="single-letter-content">
+            {data.letter[0].content}
+          </p>
+          <p>{data.letter[0].author_name}</p>
+      </div>
     </div>
   )
 }

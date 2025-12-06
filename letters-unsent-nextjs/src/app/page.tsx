@@ -64,13 +64,18 @@ export default function Home() {
   function determineLetterDisplay() {
 
     if (responseOk === false) {
-      return <Spinner />
+      return <div className="spinner-container">
+                <Spinner />
+              </div>
+
     } else if (letters.length === 0) {
       return <p>No letters</p>
+
     } else if (ErrorMessage != "") {
       return <ErrorDisplay 
-        message={ErrorMessage}
-      />
+                message={ErrorMessage}
+              />
+
     } else {
       return letters.map((Letter) => (
         <Link 
@@ -84,21 +89,18 @@ export default function Home() {
           </div>
         </Link>
       ))
+
     }
 
   }
 
+  // -------------------------------------------------------------------------------------------------
+  //     RETURN
+  // -------------------------------------------------------------------------------------------------
+
   return (
-    <div>
-
-      <div className="body-exc-navbar">
-        <div className="letterDisplay">
-
-          { determineLetterDisplay() }
-
-        </div>
-      </div>
-
+    <div className="letter-display">
+      { determineLetterDisplay() }
     </div>
   );
 }

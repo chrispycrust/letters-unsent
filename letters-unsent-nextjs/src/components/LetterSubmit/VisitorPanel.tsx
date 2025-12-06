@@ -23,19 +23,17 @@ export default function VisitorPanel({
         >
             <textarea 
                 id="VisitorInput" 
-                required 
-                style={{
-                    height: "200px"
-                }}
+                required
                 value={visitorInput}
                 onChange={(e) => setVisitorInput(e.target.value)}
+                className="visitor-panel"
             >
             </textarea>
             <button 
                 type="submit" 
                 value="submit"
             >
-                Submit
+                respond
             </button>
         </form>
 

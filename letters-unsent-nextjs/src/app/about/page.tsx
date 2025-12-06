@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function About() {
     return (
-        <div>
+        <div className="aboutSection">
             <h1>
                 About Letters Unsent
             </h1>

@@ -10,11 +10,7 @@ export default function GuardianPanel({
     responseStatus 
 }: GuardianPanelProps) {
     return (
-        <div style={{
-            backgroundColor: 'yellow',
-            height: 200
-        }}
-        >
+        <div className="guardian-panel">
             {
                 responseStatus === false ? (
                     <Spinner />

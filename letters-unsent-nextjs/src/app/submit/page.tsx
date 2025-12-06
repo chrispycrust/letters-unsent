@@ -121,9 +121,7 @@ export default function Submit() {
   }
 
   return (
-      <div>
-          <h1>Submit a letter</h1>
-
+      <div className="submit-container">
           <ErrorDisplay 
             message={ErrorMessage}
           />

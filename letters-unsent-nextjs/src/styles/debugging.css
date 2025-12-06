@@ -1,0 +1,72 @@
+html {
+    background-color: rgb(252, 53, 169);
+}
+
+body {
+    
+    background-color: rgb(190, 228, 182);
+}
+
+main {
+  background-color: rgb(25, 102, 226);
+}
+
+.aboutSection a {
+  color: rgb(255, 153, 0);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+} */
+
+.navbar, .footer {
+  background-color: rgb(23, 226, 77);
+}
+
+.navbar {
+  margin-bottom: 2em;
+}
+
+.footer {
+  margin-top: 1em;
+}
+
+.footer p {
+  background-color: rgb(134, 255, 245);
+}
+
+.nav-links {
+  background-color: rgb(147, 147, 147);
+}
+
+.navbar a:hover {
+  background-color: aquamarine;
+}
+
+.submit-container {
+  background-color: indianred;
+}
+
+.single-letter-container {
+  background-color: green;
+}
+
+.letter-display {
+  background-color: mediumslateblue;
+}
+
+@media (width <= 375px) {
+
+  .letter {
+    background-color: rgb(210, 134, 41);
+  }
+
+
+}
+
+@media (max-width > 375px) {
+
+
+}

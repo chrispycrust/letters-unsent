@@ -83,9 +83,19 @@ export default function Home() {
           key={Letter.id}
         >
           <div className="letter">
-            <h2>{Letter.intended_recipient}</h2>
-            <p>{Letter.created_at}</p>
-            <p>{Letter.content}</p>
+            {
+              ( Letter.intended_recipient === "" || Letter.intended_recipient === null )? (
+                <p className="letter-no-recipient">
+                  {Letter.content}
+                </p>
+              ) : (
+                <>
+                  <h2>{Letter.intended_recipient}</h2>
+                  <p>{Letter.content}</p>
+                </>
+              )
+            }
+            
           </div>
         </Link>
       ))

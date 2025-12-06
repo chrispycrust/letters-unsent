@@ -8,7 +8,9 @@ export async function GET() {
 
     try {
 
-        const { data: letters, error } = await supabase.from('letter').select()
+        const { data: letters, error } = await supabase
+            .from('letter').select()
+            .order('created_at', { ascending: false })
 
         console.log(letters);
 

@@ -41,7 +41,7 @@ export default async function LetterPage({
                   <h2>
                     {data.letter[0].intended_recipient}
                   </h2> 
-                  <div>
+                  <div className="letter-content-container">
                     {
                       generateParagraphs(data.letter[0].content).map( paragraph => (
                         <p>{paragraph}</p>
@@ -56,7 +56,8 @@ export default async function LetterPage({
               ( data.letter[0].author_name === "" || data.letter[0].author_name === null ) ? (
                 <></>
               ) : (
-                <p>{data.letter[0].author_name}</p>
+                <p className="sign-off">— {data.letter[0].author_name}
+                </p>
               )
             }
 

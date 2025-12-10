@@ -170,7 +170,9 @@ p.letter-no-recipient {
 }
 
 .single-letter-content, 
-.single-letter-content-no-recipient {
+.letter-content-container,
+.single-letter-content-no-recipient,
+.sign-off {
   text-align: left;
 }
 

@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
+import { convertDate, generateParagraphs } from "@/utils/functions"
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -85,13 +86,23 @@ export default function Home() {
           <div className="letter">
             {
               ( Letter.intended_recipient === "" || Letter.intended_recipient === null )? (
-                <p className="letter-no-recipient">
-                  {Letter.content}
-                </p>
+                <div className="letter-no-recipient">
+                  {
+                    generateParagraphs(Letter.content).map( paragraph => (
+                      <p>{paragraph}</p>
+                    ))
+                  }
+                </div>
               ) : (
                 <>
                   <h2>{Letter.intended_recipient}</h2>
-                  <p>{Letter.content}</p>
+                  <div>
+                    {
+                      generateParagraphs(Letter.content).map( paragraph => (
+                        <p>{paragraph}</p>
+                      ))
+                    }
+                  </div>
                 </>
               )
             }

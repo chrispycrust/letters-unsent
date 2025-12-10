@@ -1,7 +1,7 @@
 
 import { Suspense } from "react";
 import Spinner from "@/components/Spinner"
-import { convertDate } from "@/utils/functions"
+import { convertDate, generateParagraphs } from "@/utils/functions"
 
 export default async function LetterPage({
   params,
@@ -29,17 +29,25 @@ export default async function LetterPage({
 
             {
               ( data.letter[0].intended_recipient === "" || data.letter[0].intended_recipient === null )? (
-                <p className="single-letter-content-no-recipient">
-                  {data.letter[0].content}
-                </p>
+                <div className="single-letter-content-no-recipient">
+                  {
+                    generateParagraphs(data.letter[0].content).map( paragraph => (
+                      <p>{paragraph}</p>
+                    ))
+                  }
+                </div>
               ) : (
                 <>
                   <h2>
                     {data.letter[0].intended_recipient}
                   </h2> 
-                  <p className="single-letter-content">
-                    {data.letter[0].content}
-                  </p>
+                  <div>
+                    {
+                      generateParagraphs(data.letter[0].content).map( paragraph => (
+                        <p>{paragraph}</p>
+                      ))
+                    }
+                  </div>
                 </>
               )
             }

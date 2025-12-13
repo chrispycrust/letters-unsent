@@ -1,7 +1,21 @@
+/* 
+-------------------------------------------------------------------------------------------------
 
-import { Suspense } from "react";
-import Spinner from "@/components/Spinner"
+  IMPORTS
+
+-------------------------------------------------------------------------------------------------
+*/
+
 import { convertDate, generateParagraphs } from "@/utils/functions"
+
+/* 
+-------------------------------------------------------------------------------------------------
+  
+  PURPOSE 
+  Dynamic segment display single letter
+
+------------------------------------------------------------------------------------------------- 
+*/
 
 export default async function LetterPage({
   params,
@@ -19,7 +33,6 @@ export default async function LetterPage({
   return (
     <>
       <div className="single-letter-container">
-        <Suspense fallback={<Spinner />}>
           <div className="single-letter">
             <p className="single-letter-date">
               {convertDate(data.letter[0].created_at)}
@@ -62,7 +75,6 @@ export default async function LetterPage({
             }
 
           </div>
-        </Suspense>
         <p className="timestamp">{data.letter[0].created_at}</p>
       </div>
     </>

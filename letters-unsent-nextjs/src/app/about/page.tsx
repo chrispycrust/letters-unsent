@@ -47,6 +47,11 @@ export default function About() {
             <p>
                 Anonymity and consent is highly important. None of your details are stored on this website other than what you choose to share. Nothing is tracked.
             </p>
+            <p>
+                Please don't share anything on this website if you think you might want to edit or delete it later. 
+                I can't delete anything that you can't prove is yours. 
+                Ability to edit and delete anonymously will be worked on in the next iteration. (See "Roadmap & Features" section below.)
+            </p>
 
             {/* -------------------------------------------------------- */}
 

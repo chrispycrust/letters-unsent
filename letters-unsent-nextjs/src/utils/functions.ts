@@ -17,8 +17,14 @@ export function truncateContent(letterContent: string) {
 
   let letterArray = letterContent.split(" ")
 
-  // insert screen width detection later
-  let wordLimit: number = 100
+  // insert screen width detection later to determine wordlimit
+    // if screen width is mobile
+      // then wordLimit = number
+    let wordLimit: number = 100
+    // if screen width is tablet 
+      // then word limit = number 
+    // etc ...
+
   let indexPositions: Array<number> = []
   let fromIndex: number = 0
   let indexPosition: number = 0
@@ -42,6 +48,8 @@ export function truncateContent(letterContent: string) {
 
     return newletterContent;
   }
+
+  // if the original letter doesn't exceed wordlimit for screen width, print as is
   return letterContent;
 
 }

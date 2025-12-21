@@ -3,6 +3,7 @@
   --foreground: #171717;
   --accent: rgb(190, 228, 182);
   --font-size: 1em;
+  --release-font-size: 1.2em;
   --shadow-color: 0deg 0% 59%;
   --shadow-elevation-low:
     0px 0.7px 0.8px hsl(var(--shadow-color) / 0.34),
@@ -209,16 +210,14 @@ p.timestamp {
 }
 
 .single-letter-content-container-with-recipient,
-.single-letter-content-no-recipient,
-.guardian-panel p,
-.visitor-panel {
+.single-letter-content-no-recipient {
   line-height: calc(var(--font-size) * 1.5);
 }
 
-.guardian-panel p,
+.guardian-panel,
 .visitor-panel {
-  font-size: 1.2em;
-  line-height: calc(1.2em * 1.5);
+  font-size: var(--release-font-size);
+  line-height: calc(var(--release-font-size) * 1.5);
 }
 
 @keyframes spin {

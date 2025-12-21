@@ -9,15 +9,16 @@ export default function GuardianPanel({
     message, 
     responseStatus 
 }: GuardianPanelProps) {
+
     return (
         <div className="guardian-panel">
             {
                 responseStatus === false ? (
                     <Spinner />
                  ) : (
-                    <p>
+                    <div className="preserve-breaks">
                         {message}
-                    </p>
+                    </div>
                 )
             }
         </div>

@@ -13,14 +13,14 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url)
         const letterId = searchParams.get("letterId")
 
-        console.log("letterId retrieved:", letterId)
+        // console.log("letterId retrieved:", letterId)
 
         const { data: letter, error } = await supabase
             .from("letter")
             .select()
             .eq("id", letterId)
 
-        console.log(letter);
+        // console.log(letter);
 
         if (error) {
             console.error("Supabase error:", error)

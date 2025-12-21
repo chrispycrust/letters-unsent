@@ -12,8 +12,6 @@ export async function GET() {
             .from('letter').select()
             .order('created_at', { ascending: false })
 
-        console.log(letters);
-
         if (error) {
             console.error("Supabase error:", error)
         }

@@ -67,7 +67,8 @@ export default async function LetterPage({
               ( data.letter[0].author_name === "" || data.letter[0].author_name === null ) ? (
                 <></>
               ) : (
-                <p className="sign-off">— {data.letter[0].author_name}
+                <p className="sign-off">
+                  <br></br>— {data.letter[0].author_name}
                 </p>
               )
             }

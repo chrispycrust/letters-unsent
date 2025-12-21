@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import { convertDate, generateParagraphs } from "@/utils/functions"
+import { convertDate, generateParagraphs, truncateContent } from "@/utils/functions"
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -86,22 +86,22 @@ export default function Home() {
           <div className="letter">
             {
               ( Letter.intended_recipient === "" || Letter.intended_recipient === null )? (
-                <div className="letter-no-recipient">
-                  {
-                    generateParagraphs(Letter.content).map( paragraph => (
-                      <p>{paragraph}</p>
-                    ))
-                  }
+                <div className="
+                  single-letter-content-no-recipient-on-display-page 
+                  preserve-breaks
+                  single-letter-on-display-page-margin-bottom
+                ">
+                  {truncateContent(Letter.content)}
                 </div>
               ) : (
                 <>
                   <h2>{Letter.intended_recipient}</h2>
-                  <div>
-                    {
-                      generateParagraphs(Letter.content).map( paragraph => (
-                        <p>{paragraph}</p>
-                      ))
-                    }
+                  <div className="
+                    single-letter-content-container-with-recipient 
+                    preserve-breaks 
+                    single-letter-on-display-page-margin-bottom
+                  ">
+                    {truncateContent(Letter.content)}
                   </div>
                 </>
               )

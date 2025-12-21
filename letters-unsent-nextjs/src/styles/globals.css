@@ -2,6 +2,7 @@
   --background: #f3f1df;
   --foreground: #171717;
   --accent: rgb(190, 228, 182);
+  --font-size: 1em;
   --shadow-color: 0deg 0% 59%;
   --shadow-elevation-low:
     0px 0.7px 0.8px hsl(var(--shadow-color) / 0.34),
@@ -138,8 +139,8 @@ a {
   box-shadow: var(--shadow-elevation-low)
 }
 
-p.letter-no-recipient {
-  margin-top: 30px;
+.preserve-breaks {
+  white-space: pre-line;
 }
 
 .letter:hover {
@@ -170,7 +171,7 @@ p.letter-no-recipient {
 }
 
 .single-letter-content, 
-.letter-content-container,
+.single-letter-content-container-with-recipient,
 .single-letter-content-no-recipient,
 .sign-off {
   text-align: left;
@@ -178,6 +179,14 @@ p.letter-no-recipient {
 
 .single-letter-content-no-recipient {
   margin-top: 50px;
+}
+
+.single-letter-content-no-recipient-on-display-page {
+  margin-top: 2rem;
+}
+
+.single-letter-on-display-page-margin-bottom {
+  margin-bottom: 2rem;
 }
 
 p.timestamp {
@@ -197,6 +206,13 @@ p.timestamp {
   align-items: center;
   min-height: 50px;
   margin-bottom: 20px;
+}
+
+.single-letter-content-container-with-recipient,
+.single-letter-content-no-recipient,
+.guardian-panel p,
+.visitor-panel {
+  line-height: calc(var(--font-size) * 1.5);
 }
 
 .guardian-panel p,

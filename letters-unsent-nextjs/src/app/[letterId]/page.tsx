@@ -42,24 +42,16 @@ export default async function LetterPage({
 
             {
               ( data.letter[0].intended_recipient === "" || data.letter[0].intended_recipient === null )? (
-                <div className="single-letter-content-no-recipient">
-                  {
-                    generateParagraphs(data.letter[0].content).map( paragraph => (
-                      <p>{paragraph}</p>
-                    ))
-                  }
+                <div className="single-letter-content-no-recipient preserve-breaks">
+                  {data.letter[0].content}
                 </div>
               ) : (
                 <>
                   <h2>
                     {data.letter[0].intended_recipient}
                   </h2> 
-                  <div className="letter-content-container">
-                    {
-                      generateParagraphs(data.letter[0].content).map( paragraph => (
-                        <p>{paragraph}</p>
-                      ))
-                    }
+                  <div className="single-letter-content-container-with-recipient preserve-breaks">
+                    {data.letter[0].content}
                   </div>
                 </>
               )

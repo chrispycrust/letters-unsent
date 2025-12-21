@@ -11,24 +11,55 @@ export function convertDate(retrievedDate: Date) {
     return date.toLocaleDateString(undefined, options)
 }
 
-export function generateParagraphs(letterContent: string) {
+/* Function: truncate letter content on display page that are too long */
+export function truncateContent(letterContent: string) {
 
-      let paragraphArray: Array<string> = []
+  let letterArray = letterContent.split(" ")
+  // console.log("letter array after splitting into words:", letterArray)
 
-      const searchPhrase = '\n'
+  let wordLimit: number = 100
 
-      let indexes: Array<number> = [0,];
-      let startIndex = 0;
-      let index;
+  let indexPositions: Array<number> = []
+  let fromIndex: number = 0
+  let indexPosition: number = 0
 
-      while ((index = letterContent.indexOf(searchPhrase, startIndex)) !== -1) {
-        indexes.push(index);
-        startIndex = index + 1 + searchPhrase.length; // Start searching after the found phrase
+  if (letterArray.length > wordLimit) {
+    
+    while (indexPositions.length < wordLimit) {
+      
+      // console.log("fromIndex value:", fromIndex)
+      
+      // console.log("index of n :", letterContent.indexOf("\n", fromIndex) )
+      // console.log("index of space:", letterContent.indexOf(" ", fromIndex) )
+      
+      if (letterContent.indexOf("\n", fromIndex) < letterContent.indexOf(" ", fromIndex)) {
+        indexPosition = letterContent.indexOf("\n", fromIndex)
+        // console.log("indexPosition of break:", indexPosition)
+      } else {
+        indexPosition = letterContent.indexOf(" ", fromIndex)
+        // console.log("indexPosition of empty space:", indexPosition)
       }
-
-      for (let i: number = 0; i < indexes.length ; i++) {
-        paragraphArray.push(letterContent.substring(indexes[i], indexes[i+1]))
-      }
-
-      return paragraphArray;
+      
+      // console.log("fromIndex new value:", fromIndex)
+      
+      indexPositions.push(indexPosition)
+      
+      // console.log("indexPosition array:", indexPositions)
+      
+      fromIndex = indexPosition + 1
+      // console.log("new startIndex:", fromIndex)
+    
     }
+    let wordLimitIndex: number = indexPositions[indexPositions.length - 1]
+
+    let newletterContent: string = letterContent.substring(0,wordLimitIndex) + " ..."
+
+    console.log("newletterContent:", newletterContent)
+    return newletterContent;
+  }
+
+  console.log("letterContent:", letterContent)
+  return letterContent;
+  
+
+}

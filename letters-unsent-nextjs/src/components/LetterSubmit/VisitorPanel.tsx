@@ -16,26 +16,26 @@ export default function VisitorPanel({
 
         <form 
             onSubmit={handleSubmit} 
-            style={{
-                display: "flex",
-                flexDirection: "column",
-            }}
         >
             <textarea 
                 id="VisitorInput" 
                 required
                 value={visitorInput}
                 onChange={(e) => setVisitorInput(e.target.value)}
-                className="visitor-panel"
+                placeholder="Talk to Cove"
             >
             </textarea>
-            <button 
-                type="submit" 
-                value="submit"
-            >
+        
+            <div className="submit-button-container">
+                <button 
+                    type="submit" 
+                    value="submit a response"
+                    className="submit-button"
+                >
                 respond
             </button>
+            </div>
         </form>
-
+    
     )
 }

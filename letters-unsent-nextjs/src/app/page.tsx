@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import { convertDate, generateParagraphs, truncateContent } from "@/utils/functions"
+import { truncateContent } from "@/utils/functions"
 
 /* 
 -------------------------------------------------------------------------------------------------

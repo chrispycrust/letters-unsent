@@ -6,7 +6,7 @@
 -------------------------------------------------------------------------------------------------
 */
 
-import { convertDate, generateParagraphs } from "@/utils/functions"
+import { convertDate } from "@/utils/functions"
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -42,7 +42,10 @@ export default async function LetterPage({
 
             {
               ( data.letter[0].intended_recipient === "" || data.letter[0].intended_recipient === null )? (
-                <div className="single-letter-content-no-recipient preserve-breaks">
+                <div className="
+                  single-letter-content-no-recipient 
+                  preserve-breaks"
+                >
                   {data.letter[0].content}
                 </div>
               ) : (
@@ -50,7 +53,10 @@ export default async function LetterPage({
                   <h2>
                     {data.letter[0].intended_recipient}
                   </h2> 
-                  <div className="single-letter-content-container-with-recipient preserve-breaks">
+                  <div className="
+                    single-letter-content-container-with-recipient 
+                    preserve-breaks"
+                  >
                     {data.letter[0].content}
                   </div>
                 </>

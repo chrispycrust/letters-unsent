@@ -15,17 +15,23 @@ export default function VisitorPanel({
     return (
 
         <form 
-            onSubmit={handleSubmit} 
-        >
+            onSubmit={handleSubmit}
+        >   
+        <label>
+            Talk to Cove
             <textarea 
-                id="VisitorInput" 
+                id="VisitorInput"
+                name="visitorInputArea"
+                rows={1} 
                 required
                 value={visitorInput}
                 onChange={(e) => setVisitorInput(e.target.value)}
                 placeholder="Talk to Cove"
+                
             >
             </textarea>
-        
+        </label>
+            
             <div className="submit-button-container">
                 <button 
                     type="submit" 

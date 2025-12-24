@@ -8,6 +8,13 @@
 
 import { convertDate } from "@/utils/functions"
 
+// import type { Metadata } from "next";
+
+// export const metadata: Metadata = {
+//     title: `Letters Unsent-Letter ${letterId}`,
+//     description: "Write and submit your own letter",
+//   };
+
 /* 
 -------------------------------------------------------------------------------------------------
   

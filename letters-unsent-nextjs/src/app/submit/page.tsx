@@ -8,11 +8,17 @@
 -------------------------------------------------------------------------------------------------
 */
 
+import type { Metadata } from "next";
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
 import { useEffect, useState } from "react";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 import ErrorDisplay from "@/components/ErrorDisplay";
+
+// export const metadata: Metadata = {
+//   title: "Release a letter",
+//   description: "Write then submit your own letter to the archive",
+// };
 
 /* 
 -------------------------------------------------------------------------------------------------

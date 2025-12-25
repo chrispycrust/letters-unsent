@@ -7,23 +7,13 @@
 */
 
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { cormorant, lora, geist } from "@/styles/fonts/fonts"
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 
+
 import "../styles/globals.css";
 // import "../styles/debugging.css";
-
-const geistSans = localFont({
-  src: "../styles/fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "../styles/fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export const metadata: Metadata = {
   title: "Letters Unsent",
@@ -46,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${cormorant.variable} ${geist.variable} ${lora.variable}`}>
         <main>
           <NavBar/>
           <div>

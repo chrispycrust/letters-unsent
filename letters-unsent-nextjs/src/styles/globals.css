@@ -4,7 +4,7 @@
   --letter-colour: #fffff4;
   --accent: hsl(132, 46%, 75%);
   --about-link: hsl(132, 46%, 45%);
-  --font-size: 1em;
+  --font-size: 1.2em;
   --release-font-size: 1.2em;
   --borderRadius: 5px;
 
@@ -23,8 +23,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #282c21;   /* deep warm-charcoal with slight olive */
-    --foreground: #f2f0e2;   /* warm parchment-white */
-    --letter-colour: #a58b24;
+    --foreground: #e5e3d4;   /* warm parchment-white */
+    --letter-colour: #514e42;
     --accent: #7fbf92;       /* muted mint (same family as your light accent) */
     /* shadows for dark mode: darker core shadow + optional faint highlight */
     --shadow-color: 0deg 0% 0%;
@@ -52,15 +52,17 @@ body {
 }
 
 body {
+  
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   justify-content: center;
   min-height: 100vh;
   margin: 0 10px;
+  font-family: var(--lora);
   font-size: var(--font-size);
 }
 
@@ -72,7 +74,23 @@ main {
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--cormorant);
   padding: 2rem 0 1.5rem 0;
+  line-height: 1.5em;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.8em;
+  font-weight: 600;
 }
 
 ul {
@@ -81,13 +99,17 @@ ul {
 }
 
 p, ul {
-  padding-bottom: 1.5rem;
-  line-height: var(--font-size) * 1.5rem;
+  padding-bottom: 1.5em;
+  line-height: calc(var(--font-size) * 1.5);
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.about-section {
+  font-family: var(--geist);
 }
 
 .about-section a,  
@@ -120,6 +142,8 @@ a {
 
 .navbar a {
   padding: 20px;
+  font-family: var(--cormorant);
+  font-size: 2em;
 }
 
 .footer {
@@ -147,6 +171,11 @@ a {
   background-color: var(--accent);
 }
 
+.navbar a,
+.footer {
+  font-size: 1rem;
+}
+
 .nav-links a {
   /* padding-left: 20px; */
 }
@@ -155,7 +184,8 @@ a {
   padding: 30px 15px;
 }
 
-.letter, .single-letter {
+.letter
+, .single-letter {
   background-color: var(--letter-colour);
   border-radius: var(--borderRadius);
 }
@@ -179,6 +209,16 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.single-letter-content-container-with-recipient,
+.single-letter-content-no-recipient,
+.single-letter-content-no-recipient-on-display-page  {
+  line-height: calc(var(--font-size) * 1.5);
+}
+
+.single-letter-content-no-recipient {
+  line-height: 2em;
 }
 
 .single-letter {
@@ -235,11 +275,12 @@ p.timestamp {
   margin-bottom: 20px;
 }
 
-.single-letter-content-container-with-recipient,
-.single-letter-content-no-recipient {
-  line-height: calc(var(--font-size) * 1.5);
+.sign-off {
+  font-family: var(--cormorant);
+  font-style: italic;
+  font-size: 1.2em;
+  font-weight: 600;
 }
-
 
 
 form {

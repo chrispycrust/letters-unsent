@@ -13,6 +13,7 @@ import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import { truncateContent } from "@/utils/functions"
+import { cormorant } from "@/styles/fonts/fonts"
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -95,7 +96,9 @@ export default function Home() {
                 </div>
               ) : (
                 <>
-                  <h2>{Letter.intended_recipient}</h2>
+                  <h2>
+                    {Letter.intended_recipient}
+                  </h2>
                   <div className="
                     single-letter-content-container-with-recipient 
                     preserve-breaks 

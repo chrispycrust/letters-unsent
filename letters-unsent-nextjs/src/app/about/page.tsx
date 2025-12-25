@@ -15,7 +15,7 @@ export default function About() {
                     About Letters Unsent
                 </h1>
                 <p>
-                    This platform is a labour of love. The inspiration for it was sparked by Esther Perel whose <Link href="https://www.estherperel.com/blog/ull-introduction">perspective </Link> 
+                    The inspiration for this platform was sparked by Esther Perel whose <Link href="https://www.estherperel.com/blog/ull-introduction">perspective </Link> 
                     made me more aware of the emancipating power of writing a letter—the release and clarity that writing can bring, even when the letter remains unsent. 
                 </p><p>
                     There are already multiple other places where you can go to release unsent things: 
@@ -30,14 +30,21 @@ export default function About() {
                         <Link href="/">multiple other instagram accounts</Link>
                     </li>
                 </ul>
-
                 <p>
-                    But I wanted to amplify and honour such personal experiences through a dedicated home built according to my own vision while also learning hands-on experience with full stack (leaning towards front end) development. The Unsent Project also focuses on only texts never sent, specifically in a romantic context. 
-                    I wanted to capture a diversity of human experiences—our great loves aren’t limited to romance but extend to friendships, family, neighbours, even complete strangers. 
-                </p><p>
-                    There’s also something uniquely powerful about letters; their inherent introspection, the way they demand our full attention make them stand apart in a world dominated by fleeting tweets, short texts, and split-second engagements. 
-                    In a time where brevity often wins, longer-form content like letters requires more effort—but it can also offer more reward.
-                </p><p>
+                    So why make this platform?
+                </p>
+                <ul>
+                    <li>
+                        To give a home to the emotional worlds of others, built according to my own vision.
+                    </li><li>
+                        The Unsent Project focuses on only texts never sent, and specifically in a romantic context. 
+                        I wanted to honour a diversity and range of human experiences.
+                    </li><li>
+                        In a time where brevity often wins, there's something uniquely powerful about the way longer form letters demand full attention. 
+                        It requires more effort—but it can also offer more reward.
+                    </li>
+                </ul>
+                <p>
                     I hope people find comfort in reading these letters or sharing their own, knowing that others, too, have words left unspoken.
                 </p>
 
@@ -133,10 +140,7 @@ export default function About() {
                     You can find out more about me on <Link href="https://www.bychristine.au/">my personal website here</Link>.
                 </p>
                 <p>
-                    <strong>Contact:</strong> letters-unsent@protonmail.com
-                </p>
-                <p>
-                    <strong>Social media:</strong> @chrispycrust on instagram
+                    Feel free to get in touch here: dear@letters-unsent.com
                 </p>
             </section>
 

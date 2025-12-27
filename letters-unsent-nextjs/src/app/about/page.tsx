@@ -1,5 +1,6 @@
 import Link from "next/link"
 import type { Metadata } from "next";
+import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
     title: `Letters Unsent—About`,
@@ -131,17 +132,24 @@ export default function About() {
             
             {/* -------------------------------------------------------- */}
 
-            <section>
+            <section
+                id="contact"
+            >
                 <h2>
-                    Creator & Contact
+                    Contact
                 </h2>
                 <p>
-                    Engineer (code) but still an artist at heart, and writer of several letters myself. 
-                    You can find out more about me on <Link href="https://www.bychristine.au/">my personal website here</Link>.
+                    Developer but still an artist at heart, and writer of several letters myself. 
+                    You can find out more about me on <Link href="https://chrispycrust.notion.site/Thought-Stack-0253a7f5960044f482fb53db397929ec">my personal website here</Link>.
                 </p>
                 <p>
-                    Feel free to get in touch here: dear@letters-unsent.com
+                    Feel free to get in touch here: <strong>dear@letters-unsent.com</strong>
                 </p>
+                <p>
+                    You can also send an anonymous message to the above inbox via the form below. Please don’t include names, phone numbers, addresses, or anything you wouldn’t want stored.
+                </p>
+                
+                <ContactForm />
             </section>
 
         </div>  

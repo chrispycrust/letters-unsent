@@ -3,6 +3,7 @@
   --foreground: #171717;
   --letter-colour: #fffff4;
   --accent: hsl(132, 46%, 75%);
+  --accent-cooler: hsl(180, 66%, 66%);;
   --about-link: hsl(132, 46%, 45%);
   --font-size: 1.2em;
   --release-font-size: 1.2em;
@@ -108,8 +109,11 @@ a {
   text-decoration: none;
 }
 
-.about-section {
+.about-section
+, select
+, .messageInputArea {
   font-family: var(--geist);
+  font-weight: 350;
 }
 
 .about-section a,  
@@ -119,6 +123,9 @@ a {
 
 .about-section a {
   text-decoration: underline;
+  text-underline-offset: 6px;
+  transition: text-decoration;
+  transition-duration: 0.5s;
 }
 
 .about-section a:hover {
@@ -141,9 +148,16 @@ a {
 }
 
 .navbar a {
-  padding: 20px;
+  padding: 20px 20px 10px 20px;
+  transition-property: border-style;
+  transition-duration: 0.5s;
+}
+
+.navbar a
+, button {
   font-family: var(--cormorant);
-  font-size: 2em;
+  font-size: 1.1em;
+  font-weight: 500;
 }
 
 .footer {
@@ -164,17 +178,13 @@ a {
 }
 
 .navbar a:hover {
-  background-color: var(--accent);
+  border-bottom: solid 1px;
 }
 
-.navbar a[aria-current] {
+/* .navbar a[aria-current] {
   background-color: var(--accent);
-}
+} */
 
-.navbar a,
-.footer {
-  font-size: 1rem;
-}
 
 .nav-links a {
   /* padding-left: 20px; */
@@ -193,7 +203,9 @@ a {
 .letter {
   padding: 20px 50px;
   margin-bottom: 30px;
-  box-shadow: var(--shadow-elevation-low)
+  box-shadow: var(--shadow-elevation-low);
+  transition-property: box-shadow;
+  transition-duration: 0.5s;
 }
 
 .preserve-breaks {
@@ -257,7 +269,7 @@ a {
 }
 
 p.timestamp {
-  color: rgb(172, 172, 172);
+  color: rgb(136, 136, 136);
   margin-top: 20px;
 }
 
@@ -290,19 +302,37 @@ form {
   padding: 2em;
 }
 
+.contact-form {
+  padding: 0;
+}
+
 .response-area {
   display: flex;
   flex-direction: column;
 } 
 
 textarea {
-  /* flex: 1; */
-  background: none;
   text-align: left;
-  border: none;
-  padding: var(--release-font-size);
-  border: solid var(--accent) 1px;
   margin-bottom: 2em;
+  font-family: var(--lora);
+}
+
+textarea
+,select {
+  background: none;
+  padding: var(--release-font-size);
+  border: solid 2px var(--accent);
+  border-radius: var(--borderRadius);
+  color: var(--foreground);
+}
+
+.messageInputArea {
+  font-family: var(--geist);
+}
+
+select
+,.messageInputArea {
+  font-size: 1em;
 }
 
 .submit-button-container {
@@ -310,22 +340,28 @@ textarea {
   align-self: center;
 }
 
-.submit-button {
-  border-radius: 100px;
+button {
+  border-radius: var(--borderRadius);
   border: none;
   padding: 20px 40px;
   cursor: pointer;
   background-color: var(--accent);
+  transition-property: background-color;
+  transition-duration: 0.5s;
 }
 
-.submit-button:hover {
-  background-color: hsl(132, 43%, 58%);
+button:hover {
+  background-color: var(--accent-cooler); /* hsl(132, 43%, 58%); */
 }
 
 .guardian-panel,
 textarea {
   font-size: var(--release-font-size);
   line-height: calc(var(--release-font-size) * 1.5);
+}
+
+label {
+  padding-bottom: 20px;
 }
 
 @keyframes spin {
@@ -346,7 +382,6 @@ textarea {
   height: 0.8em;
   animation: spin 1000ms linear infinite;
 }
-
 
 
 @media (width > 750px) {

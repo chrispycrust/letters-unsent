@@ -35,11 +35,11 @@ const tools = [
 
 async function submit_to_supabase(args) {
 
-  console.log("Object received from model:", args);
+  // console.log("Object received from model:", args);
 
   args.created_at = new Date().toISOString();
 
-  console.log("Submitting to Supabase:", args);
+  // console.log("Submitting to Supabase:", args);
 
   try {
     
@@ -89,7 +89,7 @@ export async function GET(request: Request) {
         : "The visitor has returned again. Please greet them accordingly - try finding new ways to welcome them back."
 
     const GuardianResponse = await openai.responses.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1",
         instructions: guardianSystemPrompt,
         input: [
             { role: "developer", content: visitorPrompt },
@@ -104,10 +104,11 @@ export async function POST(request: Request) {
   try {
 
     const { updatedConversation } = await request.json()
-    console.log("updated conversation:", updatedConversation)
+
+    // console.log("updated conversation:", updatedConversation)
 
     const GuardianResponse = await openai.responses.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1",
         input: updatedConversation,
         tools,
         store: true, // disable later in prod
@@ -138,7 +139,7 @@ export async function POST(request: Request) {
       );
     
       const GuardianResponseAfterSubmission = await openai.responses.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1",
         input: updatedConversation,
         tools,
         store: true, // disable later in prod
@@ -148,8 +149,6 @@ export async function POST(request: Request) {
       
       }
     }
-    
-    // console.log("Guardian Response", finalText)
 
     return Response.json({ output: finalText }) 
 

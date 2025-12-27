@@ -318,6 +318,10 @@ textarea {
   background-color: var(--accent);
 }
 
+.submit-button:hover {
+  background-color: hsl(132, 43%, 58%);
+}
+
 .guardian-panel,
 textarea {
   font-size: var(--release-font-size);

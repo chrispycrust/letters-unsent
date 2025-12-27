@@ -47,41 +47,42 @@ export default function Submit() {
 
   async function greetVisitor() {
 
-      if (ref.current !== null) {
-        ref.current.remove();
+    // remove button if element at node exists 
+    if (ref.current !== null) {
+      ref.current.remove();
+    } else {
+      console.log("Element not found");
+    }
+
+    setConversationStart(true);
+
+    localStorage.setItem("visitCount", "1");
+    localStorage.setItem("letterDraft", "hey you"); // without formatting
+
+    // Step 1: Send visitCount and letterDraft
+    const visitCount = localStorage.getItem("visitCount")
+
+    try {
+      const res = await fetch(`/api/guardian?&visitCount=${visitCount}`)
+
+      if (res.ok === true) {
+        setResponseOk(true);
+      }
+
+      // Step 2: Fetch Cove's message
+      const data = await res.json()
+
+      if (res.ok) {
+        setCoveMessage(data.output)
       } else {
-        console.log("Element not found!");
+        console.error('Server error', data.error)
+        setErrorMessage(`Server error: ${data.error}`)
       }
 
-      setConversationStart(true)
-
-      localStorage.setItem("visitCount", "1");
-      localStorage.setItem("letterDraft", "hey you"); // without formatting
-
-      // Step 1: Send visitCount and letterDraft
-      const visitCount = localStorage.getItem("visitCount")
-
-      try {
-        const res = await fetch(`/api/guardian?&visitCount=${visitCount}`)
-
-        if (res.ok === true) {
-          setResponseOk(true);
-        }
-
-        // Step 2: Fetch Cove's message
-        const data = await res.json()
-
-        if (res.ok) {
-          setCoveMessage(data.output)
-        } else {
-          console.error('Server error', data.error)
-          setErrorMessage(`Server error: ${data.error}`)
-        }
-
-      } catch (err) {
-        console.error('Network error:', err)
-        setErrorMessage(`Network error: ${err}`)
-      }
+    } catch (err) {
+      console.error('Network error:', err)
+      setErrorMessage(`Network error: ${err}`)
+    }
 
   }
 
@@ -131,40 +132,40 @@ export default function Submit() {
   }
 
   return (
-      <div className="submit-container">
-        
-        <ErrorDisplay 
-          message={ErrorMessage}
-        />
+    <div className="submit-container">
 
-        {
-          (conversationStart === true) ? (
-            <>
-              <GuardianPanel
-                message={coveMessage}
-                responseStatus={responseOk}
-              />
+      <ErrorDisplay 
+        message={ErrorMessage}
+      />
 
-              <VisitorPanel
-                visitorInput={visitorInput}
-                setVisitorInput={setVisitorInput}
-                handleSubmit={handleSubmit}
-              />
-            </>
-          ) : (
-            <div>
-              <button
-                id="conversation-start-button"
-                type="button" 
-                onClick={greetVisitor}
-                className="submit-button"
-              >
-                Start conversation
-              </button>
-            </div>
-          )
-        }
+      {
+        (conversationStart === true) ? (
+          <>
+            <GuardianPanel
+              message={coveMessage}
+              responseStatus={responseOk}
+            />
 
-      </div>
+            <VisitorPanel
+              visitorInput={visitorInput}
+              setVisitorInput={setVisitorInput}
+              handleSubmit={handleSubmit}
+            />
+          </>
+        ) : (
+          <div>
+            <button
+              id="conversation-start-button"
+              type="button" 
+              onClick={greetVisitor}
+              className="submit-button"
+            >
+              Start conversation
+            </button>
+          </div>
+        )
+      }
+
+    </div>
   );
 }

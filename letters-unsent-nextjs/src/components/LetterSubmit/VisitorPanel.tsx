@@ -17,8 +17,10 @@ export default function VisitorPanel({
         <form 
             onSubmit={handleSubmit}
         >   
-        <label>
-            Talk to Cove
+            <label>
+                Talk to Cove
+                
+            </label>
             <textarea 
                 id="VisitorInput"
                 name="visitorInputArea"
@@ -26,12 +28,9 @@ export default function VisitorPanel({
                 required
                 value={visitorInput}
                 onChange={(e) => setVisitorInput(e.target.value)}
-                placeholder="Talk to Cove"
-                
+                placeholder="Write something"
             >
             </textarea>
-        </label>
-            
             <div className="submit-button-container">
                 <button 
                     type="submit" 

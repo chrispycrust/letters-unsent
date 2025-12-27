@@ -11,7 +11,7 @@
 import type { Metadata } from "next";
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
-import { useEffect, useState } from "react";
+import { useState, useRef } from "react";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 import ErrorDisplay from "@/components/ErrorDisplay";
 
@@ -42,11 +42,18 @@ export default function Submit() {
 
   const [responseOk, setResponseOk] = useState(false)
   const [ErrorMessage, setErrorMessage] = useState("")
+  const [conversationStart, setConversationStart] = useState(false); // "start conversation" button
+  const ref: any = useRef(null)
 
-  // immediately on page load, guardian greets the visitor
-  useEffect(() => {
+  async function greetVisitor() {
 
-    async function greetVisitor() {
+      if (ref.current !== null) {
+        ref.current.remove();
+      } else {
+        console.log("Element not found!");
+      }
+
+      setConversationStart(true)
 
       localStorage.setItem("visitCount", "1");
       localStorage.setItem("letterDraft", "hey you"); // without formatting
@@ -76,10 +83,7 @@ export default function Submit() {
         setErrorMessage(`Network error: ${err}`)
       }
 
-    }
-    greetVisitor()
-
-  }, []);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault() // stops the default page reload
@@ -128,20 +132,39 @@ export default function Submit() {
 
   return (
       <div className="submit-container">
-          <ErrorDisplay 
-            message={ErrorMessage}
-          />
+        
+        <ErrorDisplay 
+          message={ErrorMessage}
+        />
 
-          <GuardianPanel
-            message={coveMessage}
-            responseStatus={responseOk}
-          />
+        {
+          (conversationStart === true) ? (
+            <>
+              <GuardianPanel
+                message={coveMessage}
+                responseStatus={responseOk}
+              />
 
-          <VisitorPanel
-            visitorInput={visitorInput}
-            setVisitorInput={setVisitorInput}
-            handleSubmit={handleSubmit}
-          />
+              <VisitorPanel
+                visitorInput={visitorInput}
+                setVisitorInput={setVisitorInput}
+                handleSubmit={handleSubmit}
+              />
+            </>
+          ) : (
+            <div>
+              <button
+                id="conversation-start-button"
+                type="button" 
+                onClick={greetVisitor}
+                className="submit-button"
+              >
+                Start conversation
+              </button>
+            </div>
+          )
+        }
+
       </div>
   );
 }

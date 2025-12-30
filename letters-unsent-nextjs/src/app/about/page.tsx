@@ -1,11 +1,22 @@
+/* 
+-------------------------------------------------------------------------------------------------
+
+  IMPORTS
+
+-------------------------------------------------------------------------------------------------
+*/
+
 import Link from "next/link"
-import type { Metadata } from "next";
 import ContactForm from "@/components/ContactForm";
 
-export const metadata: Metadata = {
-    title: `Letters Unsent—About`,
-    description: "About this platform",
-  };
+/* 
+-------------------------------------------------------------------------------------------------
+  
+  PURPOSE 
+  Defines layout across all pages of website
+
+------------------------------------------------------------------------------------------------- 
+*/
 
 
 export default function About() {

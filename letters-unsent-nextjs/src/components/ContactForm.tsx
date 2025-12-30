@@ -31,7 +31,7 @@ export default function ContactForm() {
             </label>
             <textarea
                 required
-                className="messageInputArea"
+                className="textarea-contact-form"
             >
             </textarea>
 

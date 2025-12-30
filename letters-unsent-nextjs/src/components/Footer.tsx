@@ -1,3 +1,8 @@
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+
 /* 
 -------------------------------------------------------------------------------------------------
 
@@ -8,10 +13,34 @@
 */
 
 export default function Footer() {
+
+    const [ showModal, setShowModal ] = useState(false)
+
+    
     return (
         <footer className="footer">
-            <p>Letters Unsent - v1.0</p>
-            {/* <p>Built using: Next.js, React, TypeScript, OpenAI API, Supabase</p> */}
+            <div className="footer-nav-links">
+                <p>Letters Unsent (v1.0)</p>
+                <p>2025-present</p>
+            </div>
+            <div className="footer-nav-links">
+                <p>
+                    <Link 
+                        href="/submit" 
+                        >
+                            Release A Letter
+                        </Link>
+                </p>
+                
+                <p>
+                    <Link 
+                        href="/about" 
+                    >
+                        About & Contact
+                    </Link>
+                </p>
+                
+            </div>
         </footer>
     )
 }

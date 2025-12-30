@@ -1,3 +1,9 @@
+/* 
+  --------------------------------
+  MOBILE FIRST
+  --------------------------------
+*/
+
 :root {
   --background: #f3f1df;
   --foreground: #171717;
@@ -5,8 +11,7 @@
   --accent: hsl(132, 46%, 75%);
   --accent-cooler: hsl(180, 66%, 66%);;
   --about-link: hsl(132, 46%, 45%);
-  --font-size: 1.2em;
-  --release-font-size: 1.2em;
+  --font-size: 1.1em;
   --borderRadius: 5px;
 
   --shadow-color: 0deg 0% 59%;
@@ -52,26 +57,36 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 body {
-  
+  font-family: var(--lora);
+  font-size: var(--font-size);
   color: var(--foreground);
   background: var(--background);
   /* font-family: Arial, Helvetica, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 0;
   margin: 0 10px;
-  font-family: var(--lora);
-  font-size: var(--font-size);
 }
 
 main {
-  width: 1280px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: flex-start; */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -111,7 +126,7 @@ a {
 
 .about-section
 , select
-, .messageInputArea {
+, .textarea-contact-form {
   font-family: var(--geist);
   font-weight: 350;
 }
@@ -142,8 +157,8 @@ a {
 .navbar {
   /* height: 70px; */
   margin-bottom: 2em;
-  position: sticky;
-  top: 0px;
+  /* position: sticky;
+  top: 0px; */
   /* width: inherit; */
 }
 
@@ -184,15 +199,6 @@ a {
 /* .navbar a[aria-current] {
   background-color: var(--accent);
 } */
-
-
-.nav-links a {
-  /* padding-left: 20px; */
-}
-
-.letter-display {
-  padding: 30px 15px;
-}
 
 .letter
 , .single-letter {
@@ -273,12 +279,7 @@ p.timestamp {
   margin-top: 20px;
 }
 
-.submit-container {
-  text-align: center;
-  padding: 20px;
-}
-
-.guardian-panel, 
+ 
 .spinner-container {
   display: flex;
   flex-direction: column;
@@ -294,12 +295,49 @@ p.timestamp {
   font-weight: 600;
 }
 
+/* .container-for-submit-container {
+  height: 100vh;
+  background-color: antiquewhite;
+} */
+
+.submit-container {
+  flex: 1;
+  min-height: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  position: relative; /* allows visitor panel to stick to the bottom of the viewport */
+  overflow: hidden;   /* prevents scrolling on container */
+}
+
+.guardian-panel-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.guardian-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  justify-self: center;
+  min-height: 50px;
+  min-width: 50px;
+  overflow: auto;
+  margin-bottom: 20px;
+}
 
 form {
   display: flex;
   flex-direction: column;
   border-radius: var(--borderRadius);
-  padding: 2em;
 }
 
 .contact-form {
@@ -313,31 +351,98 @@ form {
 
 textarea {
   text-align: left;
-  margin-bottom: 2em;
   font-family: var(--lora);
+  min-height: var(--font-size);
+  resize: vertical;
 }
 
 textarea
 ,select {
   background: none;
-  padding: var(--release-font-size);
+  padding: 10px;
   border: solid 2px var(--accent);
   border-radius: var(--borderRadius);
   color: var(--foreground);
 }
 
-.messageInputArea {
+textarea:focus {
+  outline: none; /* could be an issue for accessibility users */
+}
+
+.visitor-textarea {
+  flex: 2;
+  border: none;
+  height: inherit;
+}
+
+/* @keyframes expand {
+  from {
+    transform:
+      scale(1)
+  }
+  to {
+    transform:
+      height(500px)
+  }
+}
+
+.visitor-textarea {
+  animation: expand 1000ms linear;
+} */
+
+
+.guardian-panel,
+textarea {
+  font-size: var(--font-size);
+  line-height: calc(var(--font-size) * 1.5);
+}
+
+.textarea-contact-form {
   font-family: var(--geist);
 }
 
+.textarea-contact-form:focus {
+  outline: auto;
+}
+
 select
-,.messageInputArea {
+,.textarea-contact-form {
   font-size: 1em;
 }
 
-.submit-button-container {
-  flex: 1;
-  align-self: center;
+.visitor-input-container {
+  width: 100%;
+  padding: 10px;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  background: #e5e3d4;
+}
+
+.vistor-input-container-expanded {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+
+  height: auto;
+
+  z-index: 999;
+}
+
+.visitor-input-area {
+  width: auto;
+  display: flex;
+  flex: row;
+  height: inherit;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  height: inherit;
 }
 
 button {
@@ -354,10 +459,9 @@ button:hover {
   background-color: var(--accent-cooler); /* hsl(132, 43%, 58%); */
 }
 
-.guardian-panel,
-textarea {
-  font-size: var(--release-font-size);
-  line-height: calc(var(--release-font-size) * 1.5);
+.submit-button {
+  position: sticky;
+  bottom: 0;
 }
 
 label {
@@ -384,29 +488,126 @@ label {
 }
 
 
-@media (width > 750px) {
 
-  .about-section,
-  .submit-container {
-    margin: 0 250px;
+.modal {
+  position: absolute;
+  top: 0;
+  right:0;
+  background-color: rgb(217, 217, 255);
+  height: 100%;
+  width: 100%;
+}
+
+/*
+  --------------------------------
+  TABLET 
+  --------------------------------
+*/ 
+
+@media (width > 550px) {
+
+  .about-section
+  ,.submit-container {
+    margin: 0 50px;
+  }
+
+  /* .visitor-input-container
+  , .visitor-input-container-expanded {
+    margin-right: 0;
+    width: 100%;
+  } */
+
+  .letter-display {
+    padding: 30px 15px;
+  }
+
+}
+
+/*
+  --------------------------------
+  SMALL DESKTOP
+  --------------------------------
+*/
+
+@media (width > 700px) {
+
+  :root {
+    --font-size: 1.2em;
+  }
+
+  .about-section
+  ,.submit-container {
+    margin: 0 70px;
+  }
+
+  .letter-display {
+    padding: 30px 50px;
+  }
+
+   .single-letter {
+    max-width: 90%;
+    padding: 80px 100px; 
+  }
+
+}
+
+@media (width > 900px) {
+
+  .about-section
+  ,.submit-container {
+    margin: 0 150px;
+  }
+
+   .single-letter {
+    max-width: 75%;
   }
 
   .letter-display {
     padding: 30px 150px;
   }
 
-  .single-letter {
-    max-width: 60%; 
-    padding: 80px 100px; 
+}
+
+@media (width > 1000px) {
+
+  .about-section
+  ,.submit-container {
+    margin: 0 250px;
+  }
+
+   .single-letter {
+    max-width: 75%;
+  }
+
+  .letter-display {
+    padding: 30px 150px;
   }
 
 }
 
+/* 
+  --------------------------------
+  ULTRA WIDE DESKTOP
+  --------------------------------
+*/
 
-@media (width > 1000px) {
+@media (width > 1280px) {
+
+  main {
+    width: 1280px;
+  }
+
+  .submit-container {
+    width: auto;
+    /* padding: 20px; */
+  }
 
   .letter-display {
     padding: 30px 250px;
+  }
+
+  .single-letter {
+    max-width: 60%;
   }
 
 }

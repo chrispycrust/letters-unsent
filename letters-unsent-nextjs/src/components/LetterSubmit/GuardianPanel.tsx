@@ -12,15 +12,18 @@ export default function GuardianPanel({
 
     return (
         <div className="guardian-panel">
-            {
-                responseStatus === false ? (
-                    <Spinner />
-                 ) : (
-                    <div className="preserve-breaks">
-                        {message}
-                    </div>
-                )
-            }
+
+            <div>
+                {
+                    responseStatus === false ? (
+                        <Spinner />
+                    ) : (
+                        <div className="preserve-breaks">
+                            {message}
+                        </div>
+                    )
+                }
+            </div>
         </div>
     )
 }

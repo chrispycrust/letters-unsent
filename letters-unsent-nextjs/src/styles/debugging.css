@@ -3,7 +3,6 @@ html {
 }
 
 body {
-    
     background-color: rgb(190, 228, 182);
 }
 
@@ -56,6 +55,35 @@ main {
 .letter-display {
   background-color: mediumslateblue;
 }
+
+.guardian-panel-container {
+  background-color: #7fbf92;
+}
+
+.guardian-panel {
+  background-color: rgb(187, 147, 224);
+}
+
+form {
+  background-color: grey;
+}
+
+.visitor-input-container {
+  background-color: rgb(104, 255, 255);
+}
+
+.vistor-input-container-expanded {
+  background-color: rgb(46, 170, 170);
+}
+
+.visitor-textarea {
+  background-color: goldenrod;
+}
+
+.buttons-container {
+  background-color: #e5e3d4;
+}
+
 
 @media (width <= 375px) {
 

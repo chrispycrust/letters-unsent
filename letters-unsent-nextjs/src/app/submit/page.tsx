@@ -9,11 +9,14 @@
 */
 
 import type { Metadata } from "next";
-import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
-import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
+
 import { useState, useRef } from "react";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 import ErrorDisplay from "@/components/ErrorDisplay";
+
+/* COMPONENTS */
+import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
+import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
 
 // export const metadata: Metadata = {
 //   title: "Release a letter",
@@ -31,7 +34,7 @@ import ErrorDisplay from "@/components/ErrorDisplay";
 
 export default function Submit() {
 
-  const [coveMessage, setCoveMessage] = useState('');
+  const [coveMessage, setCoveMessage] = useState("");
   const [visitorInput, setVisitorInput ] = useState("");
   const [conversation, setConversation] = useState([
     {
@@ -132,40 +135,43 @@ export default function Submit() {
   }
 
   return (
-    <div className="submit-container">
 
-      <ErrorDisplay 
-        message={ErrorMessage}
-      />
+      <div className="submit-container">
 
-      {
-        (conversationStart === true) ? (
-          <>
-            <GuardianPanel
-              message={coveMessage}
-              responseStatus={responseOk}
-            />
+          <ErrorDisplay 
+            message={ErrorMessage}
+          />
 
-            <VisitorPanel
-              visitorInput={visitorInput}
-              setVisitorInput={setVisitorInput}
-              handleSubmit={handleSubmit}
-            />
-          </>
-        ) : (
-          <div>
-            <button
-              id="conversation-start-button"
-              type="button" 
-              onClick={greetVisitor}
-              className="submit-button"
-            >
-              Start conversation
-            </button>
-          </div>
-        )
-      }
+          {
+            (conversationStart === true) ? (
+              <>  
+                <div className="guardian-panel-container">
+                  <GuardianPanel
+                    message={coveMessage}
+                    responseStatus={responseOk}
+                  />
+                </div>
 
-    </div>
+                  <VisitorPanel
+                    visitorInput={visitorInput}
+                    setVisitorInput={setVisitorInput}
+                    handleSubmit={handleSubmit}
+                  />
+              </>
+            ) : (
+              <div>
+                <button
+                  id="conversation-start-button"
+                  type="button" 
+                  onClick={greetVisitor}
+                >
+                  Start conversation
+                </button>
+              </div>
+            )
+          }
+
+      </div>
+  
   );
 }

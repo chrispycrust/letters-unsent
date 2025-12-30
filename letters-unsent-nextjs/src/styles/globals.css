@@ -6,12 +6,16 @@
 
 :root {
   --background: #f3f1df;
-  --foreground: #171717;
+  --foreground: #3e3d38;
+  --background-desat-1: #e5e3d4;
+  --background-desat-2: #58503c;
   --letter-colour: #fffff4;
   --accent: hsl(132, 46%, 75%);
   --accent-cooler: hsl(180, 66%, 66%);;
   --about-link: hsl(132, 46%, 45%);
+  --font-size-smaller: 0.8em;
   --font-size: 1.1em;
+  --font-size-larger: 1.5em;
   --borderRadius: 5px;
 
   --shadow-color: 0deg 0% 59%;
@@ -30,6 +34,7 @@
   :root {
     --background: #282c21;   /* deep warm-charcoal with slight olive */
     --foreground: #e5e3d4;   /* warm parchment-white */
+    --background-desat-1: #3f3e39;
     --letter-colour: #514e42;
     --accent: #7fbf92;       /* muted mint (same family as your light accent) */
     /* shadows for dark mode: darker core shadow + optional faint highlight */
@@ -179,12 +184,14 @@ a {
   margin-top: 20px;
 }
 
-.footer p {
-  padding: 20px 0;
+.footer-nav-links {
+  display:flex;
+  flex-direction: column;
 }
 
-.footer p:last-child {
-  text-align: right;
+.footer-nav-links p {
+  padding: 0;
+  margin: 0;
 }
 
 .nav-links {
@@ -324,10 +331,6 @@ p.timestamp {
 .guardian-panel {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  align-self: center;
-  justify-self: center;
   min-height: 50px;
   min-width: 50px;
   overflow: auto;
@@ -370,9 +373,12 @@ textarea:focus {
 }
 
 .visitor-textarea {
-  flex: 2;
+  flex: 1;
   border: none;
-  height: inherit;
+}
+
+.vistor-textarea-expanded {
+  flex: 1;
 }
 
 /* @keyframes expand {
@@ -416,7 +422,7 @@ select
   margin-top: auto;
   position: sticky;
   bottom: 0;
-  background: #e5e3d4;
+  background: var(--background-desat-1);
 }
 
 .vistor-input-container-expanded {
@@ -428,27 +434,35 @@ select
 
   height: auto;
 
-  z-index: 999;
+  z-index: 2;
 }
 
 .visitor-input-area {
-  width: auto;
   display: flex;
   flex: row;
-  height: inherit;
+  flex: 1;
+  min-height: 0;
+}
+
+.visitor-textarea {
+  flex: 1;
+  border: none;
+}
+
+.vistor-textarea-expanded {
+  flex: 1;
 }
 
 .buttons-container {
   display: flex;
   flex-direction: column;
   margin-left: 10px;
-  height: inherit;
 }
 
 button {
   border-radius: var(--borderRadius);
   border: none;
-  padding: 20px 40px;
+  padding: 20px 20px;
   cursor: pointer;
   background-color: var(--accent);
   transition-property: background-color;
@@ -459,9 +473,16 @@ button:hover {
   background-color: var(--accent-cooler); /* hsl(132, 43%, 58%); */
 }
 
+.button-input-area {
+  margin-bottom: 10px;
+}
+
+.button-change-textarea {
+  background: none;
+}
+
 .submit-button {
-  position: sticky;
-  bottom: 0;
+  margin-top: auto;
 }
 
 label {
@@ -485,18 +506,52 @@ label {
   width: 0.8em;
   height: 0.8em;
   animation: spin 1000ms linear infinite;
+  margin-top: 10px; /* workaround for now to get the complete spinner showing */
+  justify-self: center;
 }
-
-
 
 .modal {
-  position: absolute;
-  top: 0;
-  right:0;
-  background-color: rgb(217, 217, 255);
-  height: 100%;
-  width: 100%;
+  position: fixed;
+  inset: 0 0 0 70px;
+  background-color: var(--background-desat-1);
+  height: auto;
+  width: auto;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 40px;
+  box-shadow: var(--shadow-elevation-medium);
 }
+
+.modal-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: space-between; */
+}
+
+.modal-links p a {
+  font-size: var(--font-size-larger);
+}
+
+.modal-footer {
+  width: 100%;
+  font-size: var(--font-size-smaller);
+}
+
+.button-change-modal-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.button-change-modal {
+  background: none;
+}
+
 
 /*
   --------------------------------
@@ -505,6 +560,10 @@ label {
 */ 
 
 @media (width > 550px) {
+
+  :root {
+    --font-size: 1.2em;
+  }
 
   .about-section
   ,.submit-container {
@@ -530,10 +589,6 @@ label {
 */
 
 @media (width > 700px) {
-
-  :root {
-    --font-size: 1.2em;
-  }
 
   .about-section
   ,.submit-container {

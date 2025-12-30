@@ -1,4 +1,15 @@
+/* 
+-------------------------------------------------------------------------------------------------
+
+  IMPORTS
+
+-------------------------------------------------------------------------------------------------
+*/
+
 import { useState } from "react";
+import MaximiseIcon from "../../../public/icons/arrows-maximise";
+import RespondIcon from "../../../public/icons/RespondIcon";
+import MinimiseIcon from "../../../public/icons/arrows-minimise";
 
 interface VisitorInputProps {
     visitorInput: string
@@ -7,6 +18,15 @@ interface VisitorInputProps {
     // ,expandButtonState: boolean
     // ,setExpandButtonActive: React.Dispatch<React.SetStateAction<string>>
 }
+
+/* 
+-------------------------------------------------------------------------------------------------
+
+  PURPOSE
+  Contains form where visitor inputs responses to API
+
+-------------------------------------------------------------------------------------------------
+*/
 
 export default function VisitorPanel({
     visitorInput
@@ -36,7 +56,15 @@ export default function VisitorPanel({
             >
                 <textarea 
                     id="VisitorInput"
-                    className="visitor-textarea"
+                    // className="visitor-textarea"
+                    className={
+                        `visitor-textarea
+                        ${expandButtonActive ? 
+                            "vistor-textarea-expanded"
+                            : 
+                            ""
+                        }`
+                    }
                     name="input area"
                     // rows={1} 
                     required
@@ -55,18 +83,20 @@ export default function VisitorPanel({
                             <button 
                                 type="button" 
                                 value="minimise text area"
+                                className="button-input-area button-change-textarea"
                                 onClick={() => setExpandButtonActive(false)}
                             >
-                                min
+                                <MinimiseIcon />
                             </button>
 
                         ) : (
                             <button 
                                 type="button" 
                                 value="expand text area"
+                                className="button-input-area button-change-textarea"
                                 onClick={() => setExpandButtonActive(true)}
                             >
-                                ex
+                                <MaximiseIcon />
                             </button>
                         )
                     }
@@ -76,7 +106,7 @@ export default function VisitorPanel({
                         value="submit a response"
                         className="submit-button"
                     >
-                        res
+                        <RespondIcon />
                     </button>
                 </div>
             </div>

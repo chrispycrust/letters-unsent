@@ -13,6 +13,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import NavigationModal from "./NavigationModal";
+import EnvelopeClosedIcon from "../../public/icons/envelope-closed";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -31,27 +32,20 @@ export default function NavBar() {
     <nav className="navbar">
       <Link href="/">Letters Unsent</Link>
       
-        <button
-          type="button"
-          onClick={() => setShowModal(true)}
-        >
-          nav links
-        </button>
+      <button
+        type="button"
+        onClick={() => setShowModal(true)}
+        className="button-change-modal"
+      >
+        <EnvelopeClosedIcon />
+      </button>
 
-        {
-          showModal &&
-            <NavigationModal 
-              onClose={() => setShowModal(false)} 
-            />
-        }
-
-      {/* <div className="nav-links">
-        <div>
-          <Link href="/submit">Release A Letter</Link>
-        </div><div>
-          <Link href="/about">About</Link>
-        </div>
-      </div> */}
+      {
+        showModal &&
+          <NavigationModal 
+            onClose={() => setShowModal(false)} 
+          />
+      }
 
     </nav>
   );

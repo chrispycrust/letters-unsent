@@ -8,9 +8,9 @@
 
 import type { Metadata } from "next";
 import { cormorant, lora, geist } from "@/styles/fonts/fonts"
-import NavBar from "@/components/NavBar";
-import Footer from "@/components/Footer";
 
+/* COMPONENTS */
+import NavBar from "@/components/NavBar";
 
 import "../styles/globals.css";
 // import "../styles/debugging.css";
@@ -39,10 +39,7 @@ export default function RootLayout({
       <body className={`${cormorant.variable} ${geist.variable} ${lora.variable}`}>
         <main>
           <NavBar/>
-          <div>
-            {children}
-          </div>
-          <Footer/>
+          {children}
         </main>
       </body>
     </html>

@@ -13,7 +13,7 @@
   --accent: hsl(132, 46%, 75%);
   --accent-cooler: hsl(180, 66%, 66%);;
   --about-link: hsl(132, 46%, 45%);
-  --font-size-smaller: 0.8em;
+  --font-size-smaller: 0.9em;
   --font-size: 1.1em;
   --font-size-larger: 1.5em;
   --borderRadius: 5px;
@@ -65,7 +65,8 @@ body {
 html {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  /* height: 100vh; */
+  z-index: -4;
 }
 
 body {
@@ -78,11 +79,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
+  min-height: 0;
   align-items: center;
   justify-content: center;
-  min-height: 0;
   margin: 0 10px;
+  position: relative;
+  z-index: -3;
 }
 
 main {
@@ -91,7 +94,9 @@ main {
   width: 100%;
   display: flex;
   flex-direction: column;
+  /* position: relative; */
   /* justify-content: flex-start; */
+  z-index: -2;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -136,6 +141,11 @@ a {
   font-weight: 350;
 }
 
+.about-section {
+  padding-bottom: 40px; /* again, margin doesn't seem to be working */
+  /* margin-bottom: 10000px; */
+}
+
 .about-section a,  
 .about-section a:hover {
   color: var(--about-link);
@@ -153,7 +163,7 @@ a {
 }
 
 .navbar, 
-.footer {
+footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -162,9 +172,9 @@ a {
 .navbar {
   /* height: 70px; */
   margin-bottom: 2em;
-  /* position: sticky;
-  top: 0px; */
-  /* width: inherit; */
+  position: sticky;
+  top: 0px;
+  background-color: var(--background);
 }
 
 .navbar a {
@@ -180,13 +190,24 @@ a {
   font-weight: 500;
 }
 
-.footer {
-  margin-top: 20px;
+footer {
+  /* margin-top: 80px;  for some reason margins aren't applying*/
+  padding: 40px 20px 20px 20px;
+  font-size: var(--font-size-smaller);
 }
 
 .footer-nav-links {
   display:flex;
   flex-direction: column;
+}
+
+footer a {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+footer a:hover {
+  text-decoration: none;
 }
 
 .footer-nav-links p {
@@ -293,6 +314,7 @@ p.timestamp {
   align-items: center;
   min-height: 50px;
   margin-bottom: 20px;
+  z-index: auto;
 }
 
 .sign-off {
@@ -317,6 +339,7 @@ p.timestamp {
   justify-content: center;
   position: relative; /* allows visitor panel to stick to the bottom of the viewport */
   overflow: hidden;   /* prevents scrolling on container */
+  z-index: -1;        /* workaround for now to get navbar modal to appear over this */
 }
 
 .guardian-panel-container {
@@ -539,6 +562,7 @@ label {
 .modal-footer {
   width: 100%;
   font-size: var(--font-size-smaller);
+  margin-bottom: 40px;
 }
 
 .button-change-modal-container {

@@ -10,8 +10,8 @@ main {
   background-color: rgb(25, 102, 226);
 }
 
-.aboutSection a {
-  color: rgb(255, 153, 0);
+.about-section {
+  background-color: rgb(255, 153, 0);
 }
 
 /* @media (prefers-color-scheme: dark) {

@@ -15,6 +15,8 @@ import ErrorDisplay from "@/components/ErrorDisplay";
 import { truncateContent } from "@/utils/functions"
 import { cormorant } from "@/styles/fonts/fonts"
 
+import Footer from "@/components/Footer";
+
 /* 
 -------------------------------------------------------------------------------------------------
   
@@ -123,8 +125,11 @@ export default function Home() {
   // -------------------------------------------------------------------------------------------------
 
   return (
-    <div className="letter-display">
-      { determineLetterDisplay() }
-    </div>
+    <>
+      <div className="letter-display">
+        { determineLetterDisplay() }
+      </div>
+      <Footer />
+    </>
   );
 }

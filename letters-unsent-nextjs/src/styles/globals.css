@@ -85,11 +85,11 @@ body {
   
   flex: 1;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin: 0 10px;
   z-index: -3;
   min-height: 100vh;
-  
+  /* position: relative; */
 }
 
 main {
@@ -99,8 +99,8 @@ main {
   flex-direction: column;
   z-index: -2;
   justify-content: space-between;
-  position: relative;
-  overflow: auto;
+  
+  /* overflow: auto; */
 }
 
 h1, h2, h3, h4, h5, h6 {

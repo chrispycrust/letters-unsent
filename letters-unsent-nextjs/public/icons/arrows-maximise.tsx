@@ -11,7 +11,9 @@ export default function MaximiseIcon() {
             strokeLinecap="round" 
             strokeLinejoin="round" 
             // class="icon icon-tabler icons-tabler-outline icon-tabler-arrows-maximize"
+            role="img"
         >
+                <title>Icon: arrows pointing outwards in all four corners - maximise the input area to speak to Cove</title>
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                 <path d="M16 4l4 0l0 4" />
                 <path d="M14 10l6 -6" />

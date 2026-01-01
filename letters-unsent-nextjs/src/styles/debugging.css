@@ -7,17 +7,11 @@ body {
 }
 
 main {
-  background-color: rgb(25, 102, 226);
+  background-color: rgb(18, 80, 180);
 }
 
-.about-section {
+/* .about-section {
   background-color: rgb(255, 153, 0);
-}
-
-/* @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 } */
 
 .navbar, .footer {

@@ -9,6 +9,8 @@
   --foreground: #3e3d38;
   --background-desat-1: #e5e3d4;
   --background-desat-2: #58503c;
+  --background-error-message: hsl(0, 100%, 89%);
+  --button-text-color: #3e3d38;
   --letter-colour: #fffff4;
   --accent: hsl(132, 46%, 75%);
   --accent-cooler: hsl(180, 66%, 66%);;
@@ -35,6 +37,8 @@
     --background: #282c21;   /* deep warm-charcoal with slight olive */
     --foreground: #e5e3d4;   /* warm parchment-white */
     --background-desat-1: #3f3e39;
+    --background-error-message: HSL(0, 100%, 20%);
+    --button-text-color: #3e3d38;
     --letter-colour: #514e42;
     --accent: #7fbf92;       /* muted mint (same family as your light accent) */
     /* shadows for dark mode: darker core shadow + optional faint highlight */
@@ -65,7 +69,7 @@ body {
 html {
   display: flex;
   flex-direction: column;
-  /* height: 100vh; */
+  height: 100%;
   z-index: -4;
 }
 
@@ -74,29 +78,29 @@ body {
   font-size: var(--font-size);
   color: var(--foreground);
   background: var(--background);
-  /* font-family: Arial, Helvetica, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  min-height: 0;
+  
+  flex: 1;
   align-items: center;
   justify-content: center;
   margin: 0 10px;
-  position: relative;
   z-index: -3;
+  min-height: 100vh;
+  
 }
 
 main {
   flex: 1;
-  min-height: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* position: relative; */
-  /* justify-content: flex-start; */
   z-index: -2;
+  justify-content: space-between;
+  position: relative;
+  overflow: auto;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -175,6 +179,7 @@ footer {
   position: sticky;
   top: 0px;
   background-color: var(--background);
+  z-index: 10;
 }
 
 .navbar a {
@@ -235,7 +240,7 @@ footer a:hover {
 }
 
 .letter {
-  padding: 20px 50px;
+  padding: 10px 20px;
   margin-bottom: 30px;
   box-shadow: var(--shadow-elevation-low);
   transition-property: box-shadow;
@@ -270,7 +275,7 @@ footer a:hover {
 .single-letter {
   text-align: center;
   width: 100%;
-  padding: 40px 30px;
+  padding: 50px 15px;
   box-shadow: var(--shadow-elevation-medium);
 }
 
@@ -391,10 +396,6 @@ textarea
   color: var(--foreground);
 }
 
-textarea:focus {
-  outline: none; /* could be an issue for accessibility users */
-}
-
 .visitor-textarea {
   flex: 1;
   border: none;
@@ -488,12 +489,14 @@ button {
   padding: 20px 20px;
   cursor: pointer;
   background-color: var(--accent);
-  transition-property: background-color;
+  transition-property: background-color color;
   transition-duration: 0.5s;
+  color: var(--foreground);
 }
 
 button:hover {
   background-color: var(--accent-cooler); /* hsl(132, 43%, 58%); */
+  color: var(--button-text-color);
 }
 
 .button-input-area {
@@ -506,6 +509,13 @@ button:hover {
 
 .submit-button {
   margin-top: auto;
+}
+
+.submit-button
+, .submit-button:hover
+, .start-conversation-button
+, .start-conversation-button:hover  {
+  color: var(--button-text-color);
 }
 
 label {
@@ -562,7 +572,7 @@ label {
 .modal-footer {
   width: 100%;
   font-size: var(--font-size-smaller);
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .button-change-modal-container {
@@ -576,6 +586,13 @@ label {
   background: none;
 }
 
+.error {
+  background-color: var(--background-error-message);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: var(--borderRadius);
+}
+
 
 /*
   --------------------------------
@@ -585,9 +602,14 @@ label {
 
 @media (width > 550px) {
 
-  :root {
-    --font-size: 1.2em;
+  .letter {
+    padding: 20px 60px;
   }
+
+  .single-letter {
+    padding: 100px 80px 120px 80px;
+  }
+
 
   .about-section
   ,.submit-container {
@@ -614,6 +636,10 @@ label {
 
 @media (width > 700px) {
 
+  :root {
+    --font-size: 1.2em;
+  }
+
   .about-section
   ,.submit-container {
     margin: 0 70px;
@@ -625,7 +651,6 @@ label {
 
    .single-letter {
     max-width: 90%;
-    padding: 80px 100px; 
   }
 
 }
@@ -637,8 +662,9 @@ label {
     margin: 0 150px;
   }
 
-   .single-letter {
-    max-width: 75%;
+  .single-letter {
+    max-width: 85%;
+    padding: 120px 100px 140px 100px; 
   }
 
   .letter-display {
@@ -654,13 +680,15 @@ label {
     margin: 0 250px;
   }
 
-   .single-letter {
+  .single-letter {
     max-width: 75%;
   }
 
   .letter-display {
     padding: 30px 150px;
   }
+
+  
 
 }
 
@@ -686,7 +714,7 @@ label {
   }
 
   .single-letter {
-    max-width: 60%;
+    max-width: 70%;
   }
 
 }

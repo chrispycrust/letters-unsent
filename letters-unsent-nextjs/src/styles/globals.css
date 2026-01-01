@@ -174,12 +174,12 @@ footer {
 }
 
 .navbar {
-  /* height: 70px; */
-  margin-bottom: 2em;
+  height: 75px;
   position: sticky;
   top: 0px;
   background-color: var(--background);
   z-index: 10;
+  padding: 20px 0 25px 0;
 }
 
 .navbar a {
@@ -275,7 +275,7 @@ footer a:hover {
 .single-letter {
   text-align: center;
   width: 100%;
-  padding: 50px 15px;
+  padding: 70px 15px 100px 15px;
   box-shadow: var(--shadow-elevation-medium);
 }
 
@@ -576,10 +576,14 @@ label {
 }
 
 .button-change-modal-container {
+  
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  /* height: 24px;
+  width: 24px;
+  background-color: aqua; */
 }
 
 .button-change-modal {

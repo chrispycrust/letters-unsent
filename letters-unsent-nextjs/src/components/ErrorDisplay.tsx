@@ -13,6 +13,6 @@ interface ErrorProps {
 
 export default function ErrorDisplay( {message}: ErrorProps) {
     return (
-        <p>{message}</p>
+        <div className="error">{message}</div>
     )
 }

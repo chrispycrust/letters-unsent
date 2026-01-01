@@ -46,18 +46,16 @@ export default function Home() {
 
       const data = await res.json()
 
-      console.log("load letters:", data)
-
       if (data.success) {
         setLetters(data.letters)
       } else {
         console.error('Failed to load letters:', data.error)
-        setErrorMessage(`Failed to load letters: ${data.error}`)
+        setErrorMessage(`Failed to load letters: ${data.error}. Please try again later.`)
       }
 
     } catch (err) {
       console.error('Network error:', err)
-      setErrorMessage(`Network error: ${err}`)
+      setErrorMessage(`Network error: ${err}. Please try again later.`)
     }
   }
 
@@ -74,11 +72,6 @@ export default function Home() {
 
     } else if (letters.length === 0) {
       return <p>No letters</p>
-
-    } else if (ErrorMessage != "") {
-      return <ErrorDisplay 
-                message={ErrorMessage}
-              />
 
     } else {
       return letters.map((Letter) => (
@@ -126,6 +119,11 @@ export default function Home() {
 
   return (
     <>
+      {
+        ErrorMessage ? (
+          <ErrorDisplay message={ErrorMessage} />
+        ) : null
+      }
       <div className="letter-display">
         { determineLetterDisplay() }
       </div>

@@ -138,9 +138,11 @@ export default function Submit() {
 
       <div className="submit-container">
 
-          <ErrorDisplay 
-            message={ErrorMessage}
-          />
+          {
+            ErrorMessage ? (
+              <ErrorDisplay message={ErrorMessage} />
+            ) : null
+          }
 
           {
             (conversationStart === true) ? (
@@ -164,6 +166,7 @@ export default function Submit() {
                   id="conversation-start-button"
                   type="button" 
                   onClick={greetVisitor}
+                  className="start-conversation-button"
                 >
                   Start conversation
                 </button>

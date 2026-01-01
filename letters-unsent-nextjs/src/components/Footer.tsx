@@ -20,8 +20,10 @@ export default function Footer() {
     return (
         <footer>
             <div className="footer-nav-links">
-                <p>Letters Unsent (v1.0)</p>
-                <p>2025-present</p>
+                <p>
+                    <Link href="/">Letters Unsent</Link> (v1.0)
+                </p>
+                <p>Release 2026</p>
             </div>
             <div className="footer-nav-links">
                 <p>

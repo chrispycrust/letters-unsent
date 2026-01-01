@@ -113,7 +113,7 @@ export default function About() {
                 <p>Attempted submissions of this type of content will be prevented.
 
                 </p><p>
-                    Please reach out to me personally if you come across these situations:
+                    Please reach out to me if you come across these situations (contact options below):
                 </p>
                 <ul>
                     <li>
@@ -134,9 +134,11 @@ export default function About() {
                 </h2>
                 <p>
                     I'm currently expanding the ability to <strong>update</strong> and <strong>delete</strong> submitted letters anonymously in v1.1.
-                </p><p>
+                </p>
+                {/* <p>
                     If you want to see what I've planned for the patform, please see my <Link href="https://chrispycrust.notion.site/Letters-Unsent-Solo-Scrum-Board-d5e248a545a7494ba36961b0daec45cc">solo sprint board</Link>.
-                </p><p>
+                </p> */}
+                <p>
                     Suggestions, comments or feedback for this platform are welcome—please reach out to me via the contact below.
                 </p>
             </section>
@@ -154,15 +156,21 @@ export default function About() {
                     You can find out more about me on <Link href="https://chrispycrust.notion.site/Thought-Stack-0253a7f5960044f482fb53db397929ec">my personal website here</Link>.
                 </p>
                 <p>
-                    Feel free to get in touch here: <strong>dear@letters-unsent.com</strong>
+                    If you'd like to get in touch about anything related to this website here - you can use the following ways: 
                 </p>
-                <p>
-                    You can also send an anonymous message to the above inbox via the form below. Please don’t include names, phone numbers, addresses, or anything you wouldn’t want stored.
-                </p>
+                <ul>
+                    <li>
+                        <Link href="https://tally.so/r/gDdeBD">anonymous contact form</Link>
+                    </li>
+                    <li>
+                        dear@letters-unsent.com
+                    </li>
+                </ul>
                 
-                <ContactForm />
+                {/* <ContactForm /> */}
             </section>
 
         </div>  
+        
     )
 }

@@ -5,16 +5,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN
 });
 
-// interface LetterSubmission {
-//   id: number,
-//   created_at: string;
-//   content: string,
-//   intended_recipient: string,
-//   is_deleted: Date,
-//   deleted_at: Date,
-//   author_name: string
-// }
-
 type SubmitToSupabaseArgs = {
   content: string
   created_at: string
@@ -53,8 +43,8 @@ const tools: OpenAI.Responses.Tool[] = [
 
 async function submit_to_supabase(args: SubmitToSupabaseArgs) {
 
-  console.log("Object received from model: ", args);
-  console.log("type of argument: ", typeof(args))
+  // console.log("Object received from model: ", args);
+  // console.log("type of argument: ", typeof(args))
 
   args.created_at = new Date().toISOString();
 

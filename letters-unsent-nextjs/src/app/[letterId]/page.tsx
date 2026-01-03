@@ -8,12 +8,12 @@
 
 import { convertDate } from "@/utils/functions"
 
-// import type { Metadata } from "next";
+import type { Metadata } from "next";
 
-// export const metadata: Metadata = {
-//     title: `Letters Unsent-Letter ${letterId}`,
-//     description: "Write and submit your own letter",
-//   };
+export const metadata: Metadata = {
+    title: `Letters Unsent-Letter`,
+    description: "Read a single letter",
+  };
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -34,6 +34,12 @@ export default async function LetterPage({
     const letterId = Number(letterIdString.letterId)
 
     const res = await fetch(`${process.env.SUPABASE_API_URL}/singleLetter?&letterId=${letterId}`)
+
+    if (!res.ok) {
+      return (
+        <div className="error">Couldn't load this letter</div>
+      )
+    }
 
     const data = await res.json()
 

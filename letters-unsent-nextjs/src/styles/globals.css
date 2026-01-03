@@ -353,9 +353,6 @@ p.timestamp {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 50px;
-  margin-bottom: 20px;
-  z-index: auto;
 }
 
 .sign-off {
@@ -395,6 +392,8 @@ p.timestamp {
 .guardian-panel {
   display: flex;
   flex-direction: column;
+  align-content: center;
+  justify-content: center;
   min-height: 50px;
   min-width: 50px;
   overflow: auto;
@@ -576,7 +575,6 @@ label {
   height: 0.8em;
   animation: spin 1000ms linear infinite;
   margin-top: 10px; /* workaround for now to get the complete spinner showing */
-  justify-self: center;
 }
 
 .modal {

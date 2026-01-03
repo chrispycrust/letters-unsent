@@ -16,7 +16,9 @@ export default function GuardianPanel({
             <div>
                 {
                     responseStatus === false ? (
-                        <Spinner />
+                        <div className="spinner-container">
+                            <Spinner />
+                        </div>
                     ) : (
                         <div className="preserve-breaks">
                             {message}

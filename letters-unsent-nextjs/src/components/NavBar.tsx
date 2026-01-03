@@ -15,6 +15,7 @@ import { useState } from "react";
 import NavigationModal from "./NavigationModal";
 import EnvelopeClosedIcon from "../../public/icons/envelope-closed";
 import { useEffect } from "react";
+import FeatherIcon from "../../public/icons/feather-icon";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -83,6 +84,7 @@ export default function NavBar() {
               >
                 Release A Letter
               </Link>
+              <FeatherIcon />
               <Link 
                 href="/about" 
               >

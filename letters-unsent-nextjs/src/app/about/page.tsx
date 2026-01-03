@@ -22,7 +22,6 @@ export default function About() {
     return (
         <div className="about-section">
             <section >
-                <article>
                 <h1 className="about-section-h1">
                     About Letters Unsent
                 </h1>
@@ -33,13 +32,14 @@ export default function About() {
                     Esther Perel once wrote about <Link href="https://www.estherperel.com/blog/ull-introduction">the emancipating power of letter writing</Link> - 
                     the release and clarity that writing can bring, even when the letter remains unsent. 
                     There is something uniquely powerful about the emotional charge of words that never found their way to a recipient.
+                    In a time where brevity often wins, writing and reading letters require more effort - but it&apos;s also likely to offer more reward.
                 </p><p>
                     It&apos;s not surprising, then, that many people have created spaces online to hold these unsent words, including:
                 </p>
 
                 <ul>
                     <li>
-                        <Link href="about-section-h3">r/UnsentLetters</Link>
+                        <Link href="https://www.reddit.com/r/UnsentLetters/">r/UnsentLetters</Link>
                     </li><li>
                         <Link href="https://theunsentproject.com/#">The Unsent Project</Link>
                     </li><li>
@@ -51,21 +51,18 @@ export default function About() {
                 </p>
                 <ul>
                     <li>
-                        I wanted to build something meaningful while learning to build my first user-driven full-stack appplication.
+                        I wanted to build something meaningful for my first user-driven full-stack application.
                     </li><li>
-                        I wanted to build a home to hold the emotional worlds of others according to my own vision and taste.
+                        I also wanted to create a space that felt designed with care to hold the emotional worlds of others.
                     </li><li>
                         While I admire <Link href="https://theunsentproject.com/#">The Unsent Project</Link>,
                         the website focuses on unsent texts and in a romantic context. 
-                        I wanted to honour a wider range of human experience - love in all its forms, as well as grief, gratitude, anger, regret, and bitterness.
-                    </li><li>
-                        And finally, in a time where brevity often wins, writing and reading letters require more effort - but it&apos;s also likely to offer more reward.
+                        I wanted to honour a wider range of human experience - love in all its forms, as well as grief, gratitude, anger, regret, and bitterness to name a few.
                     </li>
                 </ul>
                 <p>
                     I hope people find comfort in reading these letters or sharing their own, knowing that others, too, have words left unspoken.
                 </p>
-                </article>
             </section>
 
             {/* -------------------------------------------------------- */}
@@ -75,8 +72,8 @@ export default function About() {
                     Submission Guidelines
                 </h2>
                 <p>
-                    Letters of a diverse range of content and tones are welcome on this website. However, this is also a public space.
-                    To keep it safe for everyone, please avoid the following:
+                    This space welcomes letters of diverse content, tones and subjects. However, this is also a public space.
+                    To keep it safe for everyone, please write with compassion (for yourself and others) and avoid the following:
                 </p>
                 <ul>
                     <li>
@@ -93,13 +90,11 @@ export default function About() {
                         suicidal intentions or thoughts or self-harm instructions
                     </li><li>
                         any of the above involving minors
-                    </li><li>
-                        any combination of the above restrictions
                     </li>
                 </ul>
 
-                <p>Submissions containing this type of content will be prevented.
-
+                <p>
+                    Submissions containing this content won&apos;t be accepted. 
                 </p><p>
                     You're welcome to reach out if you come across these situations (refer to &quot;Contact&quot; section below):
                 </p>
@@ -124,9 +119,11 @@ export default function About() {
                     Anonymity and consent are highly important. 
                 </p>
                 <p>
-                    To preserve anonymity, this app doesn&apos;t collect any personal data beyond what you choose to share 
-                    (including conversations with the AI on the submission form on the <Link href="submit">Release A Letter</Link> page). 
-                    This means that, at this stage, I&apos;m unable to delete or edit letters without proof of ownership on request. 
+                    To preserve anonymity, this app doesn't collect personal data beyond what you choose to share in your letter. 
+                    Conversations with Cove (the AI presence during submission on the <Link href="submit">Release A Letter</Link> page) are also not stored. 
+                </p>
+                <p>
+                    This means that, at this stage, I'm unable to delete or edit letters on request. 
                     Please only share what you&apos;re comfortable leaving public.
                 </p>
                 <p>
@@ -142,7 +139,9 @@ export default function About() {
                     Roadmap & Features
                 </h2>
                 <p>
-                    My ultimate goal is to move Letters Unsent to become more than an archive - it&apos;s a quiet digital cove that I&apos;m slowly tending. 
+                    Letters Unsent is more than an archive - it&apos;s a quiet digital cove that I&apos;m tending over time.
+                </p>
+                <p>
                     Here&apos;s a little of what I&apos;ve planned so far:
                 </p>
                 <p>
@@ -152,9 +151,9 @@ export default function About() {
                     <li>
                         anonymous <strong>update</strong> and <strong>delete</strong> of submitted letters
                     </li><li>
-                        standard form submission option as opposed to a guided conversation with the AI API
+                        standard form submission option alongside current guided conversation with Cove (AI API)
                     </li><li>
-                        filters, sort and search
+                        filters, sort and search on submitted letters
                     </li>
                 </ul>
                 <p>
@@ -162,15 +161,15 @@ export default function About() {
                 </p>
                 <ul>
                     <li>
-                        emotional memory for Cove (see &quot;Note&quot; below) to personalise your experience without your personal data
+                        emotional memory for Cove (the presence behind the AI API) to personalise your experience without your data
                     </li><li>
                         personal letter draft drawer
                     </li><li>
-                        a sense of community (without all the noise)
+                        a sense of community without all the usual noise
                     </li>
                 </ul>
                 <p>
-                    I&apos;m interested in moving beyond functionality without sacrificng usability - for this place to feel simple, yet quietly alive.
+                    I ultimately aim to move beyond functionality without sacrificing usability - for this place to feel simple, yet quietly alive.
                 </p><p>
                     A gentle note: these are not promises with deadlines. 
                     I&apos;m building this alone, alongside a full-time job, other creative non-technical pursuits, relationships and life in general. 
@@ -178,7 +177,8 @@ export default function About() {
                     What won&apos;t change is the commitment to keeping this a respectful, tender space that honours the emotional world of its visitors.
                 </p>
                 <p>
-                    Suggestions, comments or feedback for this platform and what should be build priorities are welcome - please reach out to me via the contact options just below.
+                    Suggestions, comments or feedback for this platform or on what the build priorities should be are welcome 
+                    - please reach out to me via the contact options just below.
                 </p>
             </section>
             
@@ -190,9 +190,9 @@ export default function About() {
                 <h2>
                     Contact
                 </h2>
-                <p>I am a developer by profession, an artist at heart and a writer of several letters myself.</p>
+                <p>I&apos;m a developer by profession, an artist at heart and a writer of a few letters myself.</p>
                 <p>
-                    You&apos;re welcome get in touch about anything related to this website here - you can use the following ways: 
+                    You&apos;re welcome to get in touch about anything related to this website here - you can use the following ways: 
                 </p>
                 <ul>
                     <li>
@@ -206,19 +206,6 @@ export default function About() {
                 {/* <ContactForm /> */}
             </section>
 
-            {/* -------------------------------------------------------- */}
-
-            <section
-                id="note"
-            >
-                <p>
-                    <strong>Note: </strong>
-                    This space is watched over by Cove, a quiet digital guardian. 
-                    They don&apos;t judge, remember, or intervene - they simply keep the space safe, so your words can rest here undisturbed.
-                </p>
-            </section>
-
         </div>  
-        
     )
 }

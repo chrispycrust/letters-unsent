@@ -8,8 +8,8 @@ const openai = new OpenAI({
 type SubmitToSupabaseArgs = {
   content: string
   created_at: string
-  intended_recipient: string | null
-  author_name: string | null
+  intended_recipient?: string | null
+  author_name?: string | null
 }
 
 const tools: OpenAI.Responses.Tool[] = [
@@ -27,10 +27,12 @@ const tools: OpenAI.Responses.Tool[] = [
         },
         intended_recipient: {
           type: "string",
+          nullable: true,
           description: "name of the recipient of the letter",
         },
         author_name: {
           type: "string",
+          nullable: true,
           description: "name of the author of the letter",
         }
       },

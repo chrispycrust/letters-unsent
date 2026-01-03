@@ -86,7 +86,8 @@ body {
   align-items: center;
   justify-content: flex-start;
   margin: 0 10px;
-  min-height: 100vh;
+  /* min-height: 100vh; */
+  min-height: 100dvh;
   position: relative;
 }
 
@@ -198,7 +199,7 @@ footer {
 }
 
 .navbar {
-  height: 75px;
+  height: 80px;
   position: sticky;
   top: 0px;
   background-color: var(--background);
@@ -208,7 +209,7 @@ footer {
 }
 
 .navbar a {
-  padding: 20px 20px 10px 20px;
+  /* padding: 20px 20px 10px 20px; */
   transition-property: border-style;
   transition-duration: 0.5s;
 }
@@ -222,7 +223,7 @@ footer {
 
 footer {
   /* margin-top: 80px;  for some reason margins aren't applying*/
-  padding: 40px 20px 20px 20px;
+  padding: 40px 0px 20px 0px;
   font-size: var(--font-size-smaller);
 }
 
@@ -250,6 +251,15 @@ footer a:hover {
   align-items: center;
 }
 
+.nav-links a
+, .feather-icon {
+  margin-left: 20px;
+}
+
+/* .nav-links a:last-child {
+  margin-right: 20px;
+} */
+
 .navbar a:hover {
   border-bottom: solid 1px;
 }
@@ -266,7 +276,7 @@ footer a:hover {
 
 .letter {
   padding: 10px 20px;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   box-shadow: var(--shadow-elevation-low);
   transition-property: box-shadow;
   transition-duration: 0.5s;

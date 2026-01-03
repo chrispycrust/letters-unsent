@@ -6,9 +6,10 @@
 -------------------------------------------------------------------------------------------------
 */
 
-import { convertDate } from "@/utils/functions"
-
 import type { Metadata } from "next";
+
+import ErrorDisplay from "@/components/ErrorDisplay";
+import { convertDate } from "@/utils/functions"
 
 export const metadata: Metadata = {
     title: `Letters Unsent-Letter`,
@@ -33,11 +34,28 @@ export default async function LetterPage({
 
     const letterId = Number(letterIdString.letterId)
 
-    const res = await fetch(`${process.env.SUPABASE_API_URL}/singleLetter?&letterId=${letterId}`)
+    const res = await fetch(
+      `${process.env.SUPABASE_API_URL}/singleLetter?&letterId=${letterId}`
+      ,{ cache: "no-store" }
+    )
 
     if (!res.ok) {
+
+      let errorMessage = "Couldn't load this letter"
+
+      try {
+        const errorData = await res.json()
+        if (errorData?.error) {
+          errorMessage = errorData.error
+        }
+      } catch {
+        // response wasn't JSON — ignore and use default message
+      }
+
       return (
-        <div className="error">Couldn't load this letter</div>
+        <ErrorDisplay
+          message={errorMessage}
+        />
       )
     }
 

@@ -124,11 +124,10 @@ export default function About() {
                 </p>
                 <p>
                     This means that, at this stage, I'm unable to delete or edit letters on request. 
-                    Please only share what you&apos;re comfortable leaving public.
                 </p>
                 <p>
                     I&apos;m working on an anonymous edit/delete feature for the next update (see &quot;Roadmap & Features&quot; section just below.) 
-                    Until then, please treat submission as permanent.
+                    Until then, please only share what you&apos;re comfortable leaving public permanently.
                 </p>
             </section>
 
@@ -196,10 +195,10 @@ export default function About() {
                 </p>
                 <ul>
                     <li>
-                        <strong>Anonymous contact form: </strong> <Link href="https://tally.so/r/gDdeBD">via Tally forms</Link>
+                        <strong>anonymous contact form: </strong> <Link href="https://tally.so/r/gDdeBD">via Tally forms</Link>
                     </li>
                     <li>
-                        <strong>Email: </strong> dear@letters-unsent.com
+                        <strong>email: </strong> dear@letters-unsent.com
                     </li>
                 </ul>
                 

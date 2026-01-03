@@ -154,18 +154,14 @@ export default function About() {
                     Contact
                 </h2>
                 <p>
-                    Developer but still an artist at heart, and writer of several letters myself. 
-                    You can find out more about me on <Link href="https://chrispycrust.notion.site/Thought-Stack-0253a7f5960044f482fb53db397929ec">my personal website here</Link>.
-                </p>
-                <p>
-                    If you&apos;d like to get in touch about anything related to this website here - you can use the following ways: 
+                    Please feel free to get in touch about anything related to this website here - you can use the following ways: 
                 </p>
                 <ul>
                     <li>
-                        <Link href="https://tally.so/r/gDdeBD">anonymous contact form</Link>
+                        <strong>Anonymous contact form: </strong> <Link href="https://tally.so/r/gDdeBD">via Tally forms</Link>
                     </li>
                     <li>
-                        dear@letters-unsent.com
+                        <strong>Email: </strong> dear@letters-unsent.com
                     </li>
                 </ul>
                 

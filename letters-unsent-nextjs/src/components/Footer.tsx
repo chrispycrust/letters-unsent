@@ -1,6 +1,13 @@
 "use client"
 
-import { useState } from "react"
+/* 
+-------------------------------------------------------------------------------------------------
+
+  IMPORTS
+
+-------------------------------------------------------------------------------------------------
+*/
+
 import Link from "next/link"
 
 /* 
@@ -14,9 +21,6 @@ import Link from "next/link"
 
 export default function Footer() {
 
-    const [ showModal, setShowModal ] = useState(false)
-
-    
     return (
         <footer>
             <div className="footer-nav-links">

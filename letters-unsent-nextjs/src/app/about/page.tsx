@@ -7,7 +7,6 @@
 */
 
 import Link from "next/link"
-import ContactForm from "@/components/ContactForm";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -22,13 +21,17 @@ import ContactForm from "@/components/ContactForm";
 export default function About() {
     return (
         <div className="about-section">
-            <section>
-                <h1>
+            <section >
+                <article>
+                <h1 className="about-section-h1">
                     About Letters Unsent
                 </h1>
+                <h3 className="about-section-h3">
+                    <i>A home for words never received</i>
+                </h3>
                 <p>
                     The inspiration for this platform was sparked by Esther Perel whose <Link href="https://www.estherperel.com/blog/ull-introduction">perspective </Link> 
-                    made me more aware of the emancipating power of writing a letter—the release and clarity that writing can bring, even when the letter remains unsent. 
+                    made me more aware of the release and clarity that writing can bring, even when the letter remains unsent. 
                 </p><p>
                     There are already multiple other places where you can go to release unsent things: 
                 </p>
@@ -43,51 +46,32 @@ export default function About() {
                     </li>
                 </ul>
                 <p>
-                    So why make this platform?
+                    I wanted to contribute to the available platforms for these reasons:
                 </p>
                 <ul>
                     <li>
-                        To give a home to the emotional worlds of others, built according to my own vision.
+                        I wanted to give a home to the emotional worlds of others and build it the way I&apos;d want a home for letters to look 
+                        (refer to &quot;Roadmap & Features&quot; section below for more.)
                     </li><li>
-                        The Unsent Project focuses on only texts never sent, and specifically in a romantic context. 
-                        I wanted to honour a diversity and range of human experiences.
+                        While I deeply enjoy and admire <Link href="https://theunsentproject.com/#">The Unsent Project</Link>, the website focuses on unsent texts and in a romantic context. 
+                        I wanted to honour a wider range of human experience - love in all its forms as well as grief, gratitude, anger, regret, bitterness, for example.
                     </li><li>
-                        In a time where brevity often wins, there's something uniquely powerful about the way longer form letters demand full attention. 
-                        It requires more effort—but it can also offer more reward.
+                        And finally, in a time where there seems to be a preoccupation on optimisation and brevity,
+                        there&apos;s something uniquely powerful about the letters inviting full attention. It requires more effort - but it&apos;s also likely to offer more reward.
                     </li>
                 </ul>
                 <p>
                     I hope people find comfort in reading these letters or sharing their own, knowing that others, too, have words left unspoken.
                 </p>
-
+                </article>
             </section>
 
             {/* -------------------------------------------------------- */}
 
             <section>
                 <h2>
-                    Privacy & Safety
-                </h2>
-                <p>
-                    Anonymity and consent is highly important.
-                    None of your details are stored on this website (including conversations with OpenAI's model on the submission form) other than what you choose to share. Nothing is tracked.
-                </p>
-                <p>
-                    That said, for anonymity to work without gathering any visitor data, this means there is no way right now to prove a letter is yours.
-                    Please don't share anything on this website if you think you might want to edit or delete it later. 
-                    I won't delete or edit anything without proof.
-                </p>
-                <p>
-                    Ability to edit and delete anonymously will be worked on in the next iteration. (See "Roadmap & Features" section below.)
-                </p>
-            </section>
- 
-            {/* -------------------------------------------------------- */}
-
-            <section>
-                <h3>
                     Submission Guidelines
-                </h3>
+                </h2>
                 <p>
                     I want to honour letters of a diverse range of content and tones on this website. However, this is also a public space. You cannot:
                 </p>
@@ -113,17 +97,38 @@ export default function About() {
                 <p>Attempted submissions of this type of content will be prevented.
 
                 </p><p>
-                    Please reach out to me if you come across these situations (contact options below):
+                    Please reach out to me if you come across these situations (refer to &quot;Contact&quot; section below):
                 </p>
                 <ul>
                     <li>
-                        If you're convinced your letter doesn't violate any of the above guidelines but still have issues submitting.
+                        If you&apos;re convinced your letter doesn&apos;t violate any of the above guidelines but you still have issues submitting.
                     </li><li>
-                        If you read a letter and thinks it should not be displayed publicly
+                        If you read a letter and you think it should not be displayed publicly.
                     </li><li>
-                        If you're convinced any of the disallowed content above should be reconsidered
+                        If you&apos;re convinced any of the disallowed content above should be reconsidered.
                     </li>
                 </ul>
+            </section>
+
+            {/* -------------------------------------------------------- */}
+
+            <section>
+                <h2>
+                    Privacy
+                </h2>
+                <p>
+                    Anonymity and consent is highly important.
+                    None of your details are stored on this website (including conversations with OpenAI&apos;s model on the submission form) other than what you choose to share. 
+                    Nothing is tracked.
+                </p>
+                <p>
+                    That said, for anonymity to work without gathering any visitor data, this means there is no way right now to prove a letter is yours.
+                    Please don&apos;t share anything on this website if you think you might want to edit or delete it later. 
+                    I won&apos;t delete or edit anything without proof.
+                </p>
+                <p>
+                    Ability to edit and delete anonymously will be worked on in the next iteration. (See &quot;Roadmap & Features&quot; section below.)
+                </p>
             </section>
 
             {/* -------------------------------------------------------- */}
@@ -133,11 +138,8 @@ export default function About() {
                     Roadmap & Features
                 </h2>
                 <p>
-                    I'm currently expanding the ability to <strong>update</strong> and <strong>delete</strong> submitted letters anonymously in v1.1.
+                    I&apos;m currently expanding the ability to <strong>update</strong> and <strong>delete</strong> submitted letters anonymously in v1.1.
                 </p>
-                {/* <p>
-                    If you want to see what I've planned for the patform, please see my <Link href="https://chrispycrust.notion.site/Letters-Unsent-Solo-Scrum-Board-d5e248a545a7494ba36961b0daec45cc">solo sprint board</Link>.
-                </p> */}
                 <p>
                     Suggestions, comments or feedback for this platform are welcome—please reach out to me via the contact below.
                 </p>
@@ -156,7 +158,7 @@ export default function About() {
                     You can find out more about me on <Link href="https://chrispycrust.notion.site/Thought-Stack-0253a7f5960044f482fb53db397929ec">my personal website here</Link>.
                 </p>
                 <p>
-                    If you'd like to get in touch about anything related to this website here - you can use the following ways: 
+                    If you&apos;d like to get in touch about anything related to this website here - you can use the following ways: 
                 </p>
                 <ul>
                     <li>

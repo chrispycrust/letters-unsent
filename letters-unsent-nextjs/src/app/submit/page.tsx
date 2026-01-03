@@ -8,20 +8,13 @@
 -------------------------------------------------------------------------------------------------
 */
 
-import type { Metadata } from "next";
-
 import { useState, useRef } from "react";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
-import ErrorDisplay from "@/components/ErrorDisplay";
 
 /* COMPONENTS */
+import ErrorDisplay from "@/components/ErrorDisplay";
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
-
-// export const metadata: Metadata = {
-//   title: "Release a letter",
-//   description: "Write then submit your own letter to the archive",
-// };
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -46,7 +39,7 @@ export default function Submit() {
   const [responseOk, setResponseOk] = useState(false)
   const [ErrorMessage, setErrorMessage] = useState("")
   const [conversationStart, setConversationStart] = useState(false); // "start conversation" button
-  const ref: any = useRef(null)
+  const ref = useRef<HTMLButtonElement | null>(null)
 
   async function greetVisitor() {
 
@@ -55,10 +48,12 @@ export default function Submit() {
       ref.current.remove();
     } else {
       console.log("Element not found");
+      // setErrorMessage("Button to start conversation not found")
     }
 
     setConversationStart(true);
 
+    // activate emotional memory for Cove
     localStorage.setItem("visitCount", "1");
     localStorage.setItem("letterDraft", "hey you"); // without formatting
 
@@ -89,7 +84,7 @@ export default function Submit() {
 
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault() // stops the default page reload
 
     setResponseOk(false);

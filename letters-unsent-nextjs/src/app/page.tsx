@@ -13,9 +13,14 @@ import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import { truncateContent } from "@/utils/functions"
-import { cormorant } from "@/styles/fonts/fonts"
 
 import Footer from "@/components/Footer";
+
+type Letter = {
+  id: string
+  content: string
+  intended_recipient: string | null
+}
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -29,7 +34,7 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
 
-  const [letters, setLetters] = useState([])
+  const [letters, setLetters] = useState<Letter[]>([])
   const [responseOk, setResponseOk] = useState(false)  
   const [ErrorMessage, setErrorMessage] = useState("")
 
@@ -74,32 +79,32 @@ export default function Home() {
       return <p>No letters</p>
 
     } else {
-      return letters.map((Letter) => (
+      return letters.map((letter) => (
         <Link 
-          href={`/${Letter.id}`}
-          key={Letter.id}
+          href={`/${letter.id}`}
+          key={letter.id}
         >
           <div className="letter">
             {
-              ( Letter.intended_recipient === "" || Letter.intended_recipient === null )? (
+              ( letter.intended_recipient === "" || letter.intended_recipient === null )? (
                 <div className="
                   single-letter-content-no-recipient-on-display-page 
                   preserve-breaks
                   single-letter-on-display-page-margin-bottom
                 ">
-                  {truncateContent(Letter.content)}
+                  {truncateContent(letter.content)}
                 </div>
               ) : (
                 <>
                   <h2>
-                    {Letter.intended_recipient}
+                    {letter.intended_recipient}
                   </h2>
                   <div className="
                     single-letter-content-container-with-recipient 
                     preserve-breaks 
                     single-letter-on-display-page-margin-bottom
                   ">
-                    {truncateContent(Letter.content)}
+                    {truncateContent(letter.content)}
                   </div>
                 </>
               )

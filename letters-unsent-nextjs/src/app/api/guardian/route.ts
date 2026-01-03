@@ -5,11 +5,28 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN
 });
 
-const tools = [
+// interface LetterSubmission {
+//   id: number,
+//   created_at: string;
+//   content: string,
+//   intended_recipient: string,
+//   is_deleted: Date,
+//   deleted_at: Date,
+//   author_name: string
+// }
+
+type SubmitToSupabaseArgs = {
+  content: string
+  intended_recipient: string | null
+  author_name: string | null
+}
+
+const tools: OpenAI.Responses.Tool[] = [
   {
     type: "function",
     name: "submit_to_supabase",
     description: "Submit final letter object to Supabase at RELEASE stage of conversation",
+    strict: true,
     parameters: {
       type: "object",
       properties: {
@@ -26,18 +43,19 @@ const tools = [
           description: "name of the author of the letter",
         }
       },
-      required: ["content"],
+      required: ["content", "intended_recipient", "author_name"],
       additionalProperties: false // not sure what this is 
     },
     // strict: true // also not sure what this is
   }
 ];
 
-async function submit_to_supabase(args) {
+async function submit_to_supabase(args: SubmitToSupabaseArgs) {
 
-  // console.log("Object received from model:", args);
+  console.log("Object received from model: ", args);
+  console.log("type of argument: ", typeof(args))
 
-  args.created_at = new Date().toISOString();
+  // args.created_at = new Date().toISOString();
 
   // console.log("Submitting to Supabase:", args);
 
@@ -71,7 +89,7 @@ async function submit_to_supabase(args) {
   
 }
 
-async function callFunction(name, args) {
+async function callFunction(name: string, args: SubmitToSupabaseArgs) {
   if (name === "submit_to_supabase") {
     return await submit_to_supabase(args)
   }
@@ -83,8 +101,11 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const visitCount = searchParams.get("visitCount")
     
+    // ✅ always ends up as a string
+    const visitCountNumber = Number(visitCount ?? "1")
+    
     const visitorPrompt = 
-      visitCount <= 1
+      visitCountNumber <= 1 
         ? "The visitor is new and has never been here before. Please greet them accordingly - try finding new ways to greet them. Keep it short."
         : "The visitor has returned again. Please greet them accordingly - try finding new ways to welcome them back."
 

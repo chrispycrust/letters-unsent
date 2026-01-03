@@ -1,7 +1,13 @@
 import Link from "next/link"
 import EnvelopeOpenIcon from "../../public/icons/envelope-open"
 
-export default function NavigationModal({ onClose } ) {
+type NavigationModalProps = {
+  onClose: () => void
+}
+
+export default function NavigationModal({ 
+  onClose 
+}: NavigationModalProps ) {
     return (
       <div className="modal">
 
@@ -50,8 +56,8 @@ export default function NavigationModal({ onClose } ) {
         </div>
           
         <div className="modal-footer">
-          <p>Letters Unsent (v1.0) - 2025</p>
-          <p>Built with Next.js, React (with TypeScript), OpenAI's API, Supabase, Tabler</p>
+          <p>Letters Unsent (v1.0) - 2026</p>
+          <p>Built with Next.js, React (with TypeScript), OpenAI&apos;s API, Supabase, Tabler</p>
         </div>
         
       </div>

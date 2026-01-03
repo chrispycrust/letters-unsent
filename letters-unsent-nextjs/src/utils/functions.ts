@@ -2,7 +2,7 @@
 export function convertDate(retrievedDate: Date) {
     const date = new Date(retrievedDate); // Parses ISO 8601 string
 
-    const options = {
+    const options: object = {
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -15,17 +15,17 @@ export function convertDate(retrievedDate: Date) {
 /* Purpose: truncate letter content on display page that are too long */
 export function truncateContent(letterContent: string) {
 
-  let letterArray = letterContent.split(" ")
+  const letterArray = letterContent.split(" ")
 
   // insert screen width detection later to determine wordlimit
     // if screen width is mobile
       // then wordLimit = number
-    let wordLimit: number = 100
+    const wordLimit: number = 100
     // if screen width is tablet 
       // then word limit = number 
     // etc ...
 
-  let indexPositions: Array<number> = []
+  const indexPositions: Array<number> = []
   let fromIndex: number = 0
   let indexPosition: number = 0
 
@@ -42,9 +42,9 @@ export function truncateContent(letterContent: string) {
       indexPositions.push(indexPosition)
       fromIndex = indexPosition + 1
     }
-    let wordLimitIndex: number = indexPositions[indexPositions.length - 1]
+    const wordLimitIndex: number = indexPositions[indexPositions.length - 1]
 
-    let newletterContent: string = letterContent.substring(0,wordLimitIndex) + " ..."
+    const newletterContent: string = letterContent.substring(0,wordLimitIndex) + " ..."
 
     return newletterContent;
   }

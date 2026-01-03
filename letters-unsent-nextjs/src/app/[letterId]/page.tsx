@@ -27,7 +27,7 @@ import { convertDate } from "@/utils/functions"
 export default async function LetterPage({
   params,
 }: {
-  params: Promise<{ letterId: Number }>
+  params: Promise<{ letterId: number }>
 }) {
     const letterIdString = await params
 

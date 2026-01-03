@@ -17,6 +17,7 @@ const openai = new OpenAI({
 
 type SubmitToSupabaseArgs = {
   content: string
+  created_at: string
   intended_recipient: string | null
   author_name: string | null
 }
@@ -55,7 +56,7 @@ async function submit_to_supabase(args: SubmitToSupabaseArgs) {
   console.log("Object received from model: ", args);
   console.log("type of argument: ", typeof(args))
 
-  // args.created_at = new Date().toISOString();
+  args.created_at = new Date().toISOString();
 
   // console.log("Submitting to Supabase:", args);
 

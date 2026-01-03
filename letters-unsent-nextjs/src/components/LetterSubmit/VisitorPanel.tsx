@@ -15,8 +15,6 @@ interface VisitorInputProps {
     visitorInput: string
     ,setVisitorInput: React.Dispatch<React.SetStateAction<string>>
     ,handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-    // ,expandButtonState: boolean
-    // ,setExpandButtonActive: React.Dispatch<React.SetStateAction<string>>
 }
 
 /* 
@@ -32,8 +30,6 @@ export default function VisitorPanel({
     visitorInput
     ,setVisitorInput
     ,handleSubmit
-    // ,expandButtonState
-    // ,setExpandButtonActive
 }: VisitorInputProps) {
 
     const [ expandButtonActive, setExpandButtonActive ] = useState(false)
@@ -56,7 +52,6 @@ export default function VisitorPanel({
             >
                 <textarea 
                     id="VisitorInput"
-                    // className="visitor-textarea"
                     className={
                         `visitor-textarea
                         ${expandButtonActive ? 
@@ -66,7 +61,6 @@ export default function VisitorPanel({
                         }`
                     }
                     name="input area"
-                    // rows={1} 
                     required
                     value={visitorInput}
                     onChange={(e) => setVisitorInput(e.target.value)}

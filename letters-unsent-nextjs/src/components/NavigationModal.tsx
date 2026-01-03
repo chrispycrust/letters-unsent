@@ -17,6 +17,14 @@ export default function NavigationModal({ onClose } ) {
         <div className="modal-links">
           <p>
             <Link 
+              href="/" 
+              onClick={onClose}
+            >
+              Home
+            </Link>
+          </p>
+          <p>
+            <Link 
               href="/submit" 
               onClick={onClose}
             >

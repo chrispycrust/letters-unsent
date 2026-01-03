@@ -65,7 +65,7 @@ export default function VisitorPanel({
                     value={visitorInput}
                     onChange={(e) => setVisitorInput(e.target.value)}
                     placeholder="Write something"
-                    autoFocus
+                    // autoFocus
                     spellCheck="true"
                 >
                 </textarea>

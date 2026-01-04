@@ -89,6 +89,7 @@ body {
   /* min-height: 100vh; */
   min-height: 100dvh;
   position: relative;
+  scroll-behavior: smooth;
 }
 
 main {
@@ -104,9 +105,17 @@ main {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--cormorant);
-  padding: 1em 0 1em 0;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
   line-height: 1.5em;
+}
+
+h1, h2 {
   font-weight: 600;
+}
+
+h3, h4, h5, h6 {
+  font-weight: 500;
 }
 
 h1 {
@@ -131,8 +140,11 @@ h2 {
 }
 
 h3 {
-  font-size: 1.8em;
-  font-weight: 600;
+  font-size: 1.7em;
+}
+
+h4 {
+  font-size: 1.5em;
 }
 
 ul {
@@ -149,6 +161,10 @@ li {
 p, ul {
   margin-bottom: 1.5em;
   line-height: calc(var(--font-size) * 1.5);
+}
+
+strong {
+  font-weight: 600;
 }
 
 a {
@@ -174,11 +190,6 @@ a {
 .about-section {
   padding-bottom: 40px; /* again, margin doesn't seem to be working */
   /* margin-bottom: 10000px; */
-}
-
-.about-section a,  
-.about-section a:hover {
-  color: var(--about-link);
 }
 
 .about-section a {
@@ -358,9 +369,8 @@ p.timestamp {
 
 .sign-off {
   font-family: var(--cormorant);
-  font-style: italic;
-  font-size: 1.2em;
-  font-weight: 600;
+  font-size: 1.3em;
+  font-weight: 500;
 }
 
 /* .container-for-submit-container {
@@ -632,6 +642,68 @@ label {
   border-radius: var(--borderRadius);
 }
 
+.button-toggle
+, .button-toggle:hover   {
+  background: none;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.button-toggle h2 {
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  margin-left: 20px;
+  transition: margin;
+  transition-duration: 0.5s;
+}
+
+.button-toggle:hover h2 {
+  margin-left: 10px;
+}
+
+.about-section h2 {
+  font-weight: 400;
+}
+
+/* Smooth accordion panels when opening toggles on About page */
+.toggle-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: 
+    grid-template-rows 500ms ease
+    , opacity 500ms ease
+    , transform 500ms ease;
+}
+
+.toggle-panel.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toggle-panel-inner {
+  overflow: hidden;
+}
+
+.toggle-section {
+  margin: 20px 0 50px 0;
+}
+
+.about-section section {
+  scroll-margin-top: 200px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-panel {
+    transition: none;
+    transform: none;
+  }
+}
 
 /*
   --------------------------------
@@ -690,6 +762,10 @@ label {
 
    .single-letter {
     max-width: 90%;
+  }
+
+  .toggle-section {
+    margin-left: 50px;
   }
 
 }

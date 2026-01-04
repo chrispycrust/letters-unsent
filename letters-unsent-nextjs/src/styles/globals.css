@@ -635,6 +635,15 @@ label {
   margin-bottom: 20px;
 }
 
+.modal-footer p a {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+/* .navbar .modal .modal-footer p a:hover {
+  text-decoration: none;
+} */
+
 .button-change-modal-container {
   
   width: 100%;

@@ -125,7 +125,7 @@ export async function POST(request: Request) {
         model: "gpt-4.1",
         input: updatedConversation,
         tools,
-        store: true, // disable later in prod
+        store: false, // disable later in prod
       });
 
     let finalText = GuardianResponse.output_text
@@ -156,7 +156,7 @@ export async function POST(request: Request) {
         model: "gpt-4.1",
         input: updatedConversation,
         tools,
-        store: true, // disable later in prod
+        store: false, // disable later in prod
       });
 
       finalText = GuardianResponseAfterSubmission.output_text

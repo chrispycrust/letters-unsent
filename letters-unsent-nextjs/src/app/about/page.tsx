@@ -73,7 +73,7 @@ export default function About() {
                     A quiet home for words never sent
                 </h3>
                 <p>
-                    No accounts, no tracking, no public metrics.
+                    No accounts, no tracking, no metrics.
                     <br/>
                     Just letters, and the people who read and write them.
                 </p>
@@ -93,13 +93,20 @@ export default function About() {
                     id="background-panel"
                     className={`toggle-panel ${toggleBackground ? "is-open" : ""}`}
                     hidden={!toggleBackground}
+                    tabIndex={toggleBackground ? 0 : -1}
+                    aria-hidden={!toggleBackground}
                 >
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
                             <p>
                                 Esther Perel once wrote about <Link 
                                     href="https://www.estherperel.com/blog/ull-introduction"
-                                >the emancipating power of a letter</Link> - 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    tabIndex={toggleBackground ? undefined : -1}
+                                >
+                                    the emancipating power of a letter
+                                </Link> - 
                                 the release and clarity that writing itself can bring, even when never sent. 
                             </p><p>
                                 Spaces have emerged to hold these unsent words:
@@ -109,18 +116,30 @@ export default function About() {
                                 <li>
                                     <Link 
                                         href="https://www.reddit.com/r/UnsentLetters/"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={toggleBackground ? undefined : -1}
                                     >r/UnsentLetters</Link>
                                 </li><li>
                                     <Link 
                                         href="https://theunsentproject.com/#"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={toggleBackground ? undefined : -1}
                                     >The Unsent Project</Link>
                                 </li><li>
                                     various instagram accounts like <Link 
                                         href="https://www.instagram.com/unsent_letters_to/"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={toggleBackground ? undefined : -1}
                                     >unsent_letters_to</Link>
                                 </li><li>
                                     <Link 
                                         href="https://www.unsentlettermailbox.com/"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={toggleBackground ? undefined : -1}
                                     >The Unsent Letter Mailbox</Link> in New York City
                                 </li>
                             </ul>
@@ -131,12 +150,12 @@ export default function About() {
                             <p>
                                 I&apos;m a developer by profession and a writer of a few letters myself.
                                 For my first user-driven full-stack application, I wanted to build something meaningful 
-                                — a space that honours a wider range of human experience, rather than a single context. 
+                                - a space that honours a wider range of human experience, rather than a single context. 
                                 Not just romantic love, but grief, gratitude, anger, regret, bitterness, joy, and everything in between.
                             </p>
                             <p>
-                                I also wanted to create a place I wished existed in the world 
-                                - one that treats these emotional worlds with care, and does justice to the weight they carry.
+                                I also wanted to create a place I wished exists in the world 
+                                - one that hopefully does justice to the weight of those experiences.
                             </p>
                             <p>
                                 And finally, to me, the letter format itself holds a gentle kind of power.
@@ -168,18 +187,36 @@ export default function About() {
                     id="guidelines-panel"
                     className={`toggle-panel ${toggleGuidelines ? "is-open" : ""}`}
                     hidden={!toggleGuidelines}
+                    tabIndex={toggleGuidelines ? 0 : -1}
+                    aria-hidden={!toggleGuidelines}
                 >
                     <div className="toggle-panel-inner">
                         <div 
                             className="toggle-section"
                         >
                             <p>
+                                <strong>Note:</strong> Ability to submit will be available on Jan 16th, 2026.
+                                I'm giving it this buffer so I can be fully present and rested to support if needed.
+                            </p>
+                            <p>
+                                <strong>Please treat submitted letters as permanent until anonymous management tools are available. 
+                                    (<Link 
+                                        href="#note-about-update-and-delete" 
+                                        onClick={() => setTogglePrivacy(true)}
+                                        tabIndex={toggleGuidelines ? undefined : -1}
+                                    >
+                                        See why here
+                                    </Link>.)
+                                </strong>
+                            </p>
+                            <p>
                                 This space welcomes letters of diverse content, tones and subjects. However, this is also a public space.
                                 To keep it safe for everyone, please write with compassion (for yourself and others) and avoid the following:
                             </p>
                             <ul>
                                 <li>
-                                    publicly sharing identifying details that could expose someone&apos;s identity (for example: what appears to be full names, addresses, phone numbers, emails etc)
+                                    publicly sharing identifying details that could expose someone&apos;s identity 
+                                    (for example: what appears to be full names, addresses, phone numbers, emails etc)
                                 </li><li>
                                     sexually explicit or pornographic content
                                 </li><li>
@@ -203,7 +240,10 @@ export default function About() {
                                 You&apos;re welcome <Link 
                                     href="#contact" 
                                     onClick={() => setToggleContact(true)}
-                                >to reach out</Link> if you come across these situations:
+                                    tabIndex={toggleGuidelines ? undefined : -1}
+                                >
+                                    to reach out
+                                </Link> if you come across these situations:
                             </p>
                             <ul>
                                 <li>
@@ -234,6 +274,8 @@ export default function About() {
                     id="privacy-panel"
                     className={`toggle-panel ${togglePrivacy ? "is-open" : ""}`}
                     hidden={!togglePrivacy}
+                    tabIndex={togglePrivacy ? 0 : -1}
+                    aria-hidden={!togglePrivacy}
                 >
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
@@ -264,8 +306,12 @@ export default function About() {
                                     I&apos;m unable to delete or edit letters on request. <Link 
                                         href="#anon-update-and-delete" 
                                         onClick={() => setToggleRoadmap(true)} 
-                                    >Anonymous edit and delete feature</Link> will be built in the future.
+                                        tabIndex={togglePrivacy ? undefined : -1}
+                                    >
+                                        Anonymous edit and delete feature
+                                    </Link> will be built.
                                     Until then, please only share what you&apos;re comfortable leaving in public permanently.
+                                    Once these anonymous management tools are available, I can fulfil edit/delete requests.
                                 </p>
                             </section>
                             <section>
@@ -277,9 +323,13 @@ export default function About() {
                                 <p>
                                     At the moment, letters are submitted through <Link 
                                         href="submit"
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >Release A Letter</Link> with the help of Cove (the AI presence).
-                                    This experience is enabled by a third-party provider, {" "}<Link 
+                                    This experience is enabled by a third-party provider, <Link 
                                         href="https://platform.openai.com/docs/overview"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >OpenAI</Link>. 
                                 </p>
                             </section>
@@ -292,6 +342,7 @@ export default function About() {
                                     <Link 
                                         href="#submission-guidelines" 
                                         onClick={() => setToggleGuidelines(true)}
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >Submission Guidelines</Link> to prevent abuse, harm or aggravated distress.
                                     Content that violates those named safety boundaries will not be published.
                                 </p>
@@ -307,6 +358,9 @@ export default function About() {
                                 <p>
                                     Only the final letter you choose to submit is stored in <Link 
                                         href="https://supabase.com/"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >an external database</Link>.
                                 </p>
                                 <p>
@@ -314,16 +368,21 @@ export default function About() {
                                 </p>
                                 <ul>
                                     <li>
-                                        They are processed server-side to generate a response.
+                                        They are processed server-side to generate a response 
+                                        
                                     </li>
                                     <li>
-                                        They are not saved and stored to a database owned or controlled by me.
+                                        They are not saved and stored to a database owned or controlled by me
+                                        - so your conversation with Cove disappears once the browser tab is closed.
                                     </li>
                                 </ul>
                                 <h4>Storage within my control via OpenAI</h4>
                                 <p>
                                     I use the data controls provided by OpenAI&apos;s <Link
-                                    href="https://platform.openai.com/docs/api-reference/responses"
+                                        href="https://platform.openai.com/docs/api-reference/responses"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >
                                     Responses API
                                     </Link> to limit how AI interactions are handled. This includes:
@@ -335,6 +394,9 @@ export default function About() {
                                         conversations that take place during AI-assisted writing (see{" "}
                                         <Link
                                             href="https://platform.openai.com/docs/guides/your-data#zero-data-retention"
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            tabIndex={togglePrivacy ? undefined : -1}
                                         >
                                             OpenAI&apos;s data retention documentation
                                         </Link>
@@ -344,6 +406,9 @@ export default function About() {
                                         setting the <code>store</code> parameter to <code>false</code> on API calls,
                                         which disables storage for responses where supported (see <Link
                                             href="https://platform.openai.com/docs/guides/migrate-to-responses#additional-differences"
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            tabIndex={togglePrivacy ? undefined : -1}
                                         >
                                             Responses API documentation
                                         </Link>
@@ -359,7 +424,10 @@ export default function About() {
                                 <p>
                                     According to{" "}
                                     <Link
-                                    href="https://platform.openai.com/docs/guides/your-data"
+                                        href="https://platform.openai.com/docs/guides/your-data"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >
                                     OpenAI&apos;s API data policy
                                     </Link>
@@ -379,17 +447,20 @@ export default function About() {
                                     for those who want to submit without AI involvement (see <Link 
                                         href="#non-ai-assisted-option" 
                                         onClick={() => setToggleRoadmap(true)}
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >
                                         &quot;Roadmap & Features&quot;
                                     </Link>). Some moderation may still be applied to maintain safety according to <Link 
                                         href="#submission-guidelines" 
                                         onClick={() => setToggleGuidelines(true)}
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >Submission Guidelines</Link>.
                                 </p>
                                 <p>
                                     If you change your mind and want to edit or remove a submitted letter, this is not possible at this stage. 
                                     (Please see <Link 
                                         href="#note-about-update-and-delete" 
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >this note</Link> in the &quot;Anonymity&quot; section.)
                                 </p>
                             </section>
@@ -403,6 +474,7 @@ export default function About() {
                                     You can also <Link 
                                         href="#contact" 
                                         onClick={() => setToggleContact(true)}
+                                        tabIndex={togglePrivacy ? undefined : -1}
                                     >reach out to discuss anything.</Link>
                                 </p>
                             </section>
@@ -427,6 +499,8 @@ export default function About() {
                     id="roadmap-panel"
                     className={`toggle-panel ${toggleRoadmap ? "is-open" : ""}`}
                     hidden={!toggleRoadmap}
+                    tabIndex={toggleRoadmap ? 0 : -1}
+                    aria-hidden={!toggleRoadmap}
                 >
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
@@ -434,6 +508,7 @@ export default function About() {
                                 Letters Unsent is more than an archive - it&apos;s a quiet digital cove that I&apos;m tending over time. 
                                 (You can view <Link 
                                     href="/changelog"
+                                    tabIndex={toggleRoadmap ? undefined : -1}
                                 >the changelog here</Link>.)
                             </p>
                             <p>
@@ -504,6 +579,8 @@ export default function About() {
                     id="contact-panel"
                     className={`toggle-panel ${toggleContact ? "is-open" : ""}`}
                     hidden={!toggleContact}
+                    tabIndex={toggleContact ? 0 : -1}
+                    aria-hidden={!toggleContact}
                 >
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
@@ -512,7 +589,25 @@ export default function About() {
                             </p>
                             <ul>
                                 <li>
-                                    <strong>anonymous contact form: </strong> <Link href="https://tally.so/r/gDdeBD">via Tally forms</Link>
+                                    <strong>anonymous contact form: </strong> <Link 
+                                        href="https://tally.so/r/gDdeBD"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={toggleContact ? undefined : -1}
+                                    >
+                                        via Tally forms
+                                    </Link>
+                                    <br/>
+                                    <small>
+                                        (Form responses are forwarded to my email. <Link
+                                            href="https://tally.so/help/privacy-policy"
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            tabIndex={toggleContact ? undefined : -1}
+                                        >
+                                            Tally's policy
+                                        </Link> covers their service operation, not responses submitted via the form.)
+                                    </small>
                                 </li>
                                 <li>
                                     <strong>email: </strong> dear@letters-unsent.com

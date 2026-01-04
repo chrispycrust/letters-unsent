@@ -27,7 +27,7 @@ export default function Footer() {
                 <p>
                     <Link href="/">Letters Unsent</Link> (v1.0)
                 </p>
-                <p>Release 2026</p>
+                <p>Release 2026, <Link href="/changelog">changelog</Link> </p>
             </div>
             <div className="footer-nav-links">
                 <p>

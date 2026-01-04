@@ -5,6 +5,15 @@ type NavigationModalProps = {
   onClose: () => void
 }
 
+/* 
+-------------------------------------------------------------------------------------------------
+
+  PURPOSE
+  Feedback on client for user that data is loading
+
+-------------------------------------------------------------------------------------------------
+*/
+
 export default function NavigationModal({ 
   onClose 
 }: NavigationModalProps ) {
@@ -56,7 +65,7 @@ export default function NavigationModal({
         </div>
           
         <div className="modal-footer">
-          <p>Letters Unsent (v1.0) - 2026</p>
+          <p>Letters Unsent (v1.0) - 2026, <Link href="/changelog">view changelog</Link></p>
           <p>Built with Next.js, React (with TypeScript), OpenAI&apos;s API, Supabase, Tabler</p>
         </div>
         

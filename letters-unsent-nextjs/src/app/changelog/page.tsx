@@ -10,9 +10,6 @@ export default function Changelog() {
             <h1 className="about-section-h1">
                 Changelog
             </h1>
-            <h3 className="about-section-h3">
-                Steward's Notes
-            </h3>
             <p>
                 Small improvements will be noted here as they arrive.
             </p>

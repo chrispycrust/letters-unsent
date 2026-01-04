@@ -196,7 +196,7 @@ export default function About() {
                         >
                             <p>
                                 <strong>Note:</strong> Ability to submit will be available on Jan 16th, 2026.
-                                I'm giving it this buffer so I can be fully present and rested to support if needed.
+                                I&apos;m giving it this buffer so I can be fully present and rested to support if needed.
                             </p>
                             <p>
                                 <strong>Please treat submitted letters as permanent until anonymous management tools are available. 
@@ -605,7 +605,7 @@ export default function About() {
                                             rel="noopener noreferrer"
                                             tabIndex={toggleContact ? undefined : -1}
                                         >
-                                            Tally's policy
+                                            Tally&apos;s policy
                                         </Link> covers their service operation, not responses submitted via the form.)
                                     </small>
                                 </li>

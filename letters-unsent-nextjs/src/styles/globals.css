@@ -120,12 +120,16 @@ h1, h2 {
   font-weight: 600;
 }
 
-h3, h4, h5, h6 {
+h3, h4 {
+  font-weight: 500;
+}
+
+h5, h6 {
   font-weight: 500;
 }
 
 h1 {
-  font-size: 2.5em;
+  font-size: 2.2em;
 }
 
 .about-section-h1 {
@@ -138,19 +142,18 @@ h1 {
   padding: 0;
   margin-top: 0;
   margin-bottom: 1.5em;
-  font-weight: 400;
 }
 
 h2 {
-  font-size: 2em;
-}
-
-h3 {
   font-size: 1.8em;
 }
 
+h3 {
+  font-size: 1.6em;
+}
+
 h4 {
-  font-size: 1.5em;
+  font-size: 1.4em;
 }
 
 ul {
@@ -241,8 +244,10 @@ footer {
 
 footer {
   /* margin-top: 80px;  for some reason margins aren't applying*/
+  font-family: var(--geist);
   padding: 40px 0px 20px 0px;
   font-size: var(--font-size-smaller);
+  font-weight: 300;
 }
 
 .footer-nav-links {
@@ -272,6 +277,10 @@ footer a:hover {
 .nav-links a
 , .feather-icon {
   margin-left: 20px;
+}
+
+.navbar a {
+  font-weight: 500;
 }
 
 /* .nav-links a:last-child {
@@ -655,6 +664,9 @@ label {
   padding: 0;
   text-align: left;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center; 
+  gap: 10px;
 }
 
 .button-toggle:hover {
@@ -664,18 +676,22 @@ label {
 .button-toggle h2 {
   padding: 0;
   margin: 0;
-  display: inline-block;
   margin-left: 20px;
   transition: margin;
   transition-duration: 0.5s;
+  display: block;
+  flex: 1;                  /* let heading take remaining width */
+  min-width: 0;             /* allows wrapping inside flex */
+  overflow-wrap: break-word;/* wrap on long words */
+  hyphens: auto;            /* hyphenation */
 }
 
 .button-toggle:hover h2 {
-  margin-left: 10px;
+  margin-left: 10px; 
 }
 
 .about-section h2 {
-  font-weight: 400;
+  font-weight: 500;
 }
 
 /* Smooth accordion panels when opening toggles on About page */
@@ -768,6 +784,22 @@ section {
 
   :root {
     --font-size: 1.2em;
+  }
+
+  h1 {
+    font-size: 2.5em;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  h3 {
+    font-size: 1.8em;
+  }
+
+  h4 {
+    font-size: 1.5em;
   }
 
   .about-section

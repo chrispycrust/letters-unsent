@@ -70,8 +70,13 @@ export default function About() {
                     About Letters Unsent
                 </h1>
                 <h3 className="about-section-h3">
-                    A home for words never received
+                    A quiet home for words never sent
                 </h3>
+                <p>
+                    No accounts, no tracking, no public metrics.
+                    <br/>
+                    Just letters, and the people who read and write them.
+                </p>
 
             {/* -------------------------------------------------------- */}
 
@@ -95,9 +100,9 @@ export default function About() {
                                 Esther Perel once wrote about <Link 
                                     href="https://www.estherperel.com/blog/ull-introduction"
                                 >the emancipating power of a letter</Link> - 
-                                the release and clarity that the act of writing itself can bring, even when never sent. 
+                                the release and clarity that writing itself can bring, even when never sent. 
                             </p><p>
-                                Many spaces have been created for these words:
+                                Spaces have emerged to hold these unsent words:
                             </p>
 
                             <ul>
@@ -110,13 +115,13 @@ export default function About() {
                                         href="https://theunsentproject.com/#"
                                     >The Unsent Project</Link>
                                 </li><li>
-                                    instagram accounts like <Link 
+                                    various instagram accounts like <Link 
                                         href="https://www.instagram.com/unsent_letters_to/"
                                     >unsent_letters_to</Link>
                                 </li><li>
                                     <Link 
                                         href="https://www.unsentlettermailbox.com/"
-                                    >The Unsent Letter Mailbox (NYC)</Link>
+                                    >The Unsent Letter Mailbox</Link> in New York City
                                 </li>
                             </ul>
                             
@@ -124,27 +129,24 @@ export default function About() {
                                 So why make this new platform?
                             </h3>
                             <p>
-                                I&apos;m a developer by profession, an artist at heart and a writer of a few letters myself.
+                                I&apos;m a developer by profession and a writer of a few letters myself.
+                                For my first user-driven full-stack application, I wanted to build something meaningful 
+                                — a space that honours a wider range of human experience, rather than a single context. 
+                                Not just romantic love, but grief, gratitude, anger, regret, bitterness, joy, and everything in between.
                             </p>
                             <p>
-                                For my first user-driven full-stack application, I wanted to build something meaningful -
-                                a space that honours a wide range of human experience (not just a particular context): 
-                                love in all its forms, grief, gratitude, anger, regret, bitterness.
+                                I also wanted to create a place I wished existed in the world 
+                                - one that treats these emotional worlds with care, and does justice to the weight they carry.
                             </p>
                             <p>
-                                I also simply wanted to create a space that I wish existed in the world -
-                                a space that I hope does justice to those experiences.
+                                And finally, to me, the letter format itself holds a gentle kind of power.
+                                There is something especially moving about words that have never found their way to their person, for one reason or another.
+                                And in a time where it sometimes seems like brevity and performance are often the things we optimise for, 
+                                writing and reading letters asks for more of us - but sometimes it can offer something deeper in return.
                             </p>
                             <p>
-                                And finally, to me, the letter format somehow seems quietly powerful.
-                                There is something especially moving about the emotional charge of words 
-                                that have never found their way to their person, for one reason or another.
-                                And in a time where it sometimes seems like brevity and performance are the things that are most optimised (understandably). 
-                                Writing and reading letters require more effort - but it&apos;s also likely to offer more reward.
-                            </p>
-                            <p>
-                                I hope people find comfort in reading these letters or sharing their own, 
-                                knowing that others, too, have words left unspoken.
+                                I hope people find comfort here - in reading these letters
+                                , or in sharing their own - knowing that others, too, carry words left unspoken.
                             </p>
                         </div>
                     </div>
@@ -187,7 +189,7 @@ export default function About() {
                                 </li><li>
                                     vitriolic and abusive speech
                                 </li><li>
-                                    praise for extremist ideaology
+                                    praise for extremist ideologies
                                 </li><li>
                                     suicidal intentions or thoughts detailing instructions or methods of self-harm
                                 </li><li>
@@ -365,6 +367,12 @@ export default function About() {
                                     purposes such as abuse monitoring. I do not control this behaviour, nor do I have access to Modified Abuse Monitoring or
                                     Data Residency controls.
                                 </p>
+                            </section>
+
+                            <section>
+                                <h3>
+                                    In the Future
+                                </h3>
 
                                 <p>
                                     In the next iteration, an alternative option to submit via a standard form will be added 

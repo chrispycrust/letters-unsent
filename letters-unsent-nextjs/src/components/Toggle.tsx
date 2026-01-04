@@ -14,14 +14,14 @@ interface ToggleProps {
     toggleState: boolean
     onToggle: () => void
     heading: string
-    title: string
+    controlsId: string
 }
 
 export default function Toggle({
     toggleState
     , onToggle
     , heading
-    , title
+    , controlsId
 }:ToggleProps ) {
 
     return (
@@ -29,8 +29,9 @@ export default function Toggle({
             type="button"
             onClick={onToggle}
             aria-pressed={`${toggleState}`}
+            aria-expanded={toggleState}
+            aria-controls={controlsId}
             className="button-toggle"
-            title={title}
         >
             { 
                 toggleState === true ? (

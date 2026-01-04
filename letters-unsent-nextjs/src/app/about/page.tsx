@@ -84,15 +84,18 @@ export default function About() {
                     toggleState={toggleBackground}
                     onToggle={() => setToggleBackground(!toggleBackground)}
                     heading="Background"
-                    title="Click to toggle ontent related to the background of this space"
+                    controlsId="background-panel"
                 />
-                <div className={`toggle-panel ${toggleBackground ? "is-open" : ""}`}>
+                <div 
+                    id="background-panel"
+                    className={`toggle-panel ${toggleBackground ? "is-open" : ""}`}
+                    hidden={!toggleBackground}
+                >
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
                             <p>
                                 Esther Perel once wrote about <Link 
                                     href="https://www.estherperel.com/blog/ull-introduction"
-                                    title="click to go to external website"
                                 >the emancipating power of a letter</Link> - 
                                 the release and clarity that the act of writing itself can bring, even when never sent. 
                             </p><p>
@@ -103,22 +106,18 @@ export default function About() {
                                 <li>
                                     <Link 
                                         href="https://www.reddit.com/r/UnsentLetters/"
-                                        title="click to go to external website"
                                     >r/UnsentLetters</Link>
                                 </li><li>
                                     <Link 
                                         href="https://theunsentproject.com/#"
-                                        title="click to go to external website"
                                     >The Unsent Project</Link>
                                 </li><li>
                                     instagram accounts like <Link 
                                         href="https://www.instagram.com/unsent_letters_to/"
-                                        title="click to go to external website"
                                     >unsent_letters_to</Link>
                                 </li><li>
                                     <Link 
                                         href="https://www.unsentlettermailbox.com/"
-                                        title="click to go to external website"
                                     >The Unsent Letter Mailbox (NYC)</Link>
                                 </li>
                             </ul>
@@ -163,9 +162,13 @@ export default function About() {
                     toggleState={toggleGuidelines}
                     onToggle={() => setToggleGuidelines(!toggleGuidelines)}
                     heading="Submission Guidelines"
-                    title="Click to toggle content related to Submission Guidelines"
+                    controlsId="guidelines-panel"
                 />
-                <div className={`toggle-panel ${toggleGuidelines ? "is-open" : ""}`}>
+                <div 
+                    id="guidelines-panel"
+                    className={`toggle-panel ${toggleGuidelines ? "is-open" : ""}`}
+                    hidden={!toggleGuidelines}
+                >
                     <div className="toggle-panel-inner">
                         <div 
                             className="toggle-section"
@@ -200,7 +203,6 @@ export default function About() {
                                 You&apos;re welcome <Link 
                                     href="#contact" 
                                     onClick={() => setToggleContact(true)}
-                                    title="click to scroll to relevant section"
                                 >to reach out</Link> if you come across these situations:
                             </p>
                             <ul>
@@ -226,9 +228,13 @@ export default function About() {
                     toggleState={togglePrivacy}
                     onToggle={() => setTogglePrivacy(!togglePrivacy)}
                     heading="Privacy & Use"
-                    title="Click to toggle ontent related to Privacy & Use"
+                    controlsId="privacy-panel"
                 />
-                <div className={`toggle-panel ${togglePrivacy ? "is-open" : ""}`}>
+                <div 
+                    id="privacy-panel"
+                    className={`toggle-panel ${togglePrivacy ? "is-open" : ""}`}
+                    hidden={!togglePrivacy}
+                >
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
                             <p>
@@ -258,7 +264,6 @@ export default function About() {
                                     I'm unable to delete or edit letters on request. <Link 
                                         href="#anon-update-and-delete" 
                                         onClick={() => setToggleRoadmap(true)} 
-                                        title="click to scroll to relevant section"
                                     >Anonymous edit and delete feature</Link> will be built in the future.
                                     Until then, please only share what you&apos;re comfortable leaving in public permanently.
                                 </p>
@@ -272,11 +277,9 @@ export default function About() {
                                 <p>
                                     At the moment, letters are submitted through <Link 
                                         href="submit"
-                                        title="click to go to Release A Letter page"
                                     >Release A Letter</Link> with the help of Cove (the AI presence).
                                     This experience is enabled by a third-party provider, {" "}<Link 
                                         href="https://platform.openai.com/docs/overview"
-                                        title="click to go to external website"
                                     >OpenAI</Link>. 
                                 </p>
                             </section>
@@ -289,7 +292,6 @@ export default function About() {
                                     <Link 
                                         href="#submission-guidelines" 
                                         onClick={() => setToggleGuidelines(true)}
-                                        title="click to scroll to relevant section"
                                     >Submission Guidelines</Link> to prevent abuse, harm or aggravated distress.
                                     Content that violates those named safety boundaries will not be published.
                                 </p>
@@ -300,12 +302,11 @@ export default function About() {
                                 </h3>
                                 <p>
                                     <strong>TL;DR:</strong> Only the final letter you choose to submit is stored.
-                                    AI-assisted conversations are not kept by me.
+                                    AI-assisted conversations are not kept by me. Ability to submit without AI upcoming.
                                 </p>
                                 <p>
                                     Only the final letter you choose to submit is stored in <Link 
-                                        href="https://supabase.com/" 
-                                        title="click to go to external website"
+                                        href="https://supabase.com/"
                                     >an external database</Link>.
                                 </p>
                                 <p>
@@ -323,7 +324,6 @@ export default function About() {
                                 <p>
                                     I use the data controls provided by OpenAI&apos;s <Link
                                     href="https://platform.openai.com/docs/api-reference/responses"
-                                    title="click to go to external website"
                                     >
                                     Responses API
                                     </Link> to limit how AI interactions are handled. This includes:
@@ -335,7 +335,6 @@ export default function About() {
                                         conversations that take place during AI-assisted writing (see{" "}
                                         <Link
                                             href="https://platform.openai.com/docs/guides/your-data#zero-data-retention"
-                                            title="click to go to external website"
                                         >
                                             OpenAI&apos;s data retention documentation
                                         </Link>
@@ -345,7 +344,6 @@ export default function About() {
                                         setting the <code>store</code> parameter to <code>false</code> on API calls,
                                         which disables storage for responses where supported (see <Link
                                             href="https://platform.openai.com/docs/guides/migrate-to-responses#additional-differences"
-                                            title="click to go to external website"
                                         >
                                             Responses API documentation
                                         </Link>
@@ -362,7 +360,6 @@ export default function About() {
                                     According to{" "}
                                     <Link
                                     href="https://platform.openai.com/docs/guides/your-data"
-                                    title="click to go to external website"
                                     >
                                     OpenAI’s API data policy
                                     </Link>
@@ -376,20 +373,17 @@ export default function About() {
                                     for those who want to submit without AI involvement (see <Link 
                                         href="#non-ai-assisted-option" 
                                         onClick={() => setToggleRoadmap(true)}
-                                        title="click to scroll to relevant section"
                                     >
                                         &quot;Roadmap & Features&quot;
                                     </Link>). Some moderation may still be applied to maintain safety according to <Link 
                                         href="#submission-guidelines" 
                                         onClick={() => setToggleGuidelines(true)}
-                                        title="click to scroll to relevant section"
                                     >Submission Guidelines</Link>.
                                 </p>
                                 <p>
                                     If you change your mind and want to edit or remove a submitted letter, this is not possible at this stage. 
                                     (Please see <Link 
                                         href="#note-about-update-and-delete" 
-                                        title="click to scroll to relevant section"
                                     >this note</Link> in the &quot;Anonymity&quot; section.)
                                 </p>
                             </section>
@@ -403,7 +397,6 @@ export default function About() {
                                     You can also <Link 
                                         href="#contact" 
                                         onClick={() => setToggleContact(true)}
-                                        title="click to scroll to relevant section"
                                     >reach out to discuss anything.</Link>
                                 </p>
                             </section>
@@ -421,17 +414,20 @@ export default function About() {
                     toggleState={toggleRoadmap}
                     onToggle={() => setToggleRoadmap(!toggleRoadmap)}
                     heading="Roadmap & Features"
-                    title="Click to toggle content related to Roadmap and Features"
+                    controlsId="roadmap-panel"
                 />
 
-                <div className={`toggle-panel ${toggleRoadmap ? "is-open" : ""}`}>
+                <div 
+                    id="roadmap-panel"
+                    className={`toggle-panel ${toggleRoadmap ? "is-open" : ""}`}
+                    hidden={!toggleRoadmap}
+                >
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
                             <p>
                                 Letters Unsent is more than an archive - it&apos;s a quiet digital cove that I&apos;m tending over time. 
                                 (You can view <Link 
                                     href="/changelog"
-                                    title="click to go to Changelog page"
                                 >the changelog here</Link>.)
                             </p>
                             <p>
@@ -495,10 +491,14 @@ export default function About() {
                     toggleState={toggleContact}
                     onToggle={() => setToggleContact(!toggleContact)}
                     heading="Contact"
-                    title="Click to toggle content related to Contact"
+                    controlsId="contact-panel"
                 />
 
-                <div className={`toggle-panel ${toggleContact ? "is-open" : ""}`}>
+                <div 
+                    id="contact-panel"
+                    className={`toggle-panel ${toggleContact ? "is-open" : ""}`}
+                    hidden={!toggleContact}
+                >
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
                             <p>

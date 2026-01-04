@@ -32,6 +32,36 @@ export default function About() {
     const [ toggleRoadmap, setToggleRoadmap ] = useState(false)
     const [ toggleContact, setToggleContact ] = useState(false)
 
+    // function openThenScrollTo(
+    //     targetId: string,
+    //     open: () => void
+    // ) {
+    //     open()
+
+    //     requestAnimationFrame(() =>
+    //         requestAnimationFrame(() => {
+    //         document
+    //             .getElementById(targetId)
+    //             ?.scrollIntoView({ behavior: "smooth", block: "center" })
+    //         })
+    //     )
+    // }
+
+    // function handleContactLink(
+    //     e: React.MouseEvent<HTMLAnchorElement>
+    // ) {
+    //     e.preventDefault()
+
+    //     setToggleContact(true)
+    //     setToggleGuidelines(true)
+
+    //     openThenScrollTo("contact", () => {
+    //         setToggleGuidelines(true)
+    //         setToggleContact(true)
+    //     })
+
+    // }
+
     return (
         <article className="about-section">
             
@@ -60,45 +90,64 @@ export default function About() {
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
                             <p>
-                                Esther Perel once wrote about <Link href="https://www.estherperel.com/blog/ull-introduction">the emancipating power of letter writing</Link> - 
-                                the release and clarity that writing can bring, even when the letter remains unsent. 
-                                There is something uniquely powerful about the emotional charge of words that never found their way to a recipient.
-                                
+                                Esther Perel once wrote about <Link 
+                                    href="https://www.estherperel.com/blog/ull-introduction"
+                                    title="click to go to external website"
+                                >the emancipating power of a letter</Link> - 
+                                the release and clarity that the act of writing itself can bring, even when never sent. 
                             </p><p>
-                                It&apos;s not surprising, then, that many people have created spaces for these words:
+                                Many spaces have been created for these words:
                             </p>
 
                             <ul>
                                 <li>
-                                    <Link href="https://www.reddit.com/r/UnsentLetters/">r/UnsentLetters</Link>
+                                    <Link 
+                                        href="https://www.reddit.com/r/UnsentLetters/"
+                                        title="click to go to external website"
+                                    >r/UnsentLetters</Link>
                                 </li><li>
-                                    <Link href="https://theunsentproject.com/#">The Unsent Project</Link>
+                                    <Link 
+                                        href="https://theunsentproject.com/#"
+                                        title="click to go to external website"
+                                    >The Unsent Project</Link>
                                 </li><li>
-                                    instagram accounts like <Link href="https://www.instagram.com/unsent_letters_to/">unsent_letters_to</Link>
+                                    instagram accounts like <Link 
+                                        href="https://www.instagram.com/unsent_letters_to/"
+                                        title="click to go to external website"
+                                    >unsent_letters_to</Link>
                                 </li><li>
-                                    <Link href="https://www.unsentlettermailbox.com/">The Unsent Letter Mailbox (NYC)</Link>
+                                    <Link 
+                                        href="https://www.unsentlettermailbox.com/"
+                                        title="click to go to external website"
+                                    >The Unsent Letter Mailbox (NYC)</Link>
                                 </li>
                             </ul>
-                            <p>
+                            
+                            <h3>
                                 So why make this new platform?
-                            </p>
-                            <ul>
-                                <li>
-                                    For my first user-driven full-stack application, I wanted to build something meaningful.
-                                    To me, that is holding the emotional experiences and lives of others.
-                                </li><li>
-                                    I wanted to create a space that felt designed with the care I&apos;d want to see in the world.
-                                </li><li>
-                                    While I admire <Link href="https://theunsentproject.com/#">The Unsent Project</Link>,
-                                    the website focuses on unsent texts and in a romantic context. 
-                                    I wanted to honour a wider range of human experience - love in all its forms, as well as grief, gratitude, anger, regret, bitterness (to name a few).
-                                </li>
-                            </ul>
+                            </h3>
                             <p>
-                                In a time where brevity often wins, writing and reading letters require more effort - but it&apos;s also likely to offer more reward.
+                                I&apos;m a developer by profession, an artist at heart and a writer of a few letters myself.
                             </p>
                             <p>
-                                I hope people find comfort in reading these letters or sharing their own, knowing that others, too, have words left unspoken.
+                                For my first user-driven full-stack application, I wanted to build something meaningful -
+                                a space that honours a wide range of human experience (not just a particular context): 
+                                love in all its forms, grief, gratitude, anger, regret, bitterness.
+                            </p>
+                            <p>
+                                I also simply wanted to create a space that I wish existed in the world -
+                                a space that I hope does justice to those experiences.
+                            </p>
+                            <p>
+                                And finally, to me, the letter format somehow seems quietly powerful.
+                                There is something especially moving about the emotional charge of words 
+                                that have never found their way to their person, for one reason or another.
+                                And in a time where it sometimes seems like brevity and performance are the things that are most optimised (understandably). 
+                                Writing and reading letters require more effort - but it&apos;s also likely to offer more reward.
+                            </p>
+                            <p>
+                                I hope people find comfort in reading these letters or sharing their own, 
+                                knowing that others, too, have words left unspoken.
                             </p>
                         </div>
                     </div>
@@ -119,46 +168,50 @@ export default function About() {
                 <div className={`toggle-panel ${toggleGuidelines ? "is-open" : ""}`}>
                     <div className="toggle-panel-inner">
                         <div 
-                                className="toggle-section"
-                                onClick={() => setToggleGuidelines(!toggleGuidelines)}
-                                title="Click anywhere to toggle section related to Guidelines"
-                            >
-                                <p>
-                                    This space welcomes letters of diverse content, tones and subjects. However, this is also a public space.
-                                    To keep it safe for everyone, please write with compassion (for yourself and others) and avoid the following:
-                                </p>
-                                <ul>
-                                    <li>
-                                        publicly sharing identifying details that could expose someone's identity (for example: what appears to be full names, addresses, phone numbers, emails etc)
-                                    </li><li>
-                                        sexually explicit or pornographic content
-                                    </li><li>
-                                        descriptions of non-consensual activity
-                                    </li><li>
-                                        graphic descriptions of violent or traumatic detail
-                                    </li><li>
-                                        hate speech or extremist praise
-                                    </li><li>
-                                        suicidal intentions or thoughts or self-harm instructions
-                                    </li><li>
-                                        any of the above involving minors
-                                    </li>
-                                </ul>
+                            className="toggle-section"
+                        >
+                            <p>
+                                This space welcomes letters of diverse content, tones and subjects. However, this is also a public space.
+                                To keep it safe for everyone, please write with compassion (for yourself and others) and avoid the following:
+                            </p>
+                            <ul>
+                                <li>
+                                    publicly sharing identifying details that could expose someone&apos;s identity (for example: what appears to be full names, addresses, phone numbers, emails etc)
+                                </li><li>
+                                    sexually explicit or pornographic content
+                                </li><li>
+                                    descriptions of non-consensual activity
+                                </li><li>
+                                    graphic descriptions of violent or traumatic detail
+                                </li><li>
+                                    vitriolic and abusive speech
+                                </li><li>
+                                    praise for extremist ideaology
+                                </li><li>
+                                    suicidal intentions or thoughts detailing instructions or methods of self-harm
+                                </li><li>
+                                    any of the above involving minors
+                                </li>
+                            </ul>
 
-                                <p>
-                                    Submissions containing this content won&apos;t be accepted. 
-                                </p><p>
-                                    You&apos;re welcome to reach out if you come across these situations (refer to <Link href="#contact">&quot;Contact&quot; section</Link>):
-                                </p>
-                                <ul>
-                                    <li>
-                                        If you&apos;re convinced your letter doesn&apos;t violate any of the above but you still have issues submitting.
-                                    </li><li>
-                                        If you read a letter and you think it should not be displayed publicly.
-                                    </li><li>
-                                        If you&apos;re convinced any of the disallowed content above should be reconsidered.
-                                    </li>
-                                </ul>
+                            <p>
+                                Submissions containing this content won&apos;t be accepted. 
+                            </p><p>
+                                You&apos;re welcome <Link 
+                                    href="#contact" 
+                                    onClick={() => setToggleContact(true)}
+                                    title="click to scroll to relevant section"
+                                >to reach out</Link> if you come across these situations:
+                            </p>
+                            <ul>
+                                <li>
+                                    If you&apos;re convinced your letter doesn&apos;t violate any of the above but you still have issues submitting.
+                                </li><li>
+                                    If you read a letter and you think it should not be displayed publicly.
+                                </li><li>
+                                    If you&apos;re convinced any of the disallowed content above should be reconsidered.
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -201,9 +254,12 @@ export default function About() {
                                 <p
                                     id="note-about-update-and-delete"
                                 >
-                                    <strong>Note:</strong> This means that, at this stage, without proof of ownership I'm unable to delete or edit letters on request. 
-                                    I&apos;m working on an anonymous edit/delete feature for the next update 
-                                    (see <Link href="#anon-update-and-delete">&quot;Roadmap & Features&quot; section</Link> just below.) 
+                                    <strong>Note:</strong> This means that, at this stage, without proof of ownership 
+                                    I'm unable to delete or edit letters on request. <Link 
+                                        href="#anon-update-and-delete" 
+                                        onClick={() => setToggleRoadmap(true)} 
+                                        title="click to scroll to relevant section"
+                                    >Anonymous edit and delete feature</Link> will be built in the future.
                                     Until then, please only share what you&apos;re comfortable leaving in public permanently.
                                 </p>
                             </section>
@@ -211,48 +267,17 @@ export default function About() {
                                 <h3 
                                     id="ai-assisted-writing"
                                 >
-                                    AI-assisted writing
+                                    AI-assisted Writing
                                 </h3>
                                 <p>
-                                    To submit a letter, you must go through <Link href="submit">Release A Letter</Link> and talk to Cove (what I call the AI presence).
-                                    This is linked to a third party provider, <Link href="https://platform.openai.com/docs/overview">OpenAI</Link>. 
-                                </p>
-                                <p>
-                                    These conversations are: 
-                                </p>
-                                <ul>
-                                    <li>
-                                        processed server-side on this web app and called from OpenAI's servers to generate responses
-                                    </li>
-                                    <li>
-                                        not saved to a database
-                                    </li>
-                                    <li>
-                                        not used for training OpenAI's models
-                                    </li>
-                                    <li>
-                                        not stored, reviewed, or retained (unless absolutely required and with consent)
-                                    </li>
-                                </ul>
-                                <p>
-                                    However, the provider will log request and response data for operational purposes (such as reliability, abuse prevention, and billing). 
-                                    This logging is outside my control.
-                                </p>
-                                <p>
-                                    A non-AI submission option will be added in the future for those who prefer it (<Link href="#non-ai-assisted-option">see &quot;Roadmap & Features&quot; section below</Link>).
-                                </p>
-                            </section>
-                            <section>
-                                <h3>
-                                    What is stored
-                                </h3>
-                                <p>
-                                    Only the final letter you choose to submit is stored in an external database <Link href="https://supabase.com/">Supabase</Link>).
-                                    AI prompts, and intermediate conversations are not saved (but they are logged - see above section <Link href="#ai-assisted-writing">&quot;AI assisted writing&quot;</Link>).
-                                </p>
-                                <p>
-                                    If you change your mind and want to edit or remove a submitted letter, it won't be possible at this stage. 
-                                    (Please see <Link href="#note-about-update-and-delete">this note in &quot;Anonymity&quot; section</Link>)
+                                    At the moment, letters are submitted through <Link 
+                                        href="submit"
+                                        title="click to go to Release A Letter page"
+                                    >Release A Letter</Link> with the help of Cove (the AI presence).
+                                    This experience is enabled by a third-party provider, {" "}<Link 
+                                        href="https://platform.openai.com/docs/overview"
+                                        title="click to go to external website"
+                                    >OpenAI</Link>. 
                                 </p>
                             </section>
                             <section>
@@ -260,18 +285,122 @@ export default function About() {
                                     Moderation & Safety 
                                 </h3>
                                 <p>
-                                    Letters are automatically moderated against the <Link href="#submission-guidelines">Submission Guidelines</Link> in
-                                    your conversation with Cove (the AI presence) to prevent abuse or harm.
+                                    Letters in the final conversational stage with Cove (AI presence on Release page) are checked against the {" "}
+                                    <Link 
+                                        href="#submission-guidelines" 
+                                        onClick={() => setToggleGuidelines(true)}
+                                        title="click to scroll to relevant section"
+                                    >Submission Guidelines</Link> to prevent abuse, harm or aggravated distress.
                                     Content that violates those named safety boundaries will not be published.
                                 </p>
                             </section>
                             <section>
                                 <h3>
-                                    Your choice
+                                    What Is Stored
                                 </h3>
                                 <p>
-                                    Sharing here is always optional.
-                                    If something doesn’t feel right, you’re free to leave without submitting anything.
+                                    Only the final letter you choose to submit is stored in <Link 
+                                        href="https://supabase.com/" 
+                                        title="click to go to external website"
+                                    >an external database</Link>.
+                                </p>
+                                <p>
+                                    Conversations that happen during AI-assisted writing are handled differently.
+                                </p>
+                                <ul>
+                                    <li>
+                                        They are processed server-side to generate a response.
+                                    </li>
+                                    <li>
+                                        They are not saved and stored to a database owned or controlled by me.
+                                    </li>
+                                </ul>
+                                <h4>Storage within my control via OpenAI</h4>
+                                <p>
+                                    I use the data controls provided by OpenAI&apos;s <Link
+                                    href="https://platform.openai.com/docs/api-reference/responses"
+                                    title="click to go to external website"
+                                    >
+                                    Responses API
+                                    </Link> to limit how AI interactions are handled. This includes:
+                                </p>
+
+                                <ul>
+                                    <li>
+                                        disabling API call logging for this project, which means I cannot see
+                                        conversations that take place during AI-assisted writing (see{" "}
+                                        <Link
+                                            href="https://platform.openai.com/docs/guides/your-data#zero-data-retention"
+                                            title="click to go to external website"
+                                        >
+                                            OpenAI&apos;s data retention documentation
+                                        </Link>
+                                        )
+                                    </li>
+                                    <li>
+                                        setting the <code>store</code> parameter to <code>false</code> on API calls,
+                                        which disables storage for responses where supported (see <Link
+                                            href="https://platform.openai.com/docs/guides/migrate-to-responses#additional-differences"
+                                            title="click to go to external website"
+                                        >
+                                            Responses API documentation
+                                        </Link>
+                                        )
+                                    </li>
+                                    <li>
+                                        opting out of sharing inputs, outputs, and evaluation data with OpenAI
+                                    </li>
+                                </ul>
+
+                                <h4>Storage outside my control via OpenAI</h4>
+
+                                <p>
+                                    According to{" "}
+                                    <Link
+                                    href="https://platform.openai.com/docs/guides/your-data"
+                                    title="click to go to external website"
+                                    >
+                                    OpenAI’s API data policy
+                                    </Link>
+                                    , some data may still be retained temporarily by OpenAI for operational
+                                    purposes such as abuse monitoring. I do not control this behaviour, nor do I have access to Modified Abuse Monitoring or
+                                    Data Residency controls.
+                                </p>
+
+                                <p>
+                                    In the next iteration, an alternative option to submit via a standard form will be added 
+                                    for those who want to submit without AI involvement (see <Link 
+                                        href="#non-ai-assisted-option" 
+                                        onClick={() => setToggleRoadmap(true)}
+                                        title="click to scroll to relevant section"
+                                    >
+                                        &quot;Roadmap & Features&quot;
+                                    </Link>). Some moderation may still be applied to maintain safety according to <Link 
+                                        href="#submission-guidelines" 
+                                        onClick={() => setToggleGuidelines(true)}
+                                        title="click to scroll to relevant section"
+                                    >Submission Guidelines</Link>.
+                                </p>
+                                <p>
+                                    If you change your mind and want to edit or remove a submitted letter, this is not possible at this stage. 
+                                    (Please see <Link 
+                                        href="#note-about-update-and-delete" 
+                                        title="click to scroll to relevant section"
+                                    >this note</Link> in the &quot;Anonymity&quot; section.)
+                                </p>
+                            </section>
+                            <section>
+                                <h3>
+                                    Your Choice
+                                </h3>
+                                <p>
+                                    Sharing here is, of course, always optional.
+                                    If something doesn&apos;t feel right, you&apos;re free to leave without submitting anything.
+                                    You can also <Link 
+                                        href="#contact" 
+                                        onClick={() => setToggleContact(true)}
+                                        title="click to scroll to relevant section"
+                                    >reach out to discuss anything.</Link>
                                 </p>
                             </section>
                         </div>
@@ -296,7 +425,10 @@ export default function About() {
                         <div className="toggle-section">
                             <p>
                                 Letters Unsent is more than an archive - it&apos;s a quiet digital cove that I&apos;m tending over time. 
-                                (You can view <Link href="/changelog">the changelog here</Link>.)
+                                (You can view <Link 
+                                    href="/changelog"
+                                    title="click to go to Changelog page"
+                                >the changelog here</Link>.)
                             </p>
                             <p>
                                 Here&apos;s a little of what I&apos;ve planned so far:
@@ -316,15 +448,18 @@ export default function About() {
                                 </li><li>
                                     filters, sort and search on submitted letters (based on time, themes, emotion or relationship type for example)
                                 </li>
+                                <li>
+                                    potentially letters that <i>have</i> been sent can also be included, with labelling
+                                </li>
                             </ul>
                             <p>
-                                <strong>Experience & atmosphere:</strong>
+                                <strong>Experience & atmosphere</strong> (all without storing data):
                             </p>
                             <ul>
                                 <li>
-                                    emotional memory for Cove (the AI presence) to personalise your experience without storing your data
+                                    personalised experience while on this website
                                 </li><li>
-                                    personal letter draft drawer (without storing your data)
+                                    personal letter draft drawer
                                 </li><li>
                                     a sense of community without all the usual noise
                                 </li>
@@ -340,7 +475,7 @@ export default function About() {
                             <p>
                                 Suggestions, comments or feedback for this platform 
                                 (for example, what the build priorities should be, features, guideline considerations) are welcome 
-                                - please reach out ia the <strong>contact options</strong> in the section just below.
+                                - please reach out via any of the <strong>contact channels</strong> in the section just below.
                             </p>
                         </div>
                     </div>
@@ -362,9 +497,8 @@ export default function About() {
                 <div className={`toggle-panel ${toggleContact ? "is-open" : ""}`}>
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
-                            <p>I&apos;m a developer by profession, an artist at heart and a writer of a few letters myself.</p>
                             <p>
-                                You&apos;re welcome to get in touch about anything related to this website here in these ways: 
+                                If you'd like, please get in touch about anything related to this website here in these ways: 
                             </p>
                             <ul>
                                 <li>

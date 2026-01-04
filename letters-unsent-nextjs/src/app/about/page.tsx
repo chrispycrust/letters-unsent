@@ -299,6 +299,10 @@ export default function About() {
                                     What Is Stored
                                 </h3>
                                 <p>
+                                    <strong>TL;DR:</strong> Only the final letter you choose to submit is stored.
+                                    Drafts and AI-assisted conversations are not kept by me.
+                                </p>
+                                <p>
                                     Only the final letter you choose to submit is stored in <Link 
                                         href="https://supabase.com/" 
                                         title="click to go to external website"

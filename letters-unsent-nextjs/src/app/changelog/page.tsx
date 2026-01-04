@@ -28,7 +28,7 @@ export default function Changelog() {
                         Letters follow a simple structure: the letter itself, an optional intended recipient, an optional sign-off, and a submission date.
                     </li><li>
                         Writers can experience a guided writing experience with Cove - this space&apos;s quiet AI presence - 
-                        though letters cannot yet be submitted (the submission process is under refinement).
+                        though letters cannot yet be submitted (will open January 16th, 2026).
                     </li><li>
                         Guided writing conversations are moderated by Cove for safety in line with <Link href="/about">guidelines stated here</Link>.
                     </li><li>

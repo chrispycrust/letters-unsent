@@ -500,7 +500,7 @@ export default function About() {
                     <div className="toggle-panel-inner">
                         <div className="toggle-section">
                             <p>
-                                If you'd like, please get in touch about anything related to this website here in these ways: 
+                                You can get in touch about anything related to this website here in these ways: 
                             </p>
                             <ul>
                                 <li>

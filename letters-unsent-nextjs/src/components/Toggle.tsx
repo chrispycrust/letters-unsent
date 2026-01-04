@@ -28,7 +28,7 @@ export default function Toggle({
         <button
             type="button"
             onClick={onToggle}
-            aria-pressed={`${toggleState}`}
+            aria-pressed={toggleState}
             aria-expanded={toggleState}
             aria-controls={controlsId}
             className="button-toggle"

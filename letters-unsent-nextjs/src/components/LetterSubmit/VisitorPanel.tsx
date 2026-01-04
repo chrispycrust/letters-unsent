@@ -79,6 +79,8 @@ export default function VisitorPanel({
                                 value="minimise text area"
                                 className="button-input-area button-change-textarea"
                                 onClick={() => setExpandButtonActive(false)}
+                                title="click to minimise the text area"
+                                aria-label="click to minimise the text area"
                             >
                                 <MinimiseIcon />
                             </button>
@@ -89,6 +91,8 @@ export default function VisitorPanel({
                                 value="expand text area"
                                 className="button-input-area button-change-textarea"
                                 onClick={() => setExpandButtonActive(true)}
+                                title="click to maximise the text area"
+                                aria-label="click to maximise the text area"
                             >
                                 <MaximiseIcon />
                             </button>
@@ -99,6 +103,8 @@ export default function VisitorPanel({
                         type="submit" 
                         value="submit a response"
                         className="submit-button"
+                        title="click to submit a response to Cove (AI presence)"
+                        aria-label="click to submit a response to Cove (AI presence)"
                     >
                         <RespondIcon />
                     </button>

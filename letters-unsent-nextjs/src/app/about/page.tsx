@@ -10,8 +10,6 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import ArrowBadgeRight from "../../../public/icons/ArrowBadgeRight"
-import ArrowBadgeDown from "../../../public/icons/ArrowBadgeDown"
 import Toggle from "@/components/Toggle"
 
 /* 
@@ -261,7 +259,7 @@ export default function About() {
                                     id="note-about-update-and-delete"
                                 >
                                     <strong>Note:</strong> This means that, at this stage, without proof of ownership 
-                                    I'm unable to delete or edit letters on request. <Link 
+                                    I&apos;m unable to delete or edit letters on request. <Link 
                                         href="#anon-update-and-delete" 
                                         onClick={() => setToggleRoadmap(true)} 
                                     >Anonymous edit and delete feature</Link> will be built in the future.
@@ -361,7 +359,7 @@ export default function About() {
                                     <Link
                                     href="https://platform.openai.com/docs/guides/your-data"
                                     >
-                                    OpenAI’s API data policy
+                                    OpenAI&apos;s API data policy
                                     </Link>
                                     , some data may still be retained temporarily by OpenAI for operational
                                     purposes such as abuse monitoring. I do not control this behaviour, nor do I have access to Modified Abuse Monitoring or

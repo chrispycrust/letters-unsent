@@ -12,6 +12,7 @@
   --background-error-message: hsl(0, 100%, 89%);
   --button-text-color: #3e3d38;
   --letter-colour: #fffff4;
+  --ai-gen-tag-colour: #d2d2bf;
   --accent: hsl(132, 46%, 75%);
   --accent-cooler: hsl(180, 66%, 66%);;
   --about-link: hsl(132, 46%, 45%);
@@ -42,6 +43,7 @@
     --background-error-message: HSL(0, 100%, 20%);
     --button-text-color: #3e3d38;
     --letter-colour: #514e42;
+    --ai-gen-tag-colour: #676353;
     --accent: #7fbf92;       /* muted mint (same family as your light accent) */
     /* shadows for dark mode: darker core shadow + optional faint highlight */
     --shadow-color: 0deg 0% 0%;
@@ -740,13 +742,22 @@ section {
   }
 }
 
-.changelog-date {
+.changelog-date
+, .tag {
   display: inline-block;
   background: var(--background-desat-1);
   padding: 5px 10px;
   border-radius: var(--borderRadius);
   font-size: var(--font-size-smaller);
+}
+
+.changelog-date {
   margin-left: 10px;
+}
+
+.tag {
+  font-family: var(--geist);
+  float:right;
 }
 
 /*

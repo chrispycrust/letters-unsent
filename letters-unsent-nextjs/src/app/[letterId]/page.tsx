@@ -9,7 +9,8 @@
 import type { Metadata } from "next";
 
 import ErrorDisplay from "@/components/ErrorDisplay";
-import { convertDate } from "@/utils/functions"
+import { convertDate, tagAIGeneratedLetters } from "@/utils/functions"
+import AIGenTag from "@/components/AIGenTag";
 
 export const metadata: Metadata = {
     title: `Letters Unsent-Letter`,
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
 export default async function LetterPage({
   params,
 }: {
-  params: Promise<{ letterId: number }>
+  params: Promise<{ letterId: string }>
 }) {
     const letterIdString = await params
 
@@ -64,7 +65,12 @@ export default async function LetterPage({
   return (
     <>
       <div className="single-letter-container">
-          <div className="single-letter">
+          {
+            tagAIGeneratedLetters(letterIdString.letterId) &&
+              <AIGenTag />
+          }
+          <br />
+          <div className="single-letter"> 
             <p className="single-letter-date">
               {convertDate(data.letter[0].created_at)}
             </p>

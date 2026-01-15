@@ -1,3 +1,5 @@
+import { strict } from "assert";
+
 /* Purpose: Convert timestamp to human readable format and consistent with tone of letter */
 export function convertDate(retrievedDate: Date) {
     const date = new Date(retrievedDate); // Parses ISO 8601 string
@@ -52,4 +54,15 @@ export function truncateContent(letterContent: string) {
   // if the original letter doesn't exceed wordlimit for screen width, print as is
   return letterContent;
 
+}
+
+export function tagAIGeneratedLetters(letterId: string) {
+
+  const letterIdNumber = Number(letterId)
+
+  if (letterIdNumber >= 1 && letterIdNumber <= 19) {
+    return true
+  }
+  return false;
+  
 }

@@ -9,12 +9,14 @@
 */
 
 import { useState, useEffect } from "react";
+
+import { truncateContent, tagAIGeneratedLetters } from "@/utils/functions"
+
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import { truncateContent } from "@/utils/functions"
-
 import Footer from "@/components/Footer";
+import AIGenTag from "@/components/AIGenTag";
 
 type Letter = {
   id: string
@@ -68,6 +70,11 @@ export default function Home() {
     loadAllLetters()
   }, []);
 
+  function generateAItag(letterId: string) {
+    tagAIGeneratedLetters(letterId) &&
+      <AIGenTag />
+  }
+
   function determineLetterDisplay() {
 
     if (responseOk === false) {
@@ -87,15 +94,25 @@ export default function Home() {
           <div className="letter">
             {
               ( letter.intended_recipient === "" || letter.intended_recipient === null )? (
-                <div className="
-                  single-letter-content-no-recipient-on-display-page 
-                  preserve-breaks
-                  single-letter-on-display-page-margin-bottom
-                ">
-                  {truncateContent(letter.content)}
-                </div>
+                <>
+                  {
+                    tagAIGeneratedLetters(letter.id) &&
+                      <AIGenTag />
+                  }
+                  <div className="
+                    single-letter-content-no-recipient-on-display-page 
+                    preserve-breaks
+                    single-letter-on-display-page-margin-bottom
+                  ">
+                    {truncateContent(letter.content)}
+                  </div>
+                </>
               ) : (
                 <>
+                  {
+                    tagAIGeneratedLetters(letter.id) &&
+                      <AIGenTag />
+                  }
                   <h2>
                     {letter.intended_recipient}
                   </h2>

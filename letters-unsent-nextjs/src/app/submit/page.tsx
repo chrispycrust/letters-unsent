@@ -165,6 +165,7 @@ export default function Submit() {
                 >
                   Start conversation
                 </button>
+                <p>Note: submissions not open until Jan 19th</p>
               </div>
             )
           }

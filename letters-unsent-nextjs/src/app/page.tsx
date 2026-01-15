@@ -91,14 +91,15 @@ export default function Home() {
           href={`/${letter.id}`}
           key={letter.id}
         >
+          {
+            tagAIGeneratedLetters(letter.id) &&
+              <AIGenTag />
+          }
           <div className="letter">
             {
               ( letter.intended_recipient === "" || letter.intended_recipient === null )? (
                 <>
-                  {
-                    tagAIGeneratedLetters(letter.id) &&
-                      <AIGenTag />
-                  }
+                  
                   <div className="
                     single-letter-content-no-recipient-on-display-page 
                     preserve-breaks
@@ -109,10 +110,6 @@ export default function Home() {
                 </>
               ) : (
                 <>
-                  {
-                    tagAIGeneratedLetters(letter.id) &&
-                      <AIGenTag />
-                  }
                   <h2>
                     {letter.intended_recipient}
                   </h2>

@@ -141,6 +141,28 @@ export default function About() {
                                         rel="noopener noreferrer"
                                         tabIndex={toggleBackground ? undefined : -1}
                                     >The Unsent Letter Mailbox</Link> in New York City
+                                </li><li>
+                                    <Link 
+                                        href="https://www.lettersanonymous.com/"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={toggleBackground ? undefined : -1}
+                                    >Letters Anonymous</Link> (web app with manual content moderation by creator)
+                                </li><li>
+                                    <Link 
+                                        href="https://www.unsentletters.love/"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={toggleBackground ? undefined : -1}
+                                    >Unsent Letters</Link> (web app)
+                                </li><li>
+                                    <Link 
+                                        href="https://postsecret.com/"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={toggleBackground ? undefined : -1}
+                                    >Post Secret</Link> (something close to a confessional, but seems more postcard-y than letter-y
+                                    and is actually analogue, not digital)
                                 </li>
                             </ul>
                             
@@ -148,13 +170,19 @@ export default function About() {
                                 So why make this new platform?
                             </h3>
                             <p>
-                                I&apos;m a developer by profession and a writer of a few letters myself.
+                                I am an artist turned engineer, interested in building emotional architecture for the web in my spare time.
                                 For my first user-driven full-stack application, I wanted to build something meaningful 
                                 - a space that honours a wider range of human experience, rather than a single context. 
                                 Not just romantic love, but grief, gratitude, anger, regret, bitterness, joy, and everything in between.
+                                (You can find out more about me <Link 
+                                        href="https://chrispycrust.notion.site/Thought-Stack-0253a7f5960044f482fb53db397929ec?pvs=74"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        tabIndex={toggleBackground ? undefined : -1}
+                                >here on my personal website</Link>.
                             </p>
                             <p>
-                                I also wanted to create a place I wished exists in the world 
+                                I also wanted to create a place I wanted to exist in the world 
                                 - one that hopefully does justice to the weight of those experiences.
                             </p>
                             <p>
@@ -254,6 +282,11 @@ export default function About() {
                                     If you&apos;re convinced any of the disallowed content above should be reconsidered.
                                 </li>
                             </ul>
+                            <p><strong>Note: </strong>
+                                You'll see a sample of letters tagged as "AI generated." 
+                                These are included to demonstrate the range of what can be shared here - emotions and relationship types.
+                                These may be gradually removed as real submissions arrive.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -450,7 +483,7 @@ export default function About() {
                                         tabIndex={togglePrivacy ? undefined : -1}
                                     >
                                         &quot;Roadmap & Features&quot;
-                                    </Link>). Some moderation may still be applied to maintain safety according to <Link 
+                                    </Link>). Moderation will still be applied to maintain safety according to <Link 
                                         href="#submission-guidelines" 
                                         onClick={() => setToggleGuidelines(true)}
                                         tabIndex={togglePrivacy ? undefined : -1}

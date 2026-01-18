@@ -36,9 +36,7 @@ export default function Home() {
 
   const [letters, setLetters] = useState<Letter[]>([])
   const [responseOk, setResponseOk] = useState(false)  
-  const [ErrorMessage, setErrorMessage] = useState(`
-    Upgrading the database - will be offline and unable to retrieve any letters. 
-    Please check back in a couple of hours.`)
+  const [ErrorMessage, setErrorMessage] = useState("")
 
   async function loadAllLetters() {
     try {

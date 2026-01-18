@@ -45,7 +45,7 @@ thank you for being here</String>
       <ConnectedNoteIDs>4,42</ConnectedNoteIDs>
       <PointsToNoteIDs>4</PointsToNoteIDs>
     </Note>
-    <Note ID="4" FontSize="12.0" Position="1142.7,627.1" Width="188.0">
+    <Note ID="4" FontSize="12.0" Position="1217.9,680.4" Width="188.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -211,7 +211,7 @@ fade in visual gesture (swipe up) or assume they press enter?
       <ConnectedNoteIDs>2,42,66</ConnectedNoteIDs>
       <PointsToNoteIDs>66</PointsToNoteIDs>
     </Note>
-    <Note ID="44" FontSize="12.0" Position="1028.3,734.3" Width="200.0">
+    <Note ID="44" FontSize="12.0" Position="1078.5,766.4" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -293,14 +293,14 @@ shows a long, unguessable delete URL (token only shown once)
       <ConnectedNoteIDs>33,61</ConnectedNoteIDs>
       <PointsToNoteIDs>33</PointsToNoteIDs>
     </Note>
-    <Note ID="63" FontSize="12.0" Position="809.7,564.1" Width="200.0">
+    <Note ID="63" FontSize="12.0" Position="864.0,608.5" Width="200.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>begin a series of questions to gently elicit responses to kick start the letter writing process</String>
       <ConnectedNoteIDs>61,65</ConnectedNoteIDs>
     </Note>
-    <Note ID="65" FontSize="12.0" Position="834.0,641.0" Width="185.0">
+    <Note ID="65" FontSize="12.0" Position="804.5,684.9" Width="185.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -380,7 +380,7 @@ offer export</String>
       </Appearance>
       <String>allow reverse for autosave if user changes mind e.g. settings toggle</String>
     </Note>
-    <Note ID="80" FontSize="12.0" Position="1779.9,474.7" Width="115.0">
+    <Note ID="80" FontSize="12.0" Position="1784.8,455.8" Width="115.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -388,7 +388,7 @@ offer export</String>
       <ConnectedNoteIDs>81,86,88</ConnectedNoteIDs>
       <PointsToNoteIDs>81,86,88</PointsToNoteIDs>
     </Note>
-    <Note ID="81" FontSize="12.0" Position="1705.5,547.0" Width="129.0">
+    <Note ID="81" FontSize="12.0" Position="1686.5,568.2" Width="129.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -403,7 +403,7 @@ offer export</String>
       <String>state model</String>
       <ConnectedNoteIDs>83</ConnectedNoteIDs>
     </Note>
-    <Note ID="83" FontSize="12.0" Position="1685.5,612.0" Width="105.0">
+    <Note ID="83" FontSize="12.0" Position="1688.0,635.3" Width="105.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -411,7 +411,7 @@ offer export</String>
       <ConnectedNoteIDs>81,82</ConnectedNoteIDs>
       <PointsToNoteIDs>82</PointsToNoteIDs>
     </Note>
-    <Note ID="84" FontSize="12.0" Position="1891.7,738.6" Width="87.0">
+    <Note ID="84" FontSize="12.0" Position="1886.8,683.2" Width="87.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -419,14 +419,14 @@ offer export</String>
       <ConnectedNoteIDs>86,89</ConnectedNoteIDs>
       <PointsToNoteIDs>89</PointsToNoteIDs>
     </Note>
-    <Note ID="85" FontSize="12.0" Position="1912.7,599.1" Width="95.0">
+    <Note ID="85" FontSize="12.0" Position="1983.7,611.9" Width="95.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>system prompt</String>
       <ConnectedNoteIDs>86</ConnectedNoteIDs>
     </Note>
-    <Note ID="86" FontSize="12.0" Position="1896.9,577.5" Width="79.0">
+    <Note ID="86" FontSize="12.0" Position="1885.4,584.5" Width="79.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -442,7 +442,7 @@ offer export</String>
       <ConnectedNoteIDs>80,91</ConnectedNoteIDs>
       <PointsToNoteIDs>80</PointsToNoteIDs>
     </Note>
-    <Note ID="89" FontSize="12.0" Position="2029.5,750.1" Width="83.0">
+    <Note ID="89" FontSize="12.0" Position="2026.9,764.0" Width="83.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
@@ -450,11 +450,12 @@ offer export</String>
       <ConnectedNoteIDs>84,97</ConnectedNoteIDs>
       <PointsToNoteIDs>97</PointsToNoteIDs>
     </Note>
-    <Note ID="90" FontSize="12.0" Position="1870.8,415.8" Width="200.0">
+    <Note ID="90" FontSize="12.0" Position="1877.4,405.2" Width="171.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
-      <String>user input goes down, updated data comes back up</String>
+      <String>user input goes down, 
+updated data comes back up</String>
     </Note>
     <Note ID="91" FontSize="12.0" Position="1796.3,294.1" Width="81.0">
       <Appearance>
@@ -464,19 +465,20 @@ offer export</String>
       <ConnectedNoteIDs>88</ConnectedNoteIDs>
       <PointsToNoteIDs>88</PointsToNoteIDs>
     </Note>
-    <Note ID="92" FontSize="12.0" Position="1573.0,496.6" Width="200.0">
+    <Note ID="92" FontSize="12.0" Position="1559.0,497.0" Width="214.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>make sure we’re at right step in flow</String>
     </Note>
-    <Note ID="93" FontSize="12.0" Position="1901.7,503.1" Width="200.0">
+    <Note ID="93" FontSize="12.0" Position="1916.0,490.9" Width="194.0">
       <Appearance>
         <Alignment>Left</Alignment>
       </Appearance>
-      <String>sends messages, receives text + structured outputs</String>
+      <String>sends messages, 
+receives text + structured outputs</String>
     </Note>
-    <Note ID="95" FontSize="12.0" Position="1430.3,659.9" Width="191.0">
+    <Note ID="95" FontSize="12.0" Position="1432.9,622.7" Width="191.0">
       <Appearance/>
       <String>all updates pass through reducer</String>
     </Note>
@@ -491,6 +493,12 @@ offer export</String>
         <Alignment>Left</Alignment>
       </Appearance>
       <String>COVE’S BRAIN &amp; MEMORY</String>
+    </Note>
+    <Note ID="103" FontSize="12.0" Position="1139.6,127.5" Width="161.1">
+      <Appearance>
+        <Alignment>Left</Alignment>
+      </Appearance>
+      <String>“letterDraft” key exists in localStorage</String>
     </Note>
   </Notes>
   <BackgroundShapes>
@@ -520,28 +528,28 @@ offer export</String>
     </Shape>
   </BackgroundShapes>
   <Labels>
-    <Label IDs="13,39">no</Label>
-    <Label IDs="3,42">storedDraft = Y</Label>
-    <Label IDs="42,43">storedDraft = N</Label>
-    <Label IDs="4,33">Yes</Label>
-    <Label IDs="9,35">Yes</Label>
-    <Label IDs="9,13">No</Label>
-    <Label IDs="20,54">no</Label>
-    <Label IDs="54,58">yes</Label>
-    <Label IDs="1,23">hasVisited = yes</Label>
     <Label IDs="1,2">hasVisited = no</Label>
+    <Label IDs="1,23">hasVisited = yes</Label>
     <Label IDs="61,63">i don't know where to begin/i have some words</Label>
     <Label IDs="61,62">i know what to say</Label>
+    <Label IDs="13,39">no</Label>
+    <Label IDs="9,13">No</Label>
+    <Label IDs="20,54">no</Label>
+    <Label IDs="32,69">no</Label>
+    <Label IDs="13,76">no</Label>
+    <Label IDs="51,76">no</Label>
     <Label IDs="4,66">no - let it go and begin again</Label>
+    <Label IDs="42,43">storedDraft = N</Label>
+    <Label IDs="3,42">storedDraft = Y</Label>
+    <Label IDs="4,33">Yes</Label>
+    <Label IDs="9,35">Yes</Label>
+    <Label IDs="54,58">yes</Label>
     <Label IDs="39,69">yes</Label>
     <Label IDs="69,70">yes</Label>
-    <Label IDs="32,69">no</Label>
     <Label IDs="13,73">yes</Label>
-    <Label IDs="13,76">no</Label>
     <Label IDs="14,76">yes</Label>
-    <Label IDs="51,76">no</Label>
   </Labels>
-  <AutoFit>0,2,4,9,14,17,30,36,40,42,54,58,65,73,80-86,88,89,91,95,100,102</AutoFit>
+  <AutoFit>0,2,4,9,14,17,30,36,40,42,54,58,65,73,80-86,88-91,93,95,100,102</AutoFit>
   <NoteStyles>
     <Style Name="Bubble (Blue)" ID="4DDF405C-7C98-4986-B63C-AB0A0746FEA9" AffectFontStyle="No" AffectAlignment="No" AffectTextColor="No" AffectNoteBody="Yes" AffectFade="No">
       <BorderThickness>1</BorderThickness>

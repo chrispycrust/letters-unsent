@@ -1,5 +1,3 @@
-import { strict } from "assert";
-
 /* Purpose: Convert timestamp to human readable format and consistent with tone of letter */
 export function convertDate(retrievedDate: Date) {
     const date = new Date(retrievedDate); // Parses ISO 8601 string

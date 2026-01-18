@@ -283,7 +283,7 @@ export default function About() {
                                 </li>
                             </ul>
                             <p><strong>Note: </strong>
-                                You'll see a sample of letters tagged as "AI generated." 
+                                You&apos;ll see a sample of letters tagged as &quot;AI generated.&quot; 
                                 These are included to demonstrate the range of what can be shared here - emotions and relationship types.
                                 These may be gradually removed as real submissions arrive.
                             </p>

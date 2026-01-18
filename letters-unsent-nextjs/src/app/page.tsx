@@ -70,11 +70,6 @@ export default function Home() {
     loadAllLetters()
   }, []);
 
-  function generateAItag(letterId: string) {
-    tagAIGeneratedLetters(letterId) &&
-      <AIGenTag />
-  }
-
   function determineLetterDisplay() {
 
     if (responseOk === false) {

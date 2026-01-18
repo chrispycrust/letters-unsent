@@ -175,11 +175,11 @@ export default function About() {
                                 - a space that honours a wider range of human experience, rather than a single context. 
                                 Not just romantic love, but grief, gratitude, anger, regret, bitterness, joy, and everything in between.
                                 (You can find out more about me <Link 
-                                        href="https://chrispycrust.notion.site/Thought-Stack-0253a7f5960044f482fb53db397929ec?pvs=74"
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        tabIndex={toggleBackground ? undefined : -1}
-                                >here on my personal website</Link>.
+                                    href="https://chrispycrust.notion.site/Thought-Stack-0253a7f5960044f482fb53db397929ec?pvs=74"
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    tabIndex={toggleBackground ? undefined : -1}
+                                >here on my personal website</Link>.)
                             </p>
                             <p>
                                 I also wanted to create a place I wanted to exist in the world 

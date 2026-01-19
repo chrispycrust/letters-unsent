@@ -223,7 +223,7 @@ export default function About() {
                             className="toggle-section"
                         >
                             <p>
-                                <strong>Note:</strong> Ability to submit will be available on Jan 20th, 2026.
+                                <strong>Note:</strong> Ability to submit will be available on Jan 27th, 2026.
                                 I&apos;m giving it this buffer so I can be fully present and rested to support if needed.
                             </p>
                             <p>

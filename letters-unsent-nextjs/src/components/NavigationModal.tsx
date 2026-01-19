@@ -65,7 +65,7 @@ export default function NavigationModal({
         </div>
           
         <div className="modal-footer">
-          <p>Letters Unsent (<Link href="/changelog" onClick={onClose}>v1.0</Link>)</p>
+          <p>Letters Unsent (<Link href="/changelog" onClick={onClose}>v1.1</Link>)</p>
           <p>Built with Next.js, React (with TypeScript), OpenAI&apos;s API, Supabase, Tabler</p>
         </div>
         

@@ -58,7 +58,7 @@ export function tagAIGeneratedLetters(letterId: string) {
 
   const letterIdNumber = Number(letterId)
 
-  if (letterIdNumber >= 1 && letterIdNumber <= 19) {
+  if (letterIdNumber >= 32 && letterIdNumber <= 52) {
     return true
   }
   return false;

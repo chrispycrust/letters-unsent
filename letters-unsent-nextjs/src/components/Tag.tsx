@@ -1,6 +1,6 @@
 
 interface TagProps { 
-    content: string;
+    content: string | null;
     style: string;
 }
 

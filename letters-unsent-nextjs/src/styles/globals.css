@@ -755,10 +755,28 @@ section {
   margin-left: 10px;
 }
 
+.meta-data-container {
+  float: right;
+  display: flex;
+  flex-direction: column;
+}
+
 .tag {
   font-family: var(--geist);
-  float:right;
+  float: right;
 }
+
+.contextual-tags-container {
+  margin-top: 5px;
+  margin-right: 10px;
+}
+
+.tag
+, .contextual-tags-container {
+  opacity: 90%;
+  font-size: var(--font-size-smaller);
+}
+
 
 /*
   --------------------------------

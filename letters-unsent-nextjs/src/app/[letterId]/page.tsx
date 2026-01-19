@@ -69,6 +69,20 @@ export default async function LetterPage({
             tagAIGeneratedLetters(letterIdString.letterId) &&
               <AIGenTag />
           }
+          {
+            ( (data.letter[0].relationship_type !== "" || data.letter[0].relationship_type !== null)
+              &&
+              (data.letter[0].emotional_tone !== "" || data.letter[0].emotional_tone !== null)
+            ) ? (
+                <div
+                  className="contextual-tags-container"
+                >
+                  <span>{data.letter[0].relationship_type} · <i>{data.letter[0].emotional_tone}</i></span>
+                </div>
+              ) : (
+                <></>
+              )
+            }
           <br />
           <div className="single-letter"> 
             <p className="single-letter-date">

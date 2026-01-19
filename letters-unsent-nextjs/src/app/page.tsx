@@ -16,12 +16,15 @@ import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Footer from "@/components/Footer";
+import Tag from "@/components/Tag";
 import AIGenTag from "@/components/AIGenTag";
 
 type Letter = {
   id: string
   content: string
   intended_recipient: string | null
+  relationship_type: string | null
+  emotional_tone: string | null
 }
 
 /* 
@@ -86,15 +89,40 @@ export default function Home() {
           href={`/${letter.id}`}
           key={letter.id}
         >
-          {
-            tagAIGeneratedLetters(letter.id) &&
-              <AIGenTag />
-          }
+          <div
+            className="meta-data-container"
+          >
+            {
+              tagAIGeneratedLetters(letter.id) &&
+                <div>
+                  <AIGenTag />
+                </div>
+            }
+            {
+              ( (letter.relationship_type !== "" || letter.relationship_type !== null)
+                &&
+                (letter.emotional_tone !== "" || letter.emotional_tone !== null)
+              ) ? (
+                  <div
+                    className="contextual-tags-container"
+                  >
+                    <span>{letter.relationship_type} · <i>{letter.emotional_tone}</i></span>
+                  </div>
+                ) : (
+                  <></>
+                )
+            }
+          </div>
+          
           <div className="letter">
             {
+              
               ( letter.intended_recipient === "" || letter.intended_recipient === null )? (
                 <>
-                  
+                  {
+                    (letter.relationship_type && letter.emotional_tone) &&
+                      <br/>
+                  }
                   <div className="
                     single-letter-content-no-recipient-on-display-page 
                     preserve-breaks
@@ -105,6 +133,10 @@ export default function Home() {
                 </>
               ) : (
                 <>
+                  {
+                    (letter.relationship_type && letter.emotional_tone) &&
+                      <br/>
+                  }
                   <h2>
                     {letter.intended_recipient}
                   </h2>

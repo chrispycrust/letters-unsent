@@ -16,7 +16,6 @@ import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Footer from "@/components/Footer";
-import Tag from "@/components/Tag";
 import AIGenTag from "@/components/AIGenTag";
 
 type Letter = {

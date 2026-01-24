@@ -223,7 +223,7 @@ export default function About() {
                             className="toggle-section"
                         >
                             <p>
-                                <strong>Note:</strong> Ability to submit will be available soon.
+                                <strong>Note:</strong> Submissions will be open soon.
                             </p>
                             <p>
                                 <strong>Please treat submitted letters as permanent until anonymous management tools are available. 

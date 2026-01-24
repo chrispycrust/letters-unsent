@@ -373,8 +373,10 @@ footer a:hover {
 }
 
 p.timestamp {
+  font-family: var(--geist);
   color: rgb(136, 136, 136);
   margin-top: 20px;
+  font-size: var(--font-size-smaller);
 }
 
  
@@ -761,8 +763,14 @@ section {
   flex-direction: column;
 }
 
-.tag {
+.tag
+, .contextual-tags-container {
   font-family: var(--geist);
+  opacity: 72%;
+  font-size: var(--font-size-smaller);
+}
+
+.tag {
   float: right;
 }
 
@@ -771,10 +779,11 @@ section {
   margin-right: 10px;
 }
 
-.tag
-, .contextual-tags-container {
-  opacity: 90%;
+.submission_note {
+  margin-top: 10px;
+  font-family: var(--geist);
   font-size: var(--font-size-smaller);
+  font-weight: 300;
 }
 
 
@@ -821,7 +830,7 @@ section {
 @media (width > 700px) {
 
   :root {
-    --font-size: 1.2em;
+    --font-size: 1.25em;
   }
 
   h1 {

@@ -62,6 +62,12 @@ export default async function LetterPage({
 
     const data = await res.json()
 
+    const letter = data?.letter?.[0]
+
+    if (!letter) {
+      return <ErrorDisplay message="Letter not found" />;
+    }
+
   return (
     <>
       <div className="single-letter-container">
@@ -70,62 +76,59 @@ export default async function LetterPage({
               <AIGenTag />
           }
           {
-            ( (data.letter[0].relationship_type !== "" || data.letter[0].relationship_type !== null)
-              &&
-              (data.letter[0].emotional_tone !== "" || data.letter[0].emotional_tone !== null)
-            ) ? (
+            ( letter?.relationship_type && letter?.emotional_tone && (
                 <div
                   className="contextual-tags-container"
+                  title="These are contextual tags to demonstrate the range of relationship types and emotional tones welcome on the website.
+                        These are not yet a feature to be added on submission."
                 >
-                  <span>{data.letter[0].relationship_type} · <i>{data.letter[0].emotional_tone}</i></span>
+                  <span>{letter?.relationship_type} · <i>{letter?.emotional_tone}</i></span>
                 </div>
-              ) : (
-                <></>
-              )
-            }
+            ))
+          }
           <br />
           <div className="single-letter"> 
             <p className="single-letter-date">
-              {convertDate(data.letter[0].created_at)}
+              {convertDate(letter?.created_at)}
             </p>
 
             {/* alternate rendering depending on whether a recipient is named  */}
 
             {
-              ( data.letter[0].intended_recipient === "" || data.letter[0].intended_recipient === null )? (
+              ( !letter?.intended_recipient )? (
                 <div className="
                   single-letter-content-no-recipient 
                   preserve-breaks"
                 >
-                  {data.letter[0].content}
+                  {letter?.content}
                 </div>
               ) : (
                 <>
                   <h2>
-                    {data.letter[0].intended_recipient}
+                    {letter?.intended_recipient}
                   </h2> 
                   <div className="
                     single-letter-content-container-with-recipient 
                     preserve-breaks"
                   >
-                    {data.letter[0].content}
+                    {letter?.content}
                   </div>
                 </>
               )
             }
 
             {
-              ( data.letter[0].author_name === "" || data.letter[0].author_name === null ) ? (
+              ( !letter?.author_name ) ? (
                 <></>
               ) : (
                 <p className="sign-off">
-                  <br></br>— {data.letter[0].author_name}
+                  <br></br>— {letter?.author_name}
                 </p>
               )
             }
 
           </div>
-        <p className="timestamp">{data.letter[0].created_at}</p>
+        <p className="timestamp">{letter?.created_at}</p>
       </div>
     </>
   )

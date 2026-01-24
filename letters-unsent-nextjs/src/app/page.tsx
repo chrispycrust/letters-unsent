@@ -98,25 +98,25 @@ export default function Home() {
                 </div>
             }
             {
-              ( (letter.relationship_type !== "" || letter.relationship_type !== null)
-                &&
-                (letter.emotional_tone !== "" || letter.emotional_tone !== null)
-              ) ? (
+              ( 
+                letter.relationship_type && letter.emotional_tone ) ? (
                   <div
                     className="contextual-tags-container"
+                    title="These are contextual tags to demonstrate the range of relationship types and emotional tones welcome on the website.
+                        This feature will not appear on your submission just yet."
                   >
                     <span>{letter.relationship_type} · <i>{letter.emotional_tone}</i></span>
                   </div>
                 ) : (
                   <></>
                 )
-            }
+            } 
           </div>
           
           <div className="letter">
             {
               
-              ( letter.intended_recipient === "" || letter.intended_recipient === null )? (
+              ( !letter.intended_recipient )? (
                 <>
                   {
                     (letter.relationship_type && letter.emotional_tone) &&
@@ -157,6 +157,8 @@ export default function Home() {
     }
 
   }
+
+  
 
   // -------------------------------------------------------------------------------------------------
   //     RETURN

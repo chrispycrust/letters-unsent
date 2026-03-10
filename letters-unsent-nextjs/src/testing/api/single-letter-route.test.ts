@@ -183,6 +183,25 @@ describe("/api/supabase/singleLetter route", () => {
     })
   })
 
+  it("PUT returns 400 for malformed json", async () => {
+    mockedCreateClient.mockResolvedValue({ from: jest.fn() } as never)
+
+    const request = new Request("http://localhost/api/supabase/singleLetter", {
+      method: "PUT",
+      body: "{invalid-json",
+      headers: { "content-type": "application/json" },
+    })
+
+    const response = await PUT(request)
+    const body = await response.json()
+
+    expect(response.status).toBe(400)
+    expect(body).toEqual({
+      success: false,
+      error: "Invalid payload: malformed JSON body.",
+    })
+  })
+
   it("PUT returns 403 when db denies permissions", async () => {
     const select = jest.fn().mockResolvedValue({
       data: null,
@@ -209,6 +228,57 @@ describe("/api/supabase/singleLetter route", () => {
     expect(body).toEqual({
       success: false,
       error: "permission denied for table letter",
+    })
+  })
+
+  it("PUT returns 403 when auth/session is missing", async () => {
+    mockedCreateClient.mockRejectedValue(new Error("Not authenticated"))
+
+    const request = new Request("http://localhost/api/supabase/singleLetter", {
+      method: "PUT",
+      body: JSON.stringify({
+        letterId: "1",
+        content: "Updated content",
+      }),
+      headers: { "content-type": "application/json" },
+    })
+
+    const response = await PUT(request)
+    const body = await response.json()
+
+    expect(response.status).toBe(403)
+    expect(body).toEqual({
+      success: false,
+      error: "Not authenticated",
+    })
+  })
+
+  it("PUT returns 404 when letter does not exist", async () => {
+    const select = jest.fn().mockResolvedValue({
+      data: [],
+      error: null,
+    })
+    const eq = jest.fn().mockReturnValue({ select })
+    const update = jest.fn().mockReturnValue({ eq })
+    const from = jest.fn().mockReturnValue({ update })
+    mockedCreateClient.mockResolvedValue({ from } as never)
+
+    const request = new Request("http://localhost/api/supabase/singleLetter", {
+      method: "PUT",
+      body: JSON.stringify({
+        letterId: "missing",
+        content: "Updated content",
+      }),
+      headers: { "content-type": "application/json" },
+    })
+
+    const response = await PUT(request)
+    const body = await response.json()
+
+    expect(response.status).toBe(404)
+    expect(body).toEqual({
+      success: false,
+      error: "Letter not found.",
     })
   })
 
@@ -269,6 +339,29 @@ describe("/api/supabase/singleLetter route", () => {
     expect(body).toEqual({
       success: false,
       error: "Database timeout",
+    })
+  })
+
+  it("DELETE returns 404 when letter does not exist", async () => {
+    const select = jest.fn().mockResolvedValue({
+      data: [],
+      error: null,
+    })
+    const eq = jest.fn().mockReturnValue({ select })
+    const remove = jest.fn().mockReturnValue({ eq })
+    const from = jest.fn().mockReturnValue({ delete: remove })
+    mockedCreateClient.mockResolvedValue({ from } as never)
+
+    const request = new Request("http://localhost/api/supabase/singleLetter?letterId=missing", {
+      method: "DELETE",
+    })
+    const response = await DELETE(request)
+    const body = await response.json()
+
+    expect(response.status).toBe(404)
+    expect(body).toEqual({
+      success: false,
+      error: "Letter not found.",
     })
   })
 

@@ -10,6 +10,10 @@ function getErrorMessage(error: unknown): string {
 }
 
 function getErrorStatus(error: unknown): number {
+    if (error instanceof SyntaxError) {
+        return 400
+    }
+
     const message = getErrorMessage(error).toLowerCase()
     if (
         message.includes("permission denied") ||
@@ -22,6 +26,10 @@ function getErrorStatus(error: unknown): number {
         return 400
     }
     return 500
+}
+
+function hasNoRows(data: unknown): boolean {
+    return !Array.isArray(data) || data.length === 0
 }
 
 // retrieves a letter based on ID
@@ -67,7 +75,15 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
     try {
         const supabase = await createClient()
-        const body = await request.json()
+        let body: Record<string, unknown>
+        try {
+            body = await request.json()
+        } catch {
+            return NextResponse.json(
+                { success: false, error: "Invalid payload: malformed JSON body." },
+                { status: 400 },
+            )
+        }
         const { letterId, content, intended_recipient, author_name } = body
 
         if (!letterId) {
@@ -97,6 +113,12 @@ export async function PUT(request: Request) {
             .select()
 
         if (error) throw error
+        if (hasNoRows(data)) {
+            return NextResponse.json(
+                { success: false, error: "Letter not found." },
+                { status: 404 },
+            )
+        }
 
         return NextResponse.json({ success: true, data })
     } catch (error) {
@@ -127,6 +149,12 @@ export async function DELETE(request: Request) {
             .select()
 
         if (error) throw error
+        if (hasNoRows(data)) {
+            return NextResponse.json(
+                { success: false, error: "Letter not found." },
+                { status: 404 },
+            )
+        }
 
         return NextResponse.json({ success: true, data })
     } catch (error) {

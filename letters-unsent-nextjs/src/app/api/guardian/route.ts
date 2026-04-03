@@ -2,175 +2,130 @@ import OpenAI from "openai";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN
+  apiKey: process.env.OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN,
 });
 
-type SubmitToSupabaseArgs = {
+type PrepareLetterForReleaseArgs = {
   content: string
-  created_at: string
-  intended_recipient?: string | null
-  author_name?: string | null
+  intended_recipient: string | null
+  author_name: string | null
 }
 
 const tools: OpenAI.Responses.Tool[] = [
   {
     type: "function",
-    name: "submit_to_supabase",
-    description: "Submit final letter object to Supabase at RELEASE stage of conversation",
+    name: "prepare_letter_for_release",
+    description: "Prepare the final letter payload when the visitor has clearly consented to release.",
     strict: true,
     parameters: {
       type: "object",
       properties: {
         content: {
-          "type": "string",
-          "description": "contents of the visitor's letter",
+          type: "string",
+          description: "Contents of the final letter.",
         },
         intended_recipient: {
           type: "string",
           nullable: true,
-          description: "name of the recipient of the letter",
+          description: "Name or phrase for who the letter is addressed to.",
         },
         author_name: {
           type: "string",
           nullable: true,
-          description: "name of the author of the letter",
+          description: "Optional sign-off name from the author.",
         }
       },
       required: ["content", "intended_recipient", "author_name"],
-      additionalProperties: false // not sure what this is 
+      additionalProperties: false,
     },
-    // strict: true // also not sure what this is
-  }
+  },
 ];
 
-async function submit_to_supabase(args: SubmitToSupabaseArgs) {
-
-  // console.log("Object received from model: ", args);
-  // console.log("type of argument: ", typeof(args))
-
-  args.created_at = new Date().toISOString();
-
-  // console.log("Submitting to Supabase:", args);
-
-  try {
-    
-    const res = await fetch(process.env.SUPABASE_API_URL!, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(args)
-    });
-
-    if (!res.ok) {
-      const errorBody = await res.text()
-
-      console.error("Supabase route error:", errorBody)
-      return "Error saving letter."
-    }
-
-    const data = await res.json()
-
-    console.log("✅ Supabase response:", data)
-    
-    return "Letter successfully saved."
-
-  } catch (err) {
-    console.error("Fetch failed:", err)
-    return "Error saving letter."
+function normaliseOptionalString(value: unknown): string | null {
+  if (typeof value !== "string") {
+    return null;
   }
-  
+
+  const trimmedValue = value.trim();
+  return trimmedValue.length > 0 ? trimmedValue : null;
 }
 
-async function callFunction(name: string, args: SubmitToSupabaseArgs) {
-  if (name === "submit_to_supabase") {
-    return await submit_to_supabase(args)
+function normaliseReleasePayload(value: unknown): PrepareLetterForReleaseArgs | null {
+  if (!value || typeof value !== "object") {
+    return null;
   }
-  return null
+
+  const record = value as Record<string, unknown>;
+  if (typeof record.content !== "string" || record.content.trim().length === 0) {
+    return null;
+  }
+
+  return {
+    content: record.content.trim(),
+    intended_recipient: normaliseOptionalString(record.intended_recipient),
+    author_name: normaliseOptionalString(record.author_name)
+  };
 }
-  
+
 export async function GET(request: Request) {
-    
-    const { searchParams } = new URL(request.url)
-    const visitCount = searchParams.get("visitCount")
-    
-    // ✅ always ends up as a string
-    const visitCountNumber = Number(visitCount ?? "1")
-    
-    const visitorPrompt = 
-      visitCountNumber <= 1 
-        ? "The visitor is new and has never been here before. Please greet them accordingly - try finding new ways to greet them. Keep it short."
-        : "The visitor has returned again. Please greet them accordingly - try finding new ways to welcome them back."
+  const { searchParams } = new URL(request.url);
+  const visitCount = searchParams.get("visitCount");
+  const visitCountNumber = Number(visitCount ?? "1");
 
-    const GuardianResponse = await openai.responses.create({
-        model: "gpt-4.1",
-        instructions: guardianSystemPrompt,
-        input: [
-            { role: "developer", content: visitorPrompt },
-        ]
-    })
+  const visitorPrompt =
+    visitCountNumber <= 1
+      ? "The visitor is new and has never been here before. Please greet them accordingly - try finding new ways to greet them. Keep it short."
+      : "The visitor has returned again. Please greet them accordingly - try finding new ways to welcome them back.";
 
-  return Response.json({ output: GuardianResponse.output_text }) 
+  const guardianResponse = await openai.responses.create({
+    model: "gpt-4.1",
+    instructions: guardianSystemPrompt,
+    input: [{ role: "developer", content: visitorPrompt }],
+  });
+
+  return Response.json({ output: guardianResponse.output_text });
 }
 
 export async function POST(request: Request) {
-
   try {
+    const { updatedConversation } = await request.json();
 
-    const { updatedConversation } = await request.json()
+    const guardianResponse = await openai.responses.create({
+      model: "gpt-4.1",
+      input: updatedConversation,
+      tools,
+      store: false,
+    });
 
-    // console.log("updated conversation:", updatedConversation)
+    let releasePayload: PrepareLetterForReleaseArgs | null = null;
 
-    const GuardianResponse = await openai.responses.create({
-        model: "gpt-4.1",
-        input: updatedConversation,
-        tools,
-        store: false, // disable later in prod
-      });
+    for (const toolCall of guardianResponse.output) {
+      if (toolCall.type !== "function_call") {
+        continue;
+      }
 
-    let finalText = GuardianResponse.output_text
+      if (toolCall.name !== "prepare_letter_for_release") {
+        continue;
+      }
 
-    for (const toolCall of GuardianResponse.output) {
-      if (toolCall.type === "function_call") {
-  
-      const name = toolCall.name;
-      const args = JSON.parse(toolCall.arguments);
-  
-      const result =  await callFunction(name, args);
-      
-      updatedConversation.push(
-        {
-          type: "function_call",
-          name: name,
-          call_id: toolCall.call_id,
-          arguments: toolCall.arguments
-        },
-        {
-          type: "function_call_output",
-          call_id: toolCall.call_id,
-          output: JSON.stringify(result)
-        }
-      );
-    
-      const GuardianResponseAfterSubmission = await openai.responses.create({
-        model: "gpt-4.1",
-        input: updatedConversation,
-        tools,
-        store: false, // disable later in prod
-      });
-
-      finalText = GuardianResponseAfterSubmission.output_text
-      
+      try {
+        const parsedArguments = JSON.parse(toolCall.arguments);
+        releasePayload = normaliseReleasePayload(parsedArguments);
+      } catch (error) {
+        console.error("Guardian tool parsing error:", error);
       }
     }
 
-    return Response.json({ output: finalText }) 
+    const fallbackOutput = releasePayload ? "Your letter is ready to be released." : "";
+    const outputText = guardianResponse.output_text || fallbackOutput;
 
+    return Response.json({
+      output: outputText,
+      releaseReady: Boolean(releasePayload),
+      letterPayload: releasePayload,
+    });
   } catch (error) {
-
-    console.error("Guardian route error:", error)
-    return new Response("Error generating Guardian response", { status: 500 })
-
+    console.error("Guardian route error:", error);
+    return new Response("Error generating Guardian response", { status: 500 });
   }
-
 }

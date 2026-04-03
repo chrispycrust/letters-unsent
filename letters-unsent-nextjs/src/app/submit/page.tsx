@@ -1,181 +1,269 @@
 "use client";
 
-/* 
--------------------------------------------------------------------------------------------------
-
-  IMPORTS
-
--------------------------------------------------------------------------------------------------
-*/
-
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 
-/* COMPONENTS */
 import ErrorDisplay from "@/components/ErrorDisplay";
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
+import ReleaseActionArea from "@/components/LetterSubmit/ReleaseFlow/ReleaseActionArea";
+import type {
+  ReadyLetterPayload,
+  ReleaseSubmitInput,
+  ReleaseSubmitResult,
+} from "@/components/LetterSubmit/ReleaseFlow/types";
 
-/* 
--------------------------------------------------------------------------------------------------
-  
-  PURPOSE 
-  Letter submission page
+type ConversationMessage = {
+  role: "system" | "user" | "assistant";
+  content: string;
+};
 
-------------------------------------------------------------------------------------------------- 
-*/
+type GuardianPostResponse = {
+  output: string;
+  releaseReady?: boolean;
+  letterPayload?: unknown;
+  error?: string;
+};
 
-export default function Submit() {
+const initialConversation: ConversationMessage[] = [
+  {
+    role: "system",
+    content: guardianSystemPrompt,
+  },
+];
 
-  const [coveMessage, setCoveMessage] = useState("");
-  const [visitorInput, setVisitorInput ] = useState("");
-  const [conversation, setConversation] = useState([
-    {
-        role: "system",
-        content: guardianSystemPrompt // not sure if I should be calling the system prompt from client?
-    },
-  ]);
-
-  const [responseOk, setResponseOk] = useState(false)
-  const [ErrorMessage, setErrorMessage] = useState("")
-  const [conversationStart, setConversationStart] = useState(false); // "start conversation" button
-  const ref = useRef<HTMLButtonElement | null>(null)
-
-  async function greetVisitor() {
-
-    // remove button if element at node exists 
-    if (ref.current !== null) {
-      ref.current.remove();
-    } else {
-      console.log("Element not found");
-      // setErrorMessage("Button to start conversation not found")
-    }
-
-    setConversationStart(true);
-
-    // activate emotional memory for Cove
-    localStorage.setItem("visitCount", "1");
-    localStorage.setItem("letterDraft", "hey you"); // without formatting
-
-    // Step 1: Send visitCount and letterDraft
-    const visitCount = localStorage.getItem("visitCount")
-
-    try {
-      const res = await fetch(`/api/guardian?&visitCount=${visitCount}`)
-
-      if (res.ok === true) {
-        setResponseOk(true);
-      }
-
-      // Step 2: Fetch Cove's message
-      const data = await res.json()
-
-      if (res.ok) {
-        setCoveMessage(data.output)
-      } else {
-        console.error('Server error', data.error)
-        setErrorMessage(`Server error: ${data.error}`)
-      }
-
-    } catch (err) {
-      console.error('Network error:', err)
-      setErrorMessage(`Network error: ${err}`)
-    }
-
+function normaliseOptionalString(value: unknown): string | null {
+  if (typeof value !== "string") {
+    return null;
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault() // stops the default page reload
+  const trimmedValue = value.trim();
+  return trimmedValue.length > 0 ? trimmedValue : null;
+}
+
+function normaliseReadyLetterPayload(payload: unknown): ReadyLetterPayload | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  const record = payload as Record<string, unknown>;
+  if (typeof record.content !== "string" || record.content.trim().length === 0) {
+    return null;
+  }
+
+  return {
+    content: record.content.trim(),
+    intended_recipient: normaliseOptionalString(record.intended_recipient),
+    author_name: normaliseOptionalString(record.author_name),
+  };
+}
+
+export default function Submit() {
+  const router = useRouter();
+
+  const [coveMessage, setCoveMessage] = useState("");
+  const [visitorInput, setVisitorInput] = useState("");
+  const [conversation, setConversation] = useState<ConversationMessage[]>(initialConversation);
+  const [responseOk, setResponseOk] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [conversationStart, setConversationStart] = useState(false);
+  const [pendingReleasePayload, setPendingReleasePayload] = useState<ReadyLetterPayload | null>(null);
+  const [releaseLocked, setReleaseLocked] = useState(false);
+
+  async function greetVisitor() {
+    setConversationStart(true);
+
+    localStorage.setItem("visitCount", "1");
+    localStorage.setItem("letterDraft", "hey you");
+
+    const visitCount = localStorage.getItem("visitCount");
+
+    try {
+      const res = await fetch(`/api/guardian?&visitCount=${visitCount}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        setResponseOk(true);
+        setCoveMessage(data.output);
+      } else {
+        setErrorMessage(`Server error: ${data.error}`);
+      }
+    } catch (error) {
+      setErrorMessage(`Network error: ${error}`);
+    }
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!visitorInput.trim()) {
+      return;
+    }
 
     setResponseOk(false);
 
-    const updatedConversation = [...conversation, { role: "user", content: visitorInput }]
+    const updatedConversation = [
+      ...conversation,
+      { role: "user", content: visitorInput.trim() } as ConversationMessage,
+    ];
 
     try {
-
-      // fetch Cove's message in response to visitorInput
       const res = await fetch("/api/guardian/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify( {updatedConversation} )
-      })
+        body: JSON.stringify({ updatedConversation }),
+      });
 
-      if (res.ok === false) {
-        setCoveMessage("")
-      } else {
-        setResponseOk(true);
+      const data = (await res.json()) as GuardianPostResponse;
+
+      if (!res.ok) {
+        setCoveMessage("");
+        setErrorMessage(`Failed to load response from API: ${data.error ?? "Unknown error"}`);
+        return;
       }
 
-      // update Cove's message with new response
-      const data = await res.json()
-      
-      if (res.ok) {
-        setConversation([...updatedConversation, { role: "assistant", content: data.output }])
-        setCoveMessage(data.output)
-      } else {
-        console.error('Failed to load response from API:', data.error)
-        setErrorMessage(`Failed to load response from API: ${data.error}`)
-      }
-      
-      // reset visitor input to blank
-      setVisitorInput("")
+      const assistantMessage = typeof data.output === "string" ? data.output : "";
+      const nextConversation = [
+        ...updatedConversation,
+        { role: "assistant", content: assistantMessage } as ConversationMessage,
+      ];
 
-    } catch (err) {
-      console.error('Network error:', err)
-      setErrorMessage(`Network error: ${err}`)
+      setResponseOk(true);
+      setConversation(nextConversation);
+      setCoveMessage(assistantMessage);
+      setVisitorInput("");
+
+      const releasePayload = data.releaseReady
+        ? normaliseReadyLetterPayload(data.letterPayload)
+        : null;
+
+      if (releasePayload && !releaseLocked) {
+        setPendingReleasePayload(releasePayload);
+      }
+    } catch (error) {
+      setErrorMessage(`Network error: ${error}`);
+    }
+  }
+
+  async function handleSubmitLetter(input: ReleaseSubmitInput): Promise<ReleaseSubmitResult> {
+    if (!pendingReleasePayload) {
+      throw new Error("No letter is ready to be released.");
     }
 
+    const requestBody = {
+      content: pendingReleasePayload.content,
+      intended_recipient: pendingReleasePayload.intended_recipient,
+      author_name: pendingReleasePayload.author_name,
+      owner_passphrase: input.ownerPassphrase,
+      created_at: new Date().toISOString(),
+    };
+
+    const res = await fetch("/api/supabase", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error ?? "Could not release your letter.");
+    }
+
+    const createdId =
+      (typeof data.id === "string" && data.id) ||
+      (typeof data.id === "number" && String(data.id)) ||
+      (typeof data?.data?.[0]?.id === "string" && data.data[0].id) ||
+      (typeof data?.data?.[0]?.id === "number" && String(data.data[0].id)) ||
+      null;
+
+    if (!createdId) {
+      throw new Error("Could not find the new letter id.");
+    }
+
+    setReleaseLocked(true);
+
+    return { id: createdId };
+  }
+
+  function returnToConversation() {
+    setPendingReleasePayload(null);
+    setVisitorInput("");
+  }
+
+  function startNewLetterFlow() {
+    setReleaseLocked(false);
+    setPendingReleasePayload(null);
+    setVisitorInput("");
+    setErrorMessage("");
+    setConversation(initialConversation);
+    setCoveMessage("When you're ready, we can begin a new letter.");
+    setResponseOk(true);
   }
 
   return (
+    <div className="submit-container">
+      {errorMessage ? <ErrorDisplay message={errorMessage} /> : null}
 
-      <div className="submit-container">
+      {conversationStart ? (
+        <>
+          <div className="guardian-panel-container">
+            <GuardianPanel message={coveMessage} responseStatus={responseOk} />
+          </div>
 
-          {
-            ErrorMessage ? (
-              <ErrorDisplay message={ErrorMessage} />
-            ) : null
-          }
-
-          {
-            (conversationStart === true) ? (
-              <>  
-                <div className="guardian-panel-container">
-                  <GuardianPanel
-                    message={coveMessage}
-                    responseStatus={responseOk}
-                  />
+          {pendingReleasePayload ? (
+            <ReleaseActionArea
+              letterPayload={pendingReleasePayload}
+              onSubmitLetter={handleSubmitLetter}
+              onReturnToConversation={returnToConversation}
+              onViewLetter={(letterId) => router.push(`/letters/${letterId}`)}
+            />
+          ) : (
+            <>
+              {releaseLocked ? (
+                <div className="post-release-note">
+                  <p>This letter is now closed. You can keep talking with Cove.</p>
+                  <button
+                    type="button"
+                    className="release-link-button post-release-action"
+                    onClick={startNewLetterFlow}
+                  >
+                    Start a new letter
+                  </button>
                 </div>
+              ) : null}
 
-                  <VisitorPanel
-                    visitorInput={visitorInput}
-                    setVisitorInput={setVisitorInput}
-                    handleSubmit={handleSubmit}
-                  />
-              </>
-            ) : (
-              <div>
-                <button
-                  id="conversation-start-button"
-                  type="button" 
-                  onClick={greetVisitor}
-                  className="start-conversation-button"
-                >
-                  Start conversation
-                </button>
-                <div
-                  className="submission_note"
-                >
-                  <p style={{marginBottom: "0", paddingBottom: "0"}}>Submissions are not open yet.</p>
-                  <p style={{marginTop: "0", paddingTop: "0"}}>You&apos;ll get a warning at the end advising that something went wrong.</p>
-                </div>
-              </div>
-            )
-          }
-
-      </div>
-  
+              <VisitorPanel
+                visitorInput={visitorInput}
+                setVisitorInput={setVisitorInput}
+                handleSubmit={handleSubmit}
+              />
+            </>
+          )}
+        </>
+      ) : (
+        <div>
+          <button
+            id="conversation-start-button"
+            type="button"
+            onClick={greetVisitor}
+            className="start-conversation-button"
+          >
+            Start conversation
+          </button>
+          <div className="submission_note">
+            <p style={{ marginBottom: "0", paddingBottom: "0" }}>Submissions are not open yet.</p>
+            <p style={{ marginTop: "0", paddingTop: "0" }}>
+              You&apos;ll get a warning at the end advising that something went wrong.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

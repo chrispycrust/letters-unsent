@@ -1,14 +1,17 @@
-import React from "react";
+import { jest } from "@jest/globals"
 
 jest.mock("next/link", () => {
+  const React = require("react") as typeof import("react")
+
   return function MockedLink({
     href,
     children,
     ...rest
   }: {
-    href: string;
-    children: React.ReactNode;
+    href: string | { pathname?: string }
+    children: import("react").ReactNode
   }) {
-    return React.createElement("a", { href, ...rest }, children);
-  };
-});
+    const resolvedHref = typeof href === "string" ? href : href?.pathname ?? ""
+    return React.createElement("a", { href: resolvedHref, ...rest }, children)
+  }
+})

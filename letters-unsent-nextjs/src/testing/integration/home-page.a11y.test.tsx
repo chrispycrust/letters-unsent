@@ -38,7 +38,7 @@ describe("Home page accessibility basics", () => {
 
     expect(releaseLink.getAttribute("href")).toBe("/submit")
     expect(aboutLink.getAttribute("href")).toBe("/about")
-    expect(letterLink.getAttribute("href")).toBe("/10")
+    expect(letterLink.getAttribute("href")).toBe("/letters/10")
   })
 
   it("keeps empty state text visible to users and screen readers", async () => {

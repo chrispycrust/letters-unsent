@@ -1,5 +1,15 @@
+import { beforeEach, afterEach, afterAll, describe, expect, it, jest } from "@jest/globals"
 import { render, screen } from "@testing-library/react"
-import LetterPage from "@/app/[letterId]/page"
+import LetterPage from "@/app/letters/[letterId]/page"
+
+type MockFetchResponse = {
+  ok: boolean
+  json: () => Promise<unknown>
+}
+
+function mockFetchOnce(response: MockFetchResponse) {
+  return jest.fn(async () => response)
+}
 
 describe("Single letter page accessibility basics", () => {
   const originalFetch = global.fetch
@@ -19,7 +29,7 @@ describe("Single letter page accessibility basics", () => {
   })
 
   it("renders recipient as a heading and keeps readable metadata", async () => {
-    const fetchMock = jest.fn().mockResolvedValueOnce({
+    const fetchMock = mockFetchOnce({
       ok: true,
       json: async () => ({
         letter: [
@@ -51,7 +61,7 @@ describe("Single letter page accessibility basics", () => {
   })
 
   it("does not render an empty heading when recipient is missing", async () => {
-    const fetchMock = jest.fn().mockResolvedValueOnce({
+    const fetchMock = mockFetchOnce({
       ok: true,
       json: async () => ({
         letter: [

@@ -1,6 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import Submit from "@/app/submit/page"
 
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}))
+
 describe("Submit page accessibility basics", () => {
   beforeEach(() => {
     jest.clearAllMocks()

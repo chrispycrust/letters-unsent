@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react"
-import LetterPage from "@/app/[letterId]/page"
+import LetterPage from "@/app/letters/[letterId]/page"
 
 describe("Single letter page", () => {
   const originalFetch = global.fetch

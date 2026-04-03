@@ -85,7 +85,7 @@ export default function Home() {
     } else {
       return letters.map((letter) => (
         <Link 
-          href={`/${letter.id}`}
+          href={`/letters/${letter.id}`}
           key={letter.id}
         >
           <div

@@ -49,6 +49,7 @@ describe("Single letter page", () => {
     expect(screen.getByText("Sam")).not.toBeNull()
     expect(screen.getByText("This is the full letter body.")).not.toBeNull()
     expect(screen.getByText(/Casey/)).not.toBeNull()
+    expect(screen.getByText("Do you have the token for this letter?")).not.toBeNull()
     const contextualTag = document.querySelector(".contextual-tags-container")
     expect(contextualTag?.textContent?.trim()).toBe("Friend · Reflective")
     expect(screen.getByText("AI generated")).not.toBeNull()

@@ -1,5 +1,20 @@
 import { jest } from "@jest/globals"
 
+const mockRouterPush = jest.fn()
+
+;(globalThis as { __mockRouterPush?: typeof mockRouterPush }).__mockRouterPush = mockRouterPush
+
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: mockRouterPush,
+    replace: jest.fn(),
+    refresh: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+}))
+
 jest.mock("next/link", () => {
   const React = require("react") as typeof import("react")
 

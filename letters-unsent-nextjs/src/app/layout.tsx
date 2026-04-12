@@ -12,8 +12,8 @@ import { cormorant, lora, geist } from "@/styles/fonts/fonts"
 /* COMPONENTS */
 import NavBar from "@/components/NavBar";
 
-import "../styles/globals.css";
-// import "../styles/debugging.css";
+import "@/styles/globals.css";
+// import "@/styles/debugging.css";
 
 export const metadata: Metadata = {
   title: "Letters Unsent",

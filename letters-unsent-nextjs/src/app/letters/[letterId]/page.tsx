@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import { convertDate, tagAIGeneratedLetters } from "@/utils/functions"
 import AIGenTag from "@/components/AIGenTag";
+import LetterOwnerArea from "@/components/LetterManagement/LetterOwnerArea";
 
 export const metadata: Metadata = {
     title: `Letters Unsent-Letter`,
@@ -68,25 +69,31 @@ export default async function LetterPage({
       return <ErrorDisplay message="Letter not found" />;
     }
 
+  /* -------------------------------------------------------------------------------- */
+
   return (
     <>
       <div className="single-letter-container">
-          {
-            tagAIGeneratedLetters(letterIdString.letterId) &&
-              <AIGenTag />
-          }
-          {
-            ( letter?.relationship_type && letter?.emotional_tone && (
-                <div
-                  className="contextual-tags-container"
-                  title="These are contextual tags to demonstrate the range of relationship types and emotional tones welcome on the website.
-                        These are not yet a feature to be added on submission."
-                >
-                  <span>{letter?.relationship_type} · <i>{letter?.emotional_tone}</i></span>
-                </div>
-            ))
-          }
-          <br />
+          <div className="single-letter-topline">
+            <div className="single-letter-meta">
+              {
+                tagAIGeneratedLetters(letterIdString.letterId) &&
+                  <AIGenTag />
+              }
+              {
+                ( letter?.relationship_type && letter?.emotional_tone && (
+                    <div
+                      className="contextual-tags-container"
+                      title="These are contextual tags to demonstrate the range of relationship types and emotional tones welcome on the website.
+                            These are not yet a feature to be added on submission."
+                    >
+                      <span>{letter?.relationship_type} · <i>{letter?.emotional_tone}</i></span>
+                    </div>
+                ))
+              }
+            </div>
+            <LetterOwnerArea letterId={letterIdString.letterId} />
+          </div>
           <div className="single-letter"> 
             <p className="single-letter-date">
               {convertDate(letter?.created_at)}
@@ -128,7 +135,7 @@ export default async function LetterPage({
             }
 
           </div>
-        <p className="timestamp">{letter?.created_at}</p>
+        <p className="timestamp">{letter?.updated_at ?? letter?.created_at}</p>
       </div>
     </>
   )

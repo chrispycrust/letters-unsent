@@ -78,6 +78,10 @@ form {
   background-color: #e5e3d4;
 }
 
+.letter-owner-area {
+  background-color: orange;
+}
+
 
 @media (width <= 375px) {
 

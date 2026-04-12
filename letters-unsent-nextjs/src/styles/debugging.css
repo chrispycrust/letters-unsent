@@ -42,8 +42,16 @@ main {
   background-color: indianred;
 }
 
+.single-letter-display-area {
+  background-color: rgb(21, 85, 21);
+}
+
 .single-letter-container {
   background-color: green;
+}
+
+.letter-owner-area {
+  background-color: orange;
 }
 
 .letter-display {
@@ -76,10 +84,6 @@ form {
 
 .buttons-container {
   background-color: #e5e3d4;
-}
-
-.letter-owner-area {
-  background-color: orange;
 }
 
 

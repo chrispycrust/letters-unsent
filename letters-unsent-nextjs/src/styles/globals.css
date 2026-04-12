@@ -391,9 +391,11 @@ footer a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .single-letter-container {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -428,7 +430,7 @@ footer a:hover {
   text-align: right;
   font-family: var(--geist);
   margin-bottom: 10px;
-  background-color: orange;
+  /* background-color: orange; */
 }
 
 .owner-area-title {
@@ -456,8 +458,7 @@ button.owner-subtle-action {
   font-family: var(--geist);
   font-size: 0.95rem;
   cursor: pointer;
-  border-bottom: 1px solid var(--release-border);
-  padding-bottom: 10px;
+
 }
 
 button.owner-subtle-action:hover {
@@ -578,7 +579,7 @@ button.owner-subtle-action:hover {
 }
 
 .single-letter-edit {
-  text-align: left;
+  text-align: inherit;
 }
 
 .single-letter-edit .single-letter-date {
@@ -586,40 +587,66 @@ button.owner-subtle-action:hover {
 }
 
 .letter-edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: block;
   border-radius: 0;
 }
 
-.letter-edit-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-family: var(--geist);
-}
-
-.letter-edit-field label {
-  font-size: 0.92rem;
-}
-
-.letter-edit-field input,
-.letter-edit-content {
-  border: 1px solid var(--release-border);
+.letter-edit-recipient-input,
+.letter-edit-content-input,
+.letter-edit-author-input {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
   border-radius: 8px;
-  padding: 10px 12px;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--lora);
-  font-size: 1rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
 }
 
-.letter-edit-content {
-  min-height: 280px;
-  max-height: 280px;
-  overflow-y: auto;
+.letter-edit-author-input {
+  display: block;
+  padding-left: 2ch;
+  text-align: left;
+}
+
+.letter-edit-recipient-input {
+  text-align: center;
+}
+
+.letter-edit-content-input {
+  display: block;
+  height: auto;
+  overflow-y: hidden;
   resize: none;
-  line-height: 1.5;
+  line-height: inherit;
+  text-align: left;
+}
+
+.letter-edit-sign-off {
+  margin-top: 1.5em;
+  position: relative;
+}
+
+.letter-edit-sign-off::before {
+  content: "—\00a0";
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.letter-edit-recipient-input::placeholder,
+.letter-edit-author-input::placeholder {
+  color: rgb(120, 120, 120);
+}
+
+.letter-edit-recipient-input:focus-visible,
+.letter-edit-content-input:focus-visible,
+.letter-edit-author-input:focus-visible {
+  outline: 2px solid var(--sage-600);
+  outline-offset: 3px;
+  border-radius: 8px;
 }
 
 .letter-edit-success {
@@ -648,13 +675,10 @@ button.owner-subtle-action:hover {
 }
 
 .letter-edit-actions {
-  margin-top: 6px;
-  position: sticky;
-  bottom: 0;
-  background: var(--letter-colour);
-  padding: 10px 0 0;
+  margin-top: 16px;
+  padding-top: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   gap: 12px;
 }

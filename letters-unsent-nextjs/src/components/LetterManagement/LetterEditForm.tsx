@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
 
@@ -34,6 +34,7 @@ export default function LetterEditForm({ letterId, initialLetter }: LetterEditFo
   const [errorMessage, setErrorMessage] = useState("")
   const [isModerationError, setIsModerationError] = useState(false)
   const [moderationRejectCount, setModerationRejectCount] = useState(0)
+  const contentTextareaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
     const storedPassphrase = localStorage.getItem(storageKey)
@@ -77,6 +78,25 @@ export default function LetterEditForm({ letterId, initialLetter }: LetterEditFo
 
     void verifyStoredPassphrase()
   }, [letterId, storageKey])
+
+  useEffect(() => {
+    const textarea = contentTextareaRef.current
+    if (!textarea) {
+      return
+    }
+
+    const resizeToContent = () => {
+      textarea.style.height = "auto"
+      textarea.style.height = `${textarea.scrollHeight}px`
+    }
+
+    resizeToContent()
+    const animationFrameId = window.requestAnimationFrame(resizeToContent)
+
+    return () => {
+      window.cancelAnimationFrame(animationFrameId)
+    }
+  }, [content, intendedRecipient, verificationStatus])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -165,33 +185,46 @@ export default function LetterEditForm({ letterId, initialLetter }: LetterEditFo
 
   return (
     <form className="letter-edit-form" onSubmit={handleSubmit}>
-      <div className="letter-edit-field">
-        <label htmlFor="edit-intended-recipient">Intended recipient</label>
+      <label htmlFor="edit-intended-recipient" className="sr-only">
+        Intended recipient
+      </label>
+      <h2>
         <input
           id="edit-intended-recipient"
+          className="letter-edit-recipient-input"
           value={intendedRecipient}
           onChange={(event) => setIntendedRecipient(event.target.value)}
+          placeholder="Intended recipient (optional)"
         />
-      </div>
+      </h2>
 
-      <div className="letter-edit-field">
-        <label htmlFor="edit-letter-content">Letter content</label>
-        <textarea
-          id="edit-letter-content"
-          className="letter-edit-content"
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-        />
-      </div>
+      <label htmlFor="edit-letter-content" className="sr-only">
+        Letter content
+      </label>
+      <textarea
+        id="edit-letter-content"
+        ref={contentTextareaRef}
+        className={`letter-edit-content-input preserve-breaks ${
+          intendedRecipient.trim().length > 0
+            ? "single-letter-content-container-with-recipient"
+            : "single-letter-content-no-recipient"
+        }`}
+        value={content}
+        onChange={(event) => setContent(event.target.value)}
+      />
 
-      <div className="letter-edit-field">
-        <label htmlFor="edit-author-name">Author name</label>
+      <label htmlFor="edit-author-name" className="sr-only">
+        Author name
+      </label>
+      <p className="sign-off letter-edit-sign-off">
         <input
           id="edit-author-name"
+          className="letter-edit-author-input"
           value={authorName}
           onChange={(event) => setAuthorName(event.target.value)}
+          placeholder="Author name (optional)"
         />
-      </div>
+      </p>
 
       {saveMessage ? <p className="letter-edit-success">{saveMessage}</p> : null}
 

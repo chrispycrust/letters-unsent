@@ -4,6 +4,7 @@ interface OwnerVerificationPanelProps {
   errorMessage: string
   onTokenChange: (value: string) => void
   onConfirm: () => void
+  onCancel: () => void
 }
 
 export default function OwnerVerificationPanel({
@@ -12,6 +13,7 @@ export default function OwnerVerificationPanel({
   errorMessage,
   onTokenChange,
   onConfirm,
+  onCancel
 }: OwnerVerificationPanelProps) {
   return (
     <div className="owner-verification-panel">
@@ -32,7 +34,7 @@ export default function OwnerVerificationPanel({
       <button
         type="button"
         className="owner-subtle-action"
-        // onClick={onCancel}
+        onClick={onCancel}
       >
         Cancel
       </button>

@@ -134,6 +134,12 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
     setVerificationMessage("")
   }
 
+  function handleCancel() {
+    setIsExpanded(false)
+    setTokenInput("")
+    setVerificationMessage("")
+  }
+
   function handleOpenDeleteModal() {
     setDeleteErrorMessage("")
     setDeleteSuccess(false)
@@ -222,15 +228,18 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
             errorMessage={verificationMessage}
             onTokenChange={setTokenInput}
             onConfirm={handleConfirmToken}
+            onCancel={handleCancel}
           />
         ) : (
-          <button
-            type="button"
-            className="owner-subtle-action owner-question-trigger"
-            onClick={handleOpenVerificationPanel}
-          >
-            Is this letter yours?
-          </button>
+          <div>
+            <button
+              type="button"
+              className="owner-subtle-action owner-question-trigger"
+              onClick={handleOpenVerificationPanel}
+            >
+              Is this letter yours?            
+            </button>
+          </div>
         )}
       </aside>
 

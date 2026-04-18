@@ -13,12 +13,9 @@
   --button-text-color: #3e3d38;
   --letter-colour: #fffff4;
   --ai-gen-tag-colour: #d2d2bf;
-  --accent: hsl(132, 46%, 75%);
-  --accent-cooler: hsl(180, 66%, 66%);;
-  --about-link: hsl(132, 46%, 45%);
-  --sage-700: #2f5b4b;
-  --sage-600: #3f715f;
-  --sage-100: #e4eee8;
+  --accent-700: #2f5b4b;
+  --accent: hsl(105, 12%, 49%);
+  --accent-100: #e4eee8;
   --release-panel-bg: #faf8f2;
   --release-border: #d6d2c5;
   --release-muted: #5f5b50;
@@ -214,7 +211,7 @@ button {
 }
 
 button:hover {
-  background-color: var(--accent-cooler); /* hsl(132, 43%, 58%); */
+  background-color: var(--accent-700); /* hsl(132, 43%, 58%); */
   color: var(--button-text-color);
 }
 
@@ -426,11 +423,10 @@ footer a:hover {
 
 .letter-owner-area {
   width: 100%;
-  padding: 10px 0 10px 12px;
+  padding: 10px 12px;
   text-align: right;
   font-family: var(--geist);
   margin-bottom: 10px;
-  /* background-color: orange; */
 }
 
 .owner-area-title {
@@ -440,7 +436,6 @@ footer a:hover {
 }
 
 .owner-actions {
-  margin-top: 6px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -451,20 +446,26 @@ footer a:hover {
   opacity: 0.85;
 }
 
-button.owner-subtle-action {
-  background: transparent;
-  border: 0;
+.owner-actions button,
+.letter-owner-area button {
+  padding: 0;
+  border-radius: 0;
+  cursor: pointer;
+  background-color: none;
   color: var(--foreground);
+  border: none;
+} 
+
+.owner-subtle-action {
   font-family: var(--geist);
   font-size: 0.95rem;
   cursor: pointer;
-
+  font-weight: 400;
+  transition-duration: 0.5s;
 }
 
-button.owner-subtle-action:hover {
-  text-underline-offset: 3px;
-  background-color: none;
-  border-bottom: none;
+.owner-subtle-action:hover {
+  font-weight: 650;
 }
 
 .owner-subtle-action:focus-visible {

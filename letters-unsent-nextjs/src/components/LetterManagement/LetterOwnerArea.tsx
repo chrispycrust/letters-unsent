@@ -46,6 +46,7 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
   const [isVerifying, setIsVerifying] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
   const [verifiedPassphrase, setVerifiedPassphrase] = useState<string | null>(null)
+  const [isManaging, setIsManaging] = useState(false)
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -133,6 +134,16 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
     setIsExpanded(true)
     setVerificationMessage("")
   }
+  
+  function handleOpenManagementPanel() {
+    setIsManaging(true)
+    setVerificationMessage("")
+  }
+  
+  function handleDismiss() {
+    setIsManaging(false)
+    setVerificationMessage("")
+  }
 
   function handleCancel() {
     setIsExpanded(false)
@@ -216,11 +227,20 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
   return (
     <>
       <aside className="letter-owner-area" aria-live="polite">
-        {isVerified ? (
-          <>
-            <p className="owner-area-title">You own this letter</p>
-            <OwnerActions letterId={letterId} onRemove={handleOpenDeleteModal} />
-          </>
+        { isManaging ? (
+          <OwnerActions 
+            letterId={letterId} 
+            onRemove={handleOpenDeleteModal} 
+            onDismiss={handleDismiss} 
+          />
+        ) : isVerified ? (
+            <button
+              type="button"
+              className="owner-area-title owner-subtle-action owner-question-trigger"
+              onClick={handleOpenManagementPanel}
+            >
+              You own this letter - manage it here.            
+            </button>
         ) : isExpanded ? (
           <OwnerVerificationPanel
             token={tokenInput}

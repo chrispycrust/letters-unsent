@@ -54,6 +54,14 @@ main {
   background-color: orange;
 }
 
+.owner-actions {
+  background-color: rgb(255, 255, 0);
+}
+
+button.owner-subtle-action {
+  background-color: rgb(255, 0, 0);
+}
+
 .letter-display {
   background-color: mediumslateblue;
 }

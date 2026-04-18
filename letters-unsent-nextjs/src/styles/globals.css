@@ -447,34 +447,36 @@ footer a:hover {
 }
 
 .owner-actions button,
-.letter-owner-area button {
+aside.letter-owner-area button.owner-subtle-action,
+aside.letter-owner-area button.owner-subtle-action:hover,
+aside.letter-owner-area button.owner-question-trigger,
+aside.letter-owner-area button.owner-question-trigger:hover {
   padding: 0;
   border-radius: 0;
   cursor: pointer;
-  background-color: none;
-  color: var(--foreground);
+  background-color: transparent;
   border: none;
+  font-family: var(--geist);
 } 
 
-.owner-subtle-action {
-  font-family: var(--geist);
+button.owner-subtle-action {
   font-size: 0.95rem;
   cursor: pointer;
   font-weight: 400;
   transition-duration: 0.5s;
 }
 
-.owner-subtle-action:hover {
+button.owner-subtle-action:hover {
   font-weight: 650;
 }
 
-.owner-subtle-action:focus-visible {
+button.owner-subtle-action:focus-visible {
   outline: 2px solid var(--sage-600);
   outline-offset: 3px;
   border-radius: 3px;
 }
 
-.owner-question-trigger {
+button.owner-question-trigger {
   display: inline-flex;
   width: fit-content;
 }

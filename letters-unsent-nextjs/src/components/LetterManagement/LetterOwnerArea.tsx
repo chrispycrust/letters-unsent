@@ -20,7 +20,8 @@ import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
 
 interface LetterOwnerAreaProps {
   letterId: string
-  onEdit?: () => void
+  isEditing: boolean
+  onEdit: () => void
 }
 
 /* 
@@ -53,6 +54,7 @@ function shouldClearStoredPassphrase(status: number, code?: string): boolean {
 
 export default function LetterOwnerArea({
   letterId,
+  isEditing,
   onEdit
 }: LetterOwnerAreaProps) {
 
@@ -66,7 +68,6 @@ export default function LetterOwnerArea({
   const [isVerified, setIsVerified] = useState(false)
   const [verifiedPassphrase, setVerifiedPassphrase] = useState<string | null>(null)
   const [isManaging, setIsManaging] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -163,16 +164,10 @@ export default function LetterOwnerArea({
 
   function handleEditing() {
     setIsManaging(false)
-    if (onEdit) {
-      onEdit()
-      return
-    }
-
-    setIsEditing(true)
+    onEdit()
   }
   
   function handleDismiss() {
-    setIsEditing(false)
     setIsManaging(false)
   }
 
@@ -265,13 +260,18 @@ export default function LetterOwnerArea({
             onDismiss={handleDismiss}
           />
         ) : isEditing ? (
-            <p>
-              You are now editing this letter.
-            </p>
+            <>
+              <p className="owner-area-title">
+                You are now editing this letter.
+              </p>
+              <p className="owner-area-title">
+                Select any part to revise.
+              </p>
+            </>
         ) : isVerified ? (
             <button
               type="button"
-              className="owner-area-title owner-subtle-action owner-question-trigger"
+              className="owner-subtle-action owner-question-trigger"
               onClick={handleOpenManagementPanel}
             >
               You own this letter - manage it here.            

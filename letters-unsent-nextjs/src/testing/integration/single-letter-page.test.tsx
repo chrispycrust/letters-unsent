@@ -109,6 +109,11 @@ describe("Single letter page", () => {
     )
     expect((screen.getByLabelText("Intended recipient") as HTMLInputElement).value).toBe("Sam")
     expect((screen.getByLabelText("Author name") as HTMLInputElement).value).toBe("Casey")
+
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
+
+    expect(screen.queryByText("You are now editing this letter.")).toBeNull()
+    expect(screen.getByRole("button", { name: "You own this letter - manage it here." })).not.toBeNull()
   })
 
   it("normalises numeric API ids before auto-verifying the stored token", async () => {

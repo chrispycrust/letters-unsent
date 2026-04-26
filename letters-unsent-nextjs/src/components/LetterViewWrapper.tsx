@@ -67,6 +67,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
 
         <LetterOwnerArea
           letterId={currentLetter.id}
+          isEditing={isEditing}
           onEdit={() => setIsEditing(true)}
         />
       </div>

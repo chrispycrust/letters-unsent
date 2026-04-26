@@ -28,6 +28,16 @@ function mockFetchSequence(...responses: MockFetchResponse[]) {
   })
 }
 
+function renderOwnerArea({
+  isEditing = false,
+  onEdit = jest.fn(),
+}: {
+  isEditing?: boolean
+  onEdit?: () => void
+} = {}) {
+  return render(<LetterOwnerArea letterId="10" isEditing={isEditing} onEdit={onEdit} />)
+}
+
 describe("Single letter owner area", () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -39,8 +49,13 @@ describe("Single letter owner area", () => {
   })
 
   it("renders subtle prompt when unverified", () => {
-    render(<LetterOwnerArea letterId="10" />)
+    renderOwnerArea()
     expect(screen.getByRole("button", { name: "Is this letter yours?" })).not.toBeNull()
+  })
+
+  it("renders editing status when parent edit state is active", () => {
+    renderOwnerArea({ isEditing: true })
+    expect(screen.getByText("You are now editing this letter.")).not.toBeNull()
   })
 
   it("auto-verifies from localStorage token and shows verified owner actions", async () => {
@@ -51,7 +66,7 @@ describe("Single letter owner area", () => {
     })
     global.fetch = fetchMock as unknown as typeof fetch
 
-    render(<LetterOwnerArea letterId="10" />)
+    renderOwnerArea()
 
     await waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(
@@ -79,7 +94,7 @@ describe("Single letter owner area", () => {
     const onEdit = jest.fn()
     global.fetch = fetchMock as unknown as typeof fetch
 
-    render(<LetterOwnerArea letterId="10" onEdit={onEdit} />)
+    renderOwnerArea({ onEdit })
 
     const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
     fireEvent.click(manageButton)
@@ -96,7 +111,7 @@ describe("Single letter owner area", () => {
     })
     global.fetch = fetchMock as unknown as typeof fetch
 
-    render(<LetterOwnerArea letterId="10" />)
+    renderOwnerArea()
     fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
 
     const input = screen.getByLabelText("Token") as HTMLInputElement
@@ -140,7 +155,7 @@ describe("Single letter owner area", () => {
     )
     global.fetch = fetchMock as unknown as typeof fetch
 
-    render(<LetterOwnerArea letterId="10" />)
+    renderOwnerArea()
     fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
 
     for (let attempt = 1; attempt <= 5; attempt += 1) {
@@ -167,7 +182,7 @@ describe("Single letter owner area", () => {
     })
     global.fetch = fetchMock as unknown as typeof fetch
 
-    render(<LetterOwnerArea letterId="10" />)
+    renderOwnerArea()
 
     const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
     fireEvent.click(manageButton)
@@ -194,7 +209,7 @@ describe("Single letter owner area", () => {
     )
     global.fetch = fetchMock as unknown as typeof fetch
 
-    render(<LetterOwnerArea letterId="10" />)
+    renderOwnerArea()
 
     const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
     fireEvent.click(manageButton)
@@ -223,7 +238,7 @@ describe("Single letter owner area", () => {
     )
     global.fetch = fetchMock as unknown as typeof fetch
 
-    render(<LetterOwnerArea letterId="10" />)
+    renderOwnerArea()
 
     const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
     fireEvent.click(manageButton)

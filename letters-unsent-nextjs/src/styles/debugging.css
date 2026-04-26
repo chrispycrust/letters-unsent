@@ -50,6 +50,10 @@ main {
   background-color: green;
 }
 
+.single-letter-topline {
+  background-color: rgb(157, 112, 50);
+}
+
 .letter-owner-area {
   background-color: orange;
 }

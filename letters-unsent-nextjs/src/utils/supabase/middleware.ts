@@ -1,6 +1,12 @@
 
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+
+type SupabaseCookie = {
+  name: string
+  value: string
+  options: CookieOptions
+}
 
 export const createClient = (request: NextRequest) => {
   // Create an unmodified response
@@ -18,7 +24,7 @@ export const createClient = (request: NextRequest) => {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: SupabaseCookie[]) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
@@ -33,4 +39,3 @@ export const createClient = (request: NextRequest) => {
 
   return supabaseResponse
 };
-

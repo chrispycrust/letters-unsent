@@ -9,22 +9,15 @@
 */
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
+
+import type { Letter } from "@/types/letter";
 
 import { truncateContent, tagAIGeneratedLetters } from "@/utils/functions"
-
-import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Footer from "@/components/Footer";
 import AIGenTag from "@/components/AIGenTag";
-
-type Letter = {
-  id: string
-  content: string
-  intended_recipient: string | null
-  relationship_type: string | null
-  emotional_tone: string | null
-}
 
 /* 
 -------------------------------------------------------------------------------------------------

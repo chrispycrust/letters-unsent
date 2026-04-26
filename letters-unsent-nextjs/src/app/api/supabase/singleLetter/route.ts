@@ -2,6 +2,7 @@ import argon2 from "argon2"
 import { NextResponse } from "next/server"
 import { moderateLetterForArchive } from "@/utils/guardian/moderateLetterForArchive"
 import { createClient } from "@/utils/supabase/server"
+import type { Letter } from "@/types/letter"
 
 export const runtime = "nodejs"
 
@@ -35,11 +36,7 @@ type VerifyOwnershipResult =
       error: string
     }
 
-type EditLetterRow = {
-  content: string | null
-  intended_recipient: string | null
-  author_name: string | null
-}
+type EditLetterRow = Pick<Letter, "content" | "intended_recipient" | "author_name">
 
 const verificationStateByKey = new Map<string, VerificationState>()
 

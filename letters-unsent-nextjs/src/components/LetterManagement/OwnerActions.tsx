@@ -11,7 +11,7 @@ export default function OwnerActions({
 }: OwnerActionsProps) {
   return (
     <div>
-      <p>For this letter:</p>
+      <p className="owner-area-title">For this letter:</p>
       <div className="owner-actions">
         <button type="button" className="owner-subtle-action" onClick={onEdit}>
           Edit

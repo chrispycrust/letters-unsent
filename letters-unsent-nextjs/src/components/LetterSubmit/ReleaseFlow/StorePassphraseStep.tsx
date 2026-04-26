@@ -68,7 +68,8 @@ export default function StorePassphraseStep({
           />
           <span className="release-option-title">Save it on this device</span>
           <span className="release-option-helper">
-            Store it on this device. If local storage is cleared, the token will be removed.
+            Store it on this device. Anyone with access to this browser profile may be able to use it.
+            If local storage is cleared, the token will be removed.
           </span>
         </label>
 

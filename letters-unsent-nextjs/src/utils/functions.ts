@@ -1,5 +1,5 @@
 /* Purpose: Convert timestamp to human readable format and consistent with tone of letter */
-export function convertDate(retrievedDate: Date) {
+export function convertDate(retrievedDate: Date | string) {
     const date = new Date(retrievedDate); // Parses ISO 8601 string
 
     const options: object = {

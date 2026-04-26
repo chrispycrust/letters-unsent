@@ -18,6 +18,11 @@ import OwnerVerificationPanel from "@/components/LetterManagement/OwnerVerificat
 
 import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
 
+interface LetterOwnerAreaProps {
+  letterId: string
+  onEdit?: () => void
+}
+
 /* 
 -------------------------------------------------------------------------------------------------
   
@@ -36,7 +41,21 @@ type VerifyOptions = {
   silent: boolean
 }
 
-export default function LetterOwnerArea({ letterId }: { letterId: string }) {
+function shouldClearStoredPassphrase(status: number, code?: string): boolean {
+  return (
+    status === 401 ||
+    status === 404 ||
+    code === "INVALID_PASSPHRASE" ||
+    code === "MISSING_PASSPHRASE" ||
+    code === "LETTER_NOT_FOUND"
+  )
+}
+
+export default function LetterOwnerArea({
+  letterId,
+  onEdit
+}: LetterOwnerAreaProps) {
+
   const router = useRouter()
   const storageKey = useMemo(() => getLetterPassphraseStorageKey(letterId), [letterId])
 
@@ -47,6 +66,7 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
   const [isVerified, setIsVerified] = useState(false)
   const [verifiedPassphrase, setVerifiedPassphrase] = useState<string | null>(null)
   const [isManaging, setIsManaging] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -86,7 +106,9 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
 
       setIsVerified(false)
       setVerifiedPassphrase(null)
-      localStorage.removeItem(storageKey)
+      if (shouldClearStoredPassphrase(response.status, data?.code)) {
+        localStorage.removeItem(storageKey)
+      }
 
       if (!options.silent) {
         if (response.status === 429 || data?.code === "VERIFICATION_RATE_LIMITED") {
@@ -137,12 +159,21 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
   
   function handleOpenManagementPanel() {
     setIsManaging(true)
-    setVerificationMessage("")
+  }
+
+  function handleEditing() {
+    setIsManaging(false)
+    if (onEdit) {
+      onEdit()
+      return
+    }
+
+    setIsEditing(true)
   }
   
   function handleDismiss() {
+    setIsEditing(false)
     setIsManaging(false)
-    setVerificationMessage("")
   }
 
   function handleCancel() {
@@ -228,11 +259,15 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
     <>
       <aside className="letter-owner-area" aria-live="polite">
         { isManaging ? (
-          <OwnerActions 
-            letterId={letterId} 
-            onRemove={handleOpenDeleteModal} 
-            onDismiss={handleDismiss} 
+          <OwnerActions
+            onEdit={handleEditing}
+            onRemove={handleOpenDeleteModal}
+            onDismiss={handleDismiss}
           />
+        ) : isEditing ? (
+            <p>
+              You are now editing this letter.
+            </p>
         ) : isVerified ? (
             <button
               type="button"
@@ -251,15 +286,13 @@ export default function LetterOwnerArea({ letterId }: { letterId: string }) {
             onCancel={handleCancel}
           />
         ) : (
-          <div>
-            <button
+          <button
               type="button"
               className="owner-subtle-action owner-question-trigger"
               onClick={handleOpenVerificationPanel}
             >
               Is this letter yours?            
-            </button>
-          </div>
+          </button>
         )}
       </aside>
 

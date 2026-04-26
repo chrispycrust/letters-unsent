@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react"
+import { fireEvent, waitFor } from "@testing-library/react"
 import LetterPage from "@/app/letters/[letterId]/page"
+import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
 
 describe("Single letter page", () => {
   const originalFetch = global.fetch
@@ -7,6 +9,7 @@ describe("Single letter page", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    window.localStorage.clear()
     process.env.SUPABASE_API_URL = "http://localhost/api/supabase"
   })
 
@@ -49,10 +52,151 @@ describe("Single letter page", () => {
     expect(screen.getByText("Sam")).not.toBeNull()
     expect(screen.getByText("This is the full letter body.")).not.toBeNull()
     expect(screen.getByText(/Casey/)).not.toBeNull()
-    expect(screen.getByText("Do you have the token for this letter?")).not.toBeNull()
+    expect(screen.getByText("Is this letter yours?")).not.toBeNull()
     const contextualTag = document.querySelector(".contextual-tags-container")
     expect(contextualTag?.textContent?.trim()).toBe("Friend · Reflective")
     expect(screen.getByText("AI generated")).not.toBeNull()
+  })
+
+  it("switches from the letter view to the inline edit form after owner edit", async () => {
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: "10",
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "You own this letter - manage it here." })).not.toBeNull()
+    })
+
+    fireEvent.click(screen.getByRole("button", { name: "You own this letter - manage it here." }))
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }))
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Letter content")).not.toBeNull()
+    })
+
+    expect((screen.getByLabelText("Letter content") as HTMLTextAreaElement).value).toBe(
+      "This is the full letter body.",
+    )
+    expect((screen.getByLabelText("Intended recipient") as HTMLInputElement).value).toBe("Sam")
+    expect((screen.getByLabelText("Author name") as HTMLInputElement).value).toBe("Casey")
+  })
+
+  it("normalises numeric API ids before auto-verifying the stored token", async () => {
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: 10,
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledTimes(2)
+    })
+
+    const verificationBody = JSON.parse(String(fetchMock.mock.calls[1][1]?.body))
+    expect(verificationBody.letterId).toBe("10")
+    expect(window.localStorage.getItem(getLetterPassphraseStorageKey("10"))).toBe("saved-token")
+  })
+
+  it("normalises numeric API ids before manually verifying a typed token", async () => {
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: 10,
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
+    fireEvent.change(screen.getByLabelText("Token"), {
+      target: { value: "quiet-sage-morning" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: "Confirm" }))
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledTimes(2)
+    })
+
+    const verificationBody = JSON.parse(String(fetchMock.mock.calls[1][1]?.body))
+    expect(verificationBody).toEqual({
+      letterId: "10",
+      owner_passphrase: "quiet-sage-morning",
+    })
+    expect(window.localStorage.getItem(getLetterPassphraseStorageKey("10"))).toBe("quiet-sage-morning")
   })
 
   it("shows not-found when the API returns no letter", async () => {

@@ -1,25 +1,26 @@
 import Link from "next/link"
 
 interface OwnerActionsProps {
-  letterId: string
+  onEdit: () => void
   onRemove: () => void
   onDismiss: () => void
 }
 
 export default function OwnerActions({ 
-  letterId, onRemove , onDismiss
+  onEdit, onRemove , onDismiss
 }: OwnerActionsProps) {
   return (
     <div>
       <p>For this letter:</p>
       <div className="owner-actions">
-        <Link href={`/letters/${letterId}/edit`} className="owner-subtle-action">
+        <button type="button" className="owner-subtle-action" onClick={onEdit}>
           Edit
-        </Link>
-        <span className="owner-actions-separator">or</span>
+        </button>
+        <span className="owner-actions-separator">,</span>
         <button type="button" className="owner-subtle-action" onClick={onRemove}>
           Remove
         </button>
+        <span className="owner-actions-separator">or</span>
         <button type="button" className="owner-subtle-action" onClick={onDismiss}>
           Cancel
         </button>

@@ -40,7 +40,7 @@ describe("Single letter owner area", () => {
 
   it("renders subtle prompt when unverified", () => {
     render(<LetterOwnerArea letterId="10" />)
-    expect(screen.getByRole("button", { name: "Do you have the token for this letter?" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Is this letter yours?" })).not.toBeNull()
   })
 
   it("auto-verifies from localStorage token and shows verified owner actions", async () => {
@@ -62,11 +62,30 @@ describe("Single letter owner area", () => {
       )
     })
 
-    await waitFor(() => {
-      expect(screen.getByText("For this letter")).not.toBeNull()
-    })
-    expect(screen.getByRole("link", { name: "Edit" }).getAttribute("href")).toBe("/letters/10/edit")
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
+
+    expect(screen.getByText(/For this letter/)).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
     expect(screen.getByRole("button", { name: "Remove" })).not.toBeNull()
+  })
+
+  it("passes edit intent to the parent when an edit handler is provided", async () => {
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
+    const fetchMock = mockFetchSequence({
+      ok: true,
+      json: async () => ({ success: true, verified: true }),
+    })
+    const onEdit = jest.fn()
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    render(<LetterOwnerArea letterId="10" onEdit={onEdit} />)
+
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }))
+
+    expect(onEdit).toHaveBeenCalledTimes(1)
   })
 
   it("shows retry message after invalid token verification", async () => {
@@ -78,11 +97,11 @@ describe("Single letter owner area", () => {
     global.fetch = fetchMock as unknown as typeof fetch
 
     render(<LetterOwnerArea letterId="10" />)
-    fireEvent.click(screen.getByRole("button", { name: "Do you have the token for this letter?" }))
+    fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
 
     const input = screen.getByLabelText("Token") as HTMLInputElement
     fireEvent.change(input, { target: { value: "wrong-token" } })
-    fireEvent.click(screen.getByRole("button", { name: "Confirm token" }))
+    fireEvent.click(screen.getByRole("button", { name: "Confirm" }))
 
     await waitFor(() => {
       expect(screen.getByText("The token doesn’t match this letter. Please try again.")).not.toBeNull()
@@ -122,12 +141,12 @@ describe("Single letter owner area", () => {
     global.fetch = fetchMock as unknown as typeof fetch
 
     render(<LetterOwnerArea letterId="10" />)
-    fireEvent.click(screen.getByRole("button", { name: "Do you have the token for this letter?" }))
+    fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
 
     for (let attempt = 1; attempt <= 5; attempt += 1) {
       const input = screen.getByLabelText("Token")
       fireEvent.change(input, { target: { value: `wrong-token-${attempt}` } })
-      fireEvent.click(screen.getByRole("button", { name: "Confirm token" }))
+      fireEvent.click(screen.getByRole("button", { name: "Confirm" }))
       await waitFor(() => {
         expect(fetchMock).toHaveBeenCalledTimes(attempt)
       })
@@ -150,9 +169,8 @@ describe("Single letter owner area", () => {
 
     render(<LetterOwnerArea letterId="10" />)
 
-    await waitFor(() => {
-      expect(screen.getByText("For this letter")).not.toBeNull()
-    })
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
 
     fireEvent.click(screen.getByRole("button", { name: "Remove" }))
     expect(screen.getByRole("heading", { name: "Remove my letter from the archive" })).not.toBeNull()
@@ -178,9 +196,8 @@ describe("Single letter owner area", () => {
 
     render(<LetterOwnerArea letterId="10" />)
 
-    await waitFor(() => {
-      expect(screen.getByText("For this letter")).not.toBeNull()
-    })
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
 
     fireEvent.click(screen.getByRole("button", { name: "Remove" }))
     fireEvent.click(screen.getByRole("button", { name: "I understand, please remove my letter" }))
@@ -208,9 +225,8 @@ describe("Single letter owner area", () => {
 
     render(<LetterOwnerArea letterId="10" />)
 
-    await waitFor(() => {
-      expect(screen.getByText("For this letter")).not.toBeNull()
-    })
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
 
     fireEvent.click(screen.getByRole("button", { name: "Remove" }))
     fireEvent.click(screen.getByRole("button", { name: "I understand, please remove my letter" }))

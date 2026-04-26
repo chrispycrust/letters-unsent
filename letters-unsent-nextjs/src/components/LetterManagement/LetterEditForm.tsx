@@ -4,21 +4,37 @@ import Link from "next/link"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
+import type { Letter } from "@/types/letter"
+
+type EditableLetterFields = Pick<Letter, "content" | "intended_recipient" | "author_name">
 
 interface LetterEditFormProps {
   letterId: string
-  initialLetter: {
-    content: string
-    intended_recipient: string | null
-    author_name: string | null
-  }
+  initialLetter: EditableLetterFields
+  onCancel?: () => void
+  onSaveSuccess?: (updatedFields: EditableLetterFields & Pick<Letter, "updated_at">) => void
 }
 
 const TOKEN_NOT_VERIFIED_MESSAGE = "We couldn’t verify your token."
 const TOO_MANY_ATTEMPTS_MESSAGE = "Too many attempts in a short time. Please wait a moment, then try again."
 const MODERATION_REJECT_MESSAGE = "We couldn’t accept these changes under the archive’s safety guidelines."
 
-export default function LetterEditForm({ letterId, initialLetter }: LetterEditFormProps) {
+function shouldClearStoredPassphrase(status: number, code?: string): boolean {
+  return (
+    status === 401 ||
+    status === 404 ||
+    code === "INVALID_PASSPHRASE" ||
+    code === "MISSING_PASSPHRASE" ||
+    code === "LETTER_NOT_FOUND"
+  )
+}
+
+export default function LetterEditForm({
+  letterId,
+  initialLetter,
+  onCancel,
+  onSaveSuccess,
+}: LetterEditFormProps) {
   const router = useRouter()
   const storageKey = useMemo(() => getLetterPassphraseStorageKey(letterId), [letterId])
 
@@ -59,6 +75,7 @@ export default function LetterEditForm({ letterId, initialLetter }: LetterEditFo
         const data = (await response.json().catch(() => null)) as {
           success?: boolean
           verified?: boolean
+          code?: string
         } | null
 
         if (response.ok && data?.success && data?.verified) {
@@ -67,7 +84,9 @@ export default function LetterEditForm({ letterId, initialLetter }: LetterEditFo
           return
         }
 
-        localStorage.removeItem(storageKey)
+        if (shouldClearStoredPassphrase(response.status, data?.code)) {
+          localStorage.removeItem(storageKey)
+        }
         setOwnerPassphrase(null)
         setVerificationStatus("unverified")
       } catch {
@@ -128,12 +147,37 @@ export default function LetterEditForm({ letterId, initialLetter }: LetterEditFo
       const data = (await response.json().catch(() => null)) as {
         success?: boolean
         code?: string
+        data?: Partial<Letter>[]
       } | null
 
       if (response.ok && data?.success) {
         setSaveMessage("Your changes have been saved.")
         setModerationRejectCount(0)
         setTimeout(() => {
+          if (onSaveSuccess) {
+            const savedLetter = data.data?.[0]
+            onSaveSuccess({
+              content: typeof savedLetter?.content === "string" ? savedLetter.content : content.trim(),
+              intended_recipient:
+                typeof savedLetter?.intended_recipient === "string"
+                  ? savedLetter.intended_recipient
+                  : intendedRecipient.trim().length > 0
+                    ? intendedRecipient.trim()
+                    : null,
+              author_name:
+                typeof savedLetter?.author_name === "string"
+                  ? savedLetter.author_name
+                  : authorName.trim().length > 0
+                    ? authorName.trim()
+                    : null,
+              updated_at:
+                typeof savedLetter?.updated_at === "string"
+                  ? savedLetter.updated_at
+                  : new Date().toISOString(),
+            })
+            return
+          }
+
           router.push(`/letters/${letterId}`)
         }, 900)
         return
@@ -249,10 +293,18 @@ export default function LetterEditForm({ letterId, initialLetter }: LetterEditFo
       ) : null}
 
       <div className="letter-edit-actions">
+        <p>For this letter</p>
         <button
           type="button"
           className="owner-subtle-action"
-          onClick={() => router.push(`/letters/${letterId}`)}
+          onClick={() => {
+            if (onCancel) {
+              onCancel()
+              return
+            }
+
+            router.push(`/letters/${letterId}`)
+          }}
           disabled={isSaving}
         >
           Cancel

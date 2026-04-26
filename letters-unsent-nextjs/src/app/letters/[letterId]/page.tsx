@@ -9,14 +9,13 @@
 import type { Metadata } from "next";
 
 import ErrorDisplay from "@/components/ErrorDisplay";
-import { convertDate, tagAIGeneratedLetters } from "@/utils/functions"
-import AIGenTag from "@/components/AIGenTag";
-import LetterOwnerArea from "@/components/LetterManagement/LetterOwnerArea";
+import LetterViewWrapper from "@/components/LetterViewWrapper";
+import type { Letter } from "@/types/letter";
 
 export const metadata: Metadata = {
-    title: `Letters Unsent-Letter`,
-    description: "Read a single letter",
-  };
+  title: `Letters Unsent-Letter`,
+  description: "Read a single letter",
+};
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -32,13 +31,11 @@ export default async function LetterPage({
 }: {
   params: Promise<{ letterId: string }>
 }) {
-    const letterIdString = await params
-
-    const letterId = Number(letterIdString.letterId)
+    const { letterId } = await params
 
     const res = await fetch(
-      `${process.env.SUPABASE_API_URL}/singleLetter?&letterId=${letterId}`
-      ,{ cache: "no-store" }
+      `${process.env.SUPABASE_API_URL}/singleLetter?&letterId=${encodeURIComponent(letterId)}`,
+      { cache: "no-store" },
     )
 
     if (!res.ok) {
@@ -61,82 +58,21 @@ export default async function LetterPage({
       )
     }
 
-    const data = await res.json()
+    type LetterApiResponse = Omit<Letter, "id"> & { id: string | number }
+    const data = (await res.json()) as { letter?: LetterApiResponse[] }
 
-    const letter = data?.letter?.[0]
+    const letterResponse = data?.letter?.[0]
 
-    if (!letter) {
+    if (!letterResponse) {
       return <ErrorDisplay message="Letter not found" />;
+    }
+
+    const letter: Letter = {
+      ...letterResponse,
+      id: String(letterResponse.id),
     }
 
   /* -------------------------------------------------------------------------------- */
 
-  return (
-    <>
-      <div className="single-letter-container">
-          <div className="single-letter-topline">
-            <div className="single-letter-meta">
-              {
-                tagAIGeneratedLetters(letterIdString.letterId) &&
-                  <AIGenTag />
-              }
-              {
-                ( letter?.relationship_type && letter?.emotional_tone && (
-                    <div
-                      className="contextual-tags-container"
-                      title="These are contextual tags to demonstrate the range of relationship types and emotional tones welcome on the website.
-                            These are not yet a feature to be added on submission."
-                    >
-                      <span>{letter?.relationship_type} · <i>{letter?.emotional_tone}</i></span>
-                    </div>
-                ))
-              }
-            </div>
-            <LetterOwnerArea letterId={letterIdString.letterId} />
-          </div>
-          <div className="single-letter"> 
-            <p className="single-letter-date">
-              {convertDate(letter?.created_at)}
-            </p>
-
-            {/* alternate rendering depending on whether a recipient is named  */}
-
-            {
-              ( !letter?.intended_recipient )? (
-                <div className="
-                  single-letter-content-no-recipient 
-                  preserve-breaks"
-                >
-                  {letter?.content}
-                </div>
-              ) : (
-                <>
-                  <h2>
-                    {letter?.intended_recipient}
-                  </h2> 
-                  <div className="
-                    single-letter-content-container-with-recipient 
-                    preserve-breaks"
-                  >
-                    {letter?.content}
-                  </div>
-                </>
-              )
-            }
-
-            {
-              ( !letter?.author_name ) ? (
-                <></>
-              ) : (
-                <p className="sign-off">
-                  <br></br>— {letter?.author_name}
-                </p>
-              )
-            }
-
-          </div>
-        <p className="timestamp">{letter?.updated_at ?? letter?.created_at}</p>
-      </div>
-    </>
-  )
+  return <LetterViewWrapper letter={letter} />
 }

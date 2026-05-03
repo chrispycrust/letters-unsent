@@ -31,11 +31,21 @@ function mockFetchSequence(...responses: MockFetchResponse[]) {
 function renderOwnerArea({
   isEditing = false,
   onEdit = jest.fn(),
+  onCancelEdit = jest.fn(),
 }: {
   isEditing?: boolean
   onEdit?: () => void
+  onCancelEdit?: () => void
 } = {}) {
-  return render(<LetterOwnerArea letterId="10" isEditing={isEditing} onEdit={onEdit} />)
+  return render(
+    <LetterOwnerArea
+      letterId="10"
+      isEditing={isEditing}
+      editFormId="test-letter-edit-form"
+      onEdit={onEdit}
+      onCancelEdit={onCancelEdit}
+    />,
+  )
 }
 
 describe("Single letter owner area", () => {
@@ -55,7 +65,7 @@ describe("Single letter owner area", () => {
 
   it("renders editing status when parent edit state is active", () => {
     renderOwnerArea({ isEditing: true })
-    expect(screen.getByText("You are now editing this letter.")).not.toBeNull()
+    expect(screen.getByText("You are editing this letter.")).not.toBeNull()
   })
 
   it("auto-verifies from localStorage token and shows verified owner actions", async () => {
@@ -123,6 +133,14 @@ describe("Single letter owner area", () => {
     })
 
     expect(input.value).toBe("")
+  })
+
+  it("shows immediate feedback when confirming an empty token", () => {
+    renderOwnerArea()
+    fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
+    fireEvent.click(screen.getByRole("button", { name: "Confirm" }))
+
+    expect(screen.getByText("Enter your token first.")).not.toBeNull()
   })
 
   it("shows temporary lockout message after repeated invalid attempts", async () => {

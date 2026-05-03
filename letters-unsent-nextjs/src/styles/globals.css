@@ -435,10 +435,15 @@ footer a:hover {
   color: var(--foreground);
 }
 
+.owner-area-helper {
+  opacity: 0.76;
+}
+
 .owner-actions {
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: flex-end;
 }
 
 .owner-actions-separator {
@@ -479,6 +484,95 @@ button.owner-subtle-action:focus-visible {
 button.owner-question-trigger {
   display: inline-flex;
   width: fit-content;
+}
+
+.owner-edit-pocket {
+  display: inline-flex;
+  justify-content: flex-end;
+  min-width: 0;
+  font-family: var(--geist);
+  text-align: right;
+}
+
+.owner-edit-pocket.is-expanded {
+  min-width: min(100%, 270px);
+}
+
+.owner-edit-pocket.is-collapsed {
+  min-width: 0;
+}
+
+.owner-edit-collapsed-trigger {
+  opacity: 0.72;
+}
+
+.owner-edit-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.owner-edit-action-buttons {
+  margin-top: 2px;
+}
+
+.owner-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.owner-bottom-sheet {
+  width: min(100%, 680px);
+  pointer-events: auto;
+  background: var(--background);
+  border-top: 1px solid var(--release-border);
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -8px 22px rgb(0 0 0 / 10%);
+  padding: 8px 16px calc(18px + env(safe-area-inset-bottom));
+  transition:
+    transform 180ms ease,
+    max-height 180ms ease;
+  max-height: 46dvh;
+  overflow-y: auto;
+}
+
+.owner-bottom-sheet.is-full {
+  max-height: 82dvh;
+}
+
+.owner-sheet-overlay.is-dragging .owner-bottom-sheet {
+  transition: none;
+}
+
+.owner-sheet-handle {
+  display: block;
+  width: 38px;
+  height: 4px;
+  padding: 0;
+  margin: 0 auto 14px auto;
+  border-radius: 999px;
+  background: var(--background-desat-2);
+  opacity: 0.35;
+  touch-action: none;
+}
+
+.owner-sheet-handle:hover,
+.owner-sheet-handle:focus-visible {
+  background: var(--foreground);
+  opacity: 0.55;
+}
+
+.owner-bottom-sheet-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: var(--geist);
 }
 
 .owner-verification-panel {
@@ -624,6 +718,12 @@ button.owner-question-trigger {
   resize: none;
   line-height: inherit;
   text-align: left;
+  transition: background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.letter-edit-content-input:focus {
+  background: rgb(0 0 0 / 2%);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 4%);
 }
 
 .letter-edit-sign-off {
@@ -1486,6 +1586,23 @@ section {
     width: fit-content;
     min-width: 270px;
     max-width: 320px;
+  }
+
+  .letter-owner-area.is-editing {
+    position: sticky;
+    top: calc(var(--navbar-offset) + 14px);
+    z-index: 20;
+    align-self: flex-end;
+    background: transparent;
+  }
+
+  .owner-edit-pocket {
+    /* background: transparent; */
+    background-color: fuchsia; /* to visualize the area of the pocket during development, can remove later */
+  }
+
+  .owner-edit-pocket.is-expanded {
+    padding: 4px 0;
   }
 
   .delete-confirmation-overlay {

@@ -6,6 +6,23 @@ import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
 describe("Single letter page", () => {
   const originalFetch = global.fetch
   const originalSupabaseApiUrl = process.env.SUPABASE_API_URL
+  const originalMatchMedia = window.matchMedia
+
+  function mockViewport({ isMobile }: { isMobile: boolean }) {
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: jest.fn().mockImplementation((query: string) => ({
+        matches: isMobile ? query.includes("max-width") : !query.includes("max-width"),
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    })
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -15,6 +32,10 @@ describe("Single letter page", () => {
 
   afterEach(() => {
     global.fetch = originalFetch
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: originalMatchMedia,
+    })
   })
 
   afterAll(() => {
@@ -104,16 +125,276 @@ describe("Single letter page", () => {
       expect(screen.getByLabelText("Letter content")).not.toBeNull()
     })
 
-    expect((screen.getByLabelText("Letter content") as HTMLTextAreaElement).value).toBe(
+    const letterBody = screen.getByLabelText("Letter content") as HTMLTextAreaElement
+    const recipientInput = screen.getByLabelText("Intended recipient") as HTMLInputElement
+    const authorInput = screen.getByLabelText("Author name") as HTMLInputElement
+
+    expect(letterBody.value).toBe(
       "This is the full letter body.",
     )
-    expect((screen.getByLabelText("Intended recipient") as HTMLInputElement).value).toBe("Sam")
-    expect((screen.getByLabelText("Author name") as HTMLInputElement).value).toBe("Casey")
+    expect(recipientInput.value).toBe("Sam")
+    expect(authorInput.value).toBe("Casey")
+    expect(recipientInput.className).toContain("letter-edit-recipient-input")
+    expect(authorInput.className).toContain("letter-edit-author-input")
+    expect(letterBody.className).toContain("letter-edit-content-input")
+    expect(letterBody.className).not.toContain("dashed")
 
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
 
-    expect(screen.queryByText("You are now editing this letter.")).toBeNull()
+    expect(screen.queryByText("You are editing this letter.")).toBeNull()
     expect(screen.getByRole("button", { name: "You own this letter - manage it here." })).not.toBeNull()
+  })
+
+  it("keeps desktop edit controls reachable in a sticky anchored pocket", async () => {
+    mockViewport({ isMobile: false })
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: "10",
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }))
+
+    const pocket = await screen.findByTestId("desktop-edit-pocket")
+    expect(pocket.className).toContain("owner-edit-pocket")
+    expect(pocket.className).toContain("is-sticky")
+    expect(pocket.getAttribute("data-pocket-state")).toBe("expanded")
+    expect(screen.queryByTestId("owner-side-rail")).toBeNull()
+    expect(screen.getByRole("button", { name: "Save changes" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Cancel" })).not.toBeNull()
+  })
+
+  it("opens the mobile bottom sheet from the unverified owner trigger", async () => {
+    mockViewport({ isMobile: true })
+    const fetchMock = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        letter: [
+          {
+            id: "10",
+            content: "This is the full letter body.",
+            intended_recipient: "Sam",
+            author_name: "Casey",
+            created_at: "2026-01-19T00:00:00.000Z",
+            updated_at: null,
+            relationship_type: "Friend",
+            emotional_tone: "Reflective",
+          },
+        ],
+      }),
+    })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
+
+    const sheet = screen.getByRole("dialog", { name: "Owner actions" })
+    expect(sheet.getAttribute("data-sheet-mode")).toBe("open-unverified")
+    expect(screen.getByLabelText("Token")).not.toBeNull()
+  })
+
+  it("lets the mobile bottom sheet snap fuller and dismiss", async () => {
+    mockViewport({ isMobile: true })
+    const fetchMock = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        letter: [
+          {
+            id: "10",
+            content: "This is the full letter body.",
+            intended_recipient: "Sam",
+            author_name: "Casey",
+            created_at: "2026-01-19T00:00:00.000Z",
+            updated_at: null,
+            relationship_type: "Friend",
+            emotional_tone: "Reflective",
+          },
+        ],
+      }),
+    })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
+    const sheet = screen.getByRole("dialog", { name: "Owner actions" })
+
+    fireEvent.click(screen.getByRole("button", { name: "Expand or collapse owner actions" }))
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
+
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
+    expect(screen.queryByRole("dialog", { name: "Owner actions" })).toBeNull()
+  })
+
+  it("opens verified mobile owner actions after auto-verification", async () => {
+    mockViewport({ isMobile: true })
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: "10",
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
+
+    const sheet = screen.getByRole("dialog", { name: "Owner actions" })
+    expect(sheet.getAttribute("data-sheet-mode")).toBe("open-verified")
+    expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Remove" })).not.toBeNull()
+  })
+
+  it("updates mobile sheet content in place after token verification", async () => {
+    mockViewport({ isMobile: true })
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: "10",
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
+    fireEvent.change(screen.getByLabelText("Token"), {
+      target: { value: "quiet-sage-morning" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: "Confirm" }))
+
+    await waitFor(() => {
+      expect(screen.getByRole("dialog", { name: "Owner actions" }).getAttribute("data-sheet-mode")).toBe(
+        "open-verified",
+      )
+    })
+    expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
+  })
+
+  it("shows mobile Save and Cancel actions only during edit mode", async () => {
+    mockViewport({ isMobile: true })
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: "10",
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
+    expect(screen.queryByRole("button", { name: "Save changes" })).toBeNull()
+
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }))
+    const sheet = await screen.findByRole("dialog", { name: "Owner actions" })
+
+    expect(sheet.getAttribute("data-sheet-mode")).toBe("editing")
+    expect(screen.getByRole("button", { name: "Save changes" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Cancel" })).not.toBeNull()
   })
 
   it("normalises numeric API ids before auto-verifying the stored token", async () => {

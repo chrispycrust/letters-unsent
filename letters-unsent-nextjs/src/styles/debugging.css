@@ -98,6 +98,11 @@ form {
   background-color: #e5e3d4;
 }
 
+.owner-edit-pocket {
+  /* background: transparent; */
+  background-color: fuchsia; /* to visualize the area of the pocket during development, can remove later */
+}
+
 
 @media (width <= 375px) {
 

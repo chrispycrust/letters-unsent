@@ -400,12 +400,29 @@ footer a:hover {
   margin-top: 2em;
 }
 
+.single-letter-main-column {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.single-letter-balance-rail,
+.single-letter-owner-rail {
+  display: none;
+}
+
 .single-letter-topline {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 14px;
+}
+
+.single-letter-owner-top-control {
+  width: 100%;
 }
 
 .single-letter-meta {
@@ -494,16 +511,8 @@ button.owner-question-trigger {
   text-align: right;
 }
 
-.owner-edit-pocket.is-expanded {
+.owner-edit-pocket.is-visible {
   min-width: min(100%, 270px);
-}
-
-.owner-edit-pocket.is-collapsed {
-  min-width: 0;
-}
-
-.owner-edit-collapsed-trigger {
-  opacity: 0.72;
 }
 
 .owner-edit-actions {
@@ -1589,19 +1598,12 @@ section {
   }
 
   .letter-owner-area.is-editing {
-    position: sticky;
-    top: calc(var(--navbar-offset) + 14px);
-    z-index: 20;
+    position: static;
     align-self: flex-end;
     background: transparent;
   }
 
-  .owner-edit-pocket {
-    /* background: transparent; */
-    background-color: fuchsia; /* to visualize the area of the pocket during development, can remove later */
-  }
-
-  .owner-edit-pocket.is-expanded {
+  .owner-edit-pocket.is-visible {
     padding: 4px 0;
   }
 
@@ -1709,7 +1711,7 @@ section {
   --------------------------------
 */
 
-@media (width > 1280px) {
+@media (width > 1180px) {
 
   main {
     width: 1280px;
@@ -1727,5 +1729,64 @@ section {
   .single-letter-container {
     max-width: 70%;
   }
+
+  main:has(.single-letter-display-area) {
+    width: min(calc(100vw - 20px), 1480px);
+  }
+
+  .single-letter-display-area {
+    width: 100%;
+  }
+
+  .single-letter-container {
+    width: min(100%, 1420px);
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(160px, 1fr) minmax(0, 900px) minmax(160px, 1fr);
+    column-gap: 28px;
+    align-items: start;
+    justify-content: center;
+  }
+
+  .single-letter-main-column {
+    grid-column: 2;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .single-letter-balance-rail,
+  .single-letter-owner-rail {
+    display: block;
+    min-width: 0;
+  }
+
+  .single-letter-balance-rail {
+    grid-column: 1;
+  }
+
+  .single-letter-owner-rail {
+    grid-column: 3;
+    align-self: stretch;
+    min-height: 1px;
+  }
+
+  .single-letter-owner-rail .owner-edit-pocket {
+    position: sticky;
+    top: calc(var(--navbar-offset) + 14px);
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  .single-letter-owner-rail.is-active .owner-edit-pocket {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
 
 }

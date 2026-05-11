@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 
 import DeleteConfirmationModal from "@/components/LetterManagement/DeleteConfirmationModal"
-import DesktopEditPocket from "@/components/LetterManagement/DesktopEditPocket"
 import MobileOwnerSheet, { type MobileOwnerSheetMode } from "@/components/LetterManagement/MobileOwnerSheet"
 import OwnerActions from "@/components/LetterManagement/OwnerActions"
 import OwnerEditActions from "@/components/LetterManagement/OwnerEditActions"
@@ -306,7 +305,7 @@ export default function LetterOwnerArea({
         {isMobile ? (
           renderMobileTrigger()
         ) : isEditing ? (
-          <DesktopEditPocket editFormId={editFormId} onCancel={handleCancelEdit} />
+          editActions
         ) : isManaging ? (
           ownerActions
         ) : isVerified ? (

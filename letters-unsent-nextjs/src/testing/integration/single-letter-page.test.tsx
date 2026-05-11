@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { act, render, screen, within } from "@testing-library/react"
 import { fireEvent, waitFor } from "@testing-library/react"
 import LetterPage from "@/app/letters/[letterId]/page"
 import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
@@ -7,6 +7,8 @@ describe("Single letter page", () => {
   const originalFetch = global.fetch
   const originalSupabaseApiUrl = process.env.SUPABASE_API_URL
   const originalMatchMedia = window.matchMedia
+  const originalIntersectionObserver = window.IntersectionObserver
+  let intersectionObserverCallback: IntersectionObserverCallback | null = null
 
   function mockViewport({ isMobile }: { isMobile: boolean }) {
     Object.defineProperty(window, "matchMedia", {
@@ -24,6 +26,37 @@ describe("Single letter page", () => {
     })
   }
 
+  function mockIntersectionObserver() {
+    intersectionObserverCallback = null
+
+    Object.defineProperty(window, "IntersectionObserver", {
+      writable: true,
+      value: jest.fn((callback: IntersectionObserverCallback) => {
+        intersectionObserverCallback = callback
+
+        return {
+          observe: jest.fn(),
+          unobserve: jest.fn(),
+          disconnect: jest.fn(),
+          takeRecords: jest.fn(),
+        }
+      }),
+    })
+  }
+
+  function setTopEditControlsIntersecting(isIntersecting: boolean) {
+    if (!intersectionObserverCallback) {
+      throw new Error("IntersectionObserver callback was not registered.")
+    }
+
+    act(() => {
+      intersectionObserverCallback!(
+        [{ isIntersecting } as IntersectionObserverEntry],
+        {} as IntersectionObserver,
+      )
+    })
+  }
+
   beforeEach(() => {
     jest.clearAllMocks()
     window.localStorage.clear()
@@ -35,6 +68,10 @@ describe("Single letter page", () => {
     Object.defineProperty(window, "matchMedia", {
       writable: true,
       value: originalMatchMedia,
+    })
+    Object.defineProperty(window, "IntersectionObserver", {
+      writable: true,
+      value: originalIntersectionObserver,
     })
   })
 
@@ -145,8 +182,9 @@ describe("Single letter page", () => {
     expect(screen.getByRole("button", { name: "You own this letter - manage it here." })).not.toBeNull()
   })
 
-  it("keeps desktop edit controls reachable in a sticky anchored pocket", async () => {
+  it("keeps top edit controls and activates a duplicate desktop rail after scroll", async () => {
     mockViewport({ isMobile: false })
+    mockIntersectionObserver()
     window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
     const fetchMock = jest.fn()
       .mockResolvedValueOnce({
@@ -185,13 +223,37 @@ describe("Single letter page", () => {
     fireEvent.click(manageButton)
     fireEvent.click(screen.getByRole("button", { name: "Edit" }))
 
-    const pocket = await screen.findByTestId("desktop-edit-pocket")
+    const layout = await screen.findByTestId("single-letter-layout")
+    const balanceRail = screen.getByTestId("owner-balance-rail")
+    const sideRail = screen.getByTestId("owner-side-rail")
+
+    expect(layout.className).toContain("single-letter-container")
+    expect(layout.className).toContain("is-editing")
+    expect(balanceRail.getAttribute("aria-hidden")).toBe("true")
+    expect(sideRail.getAttribute("aria-hidden")).toBe("true")
+    expect(within(sideRail).getByTestId("desktop-edit-pocket")).not.toBeNull()
+    expect(within(sideRail).queryByRole("button", { name: "Save changes" })).toBeNull()
+
+    const topControls = document.querySelector(".single-letter-owner-top-control")
+    expect(topControls).not.toBeNull()
+    expect(within(topControls as HTMLElement).getByText("You are editing this letter.")).not.toBeNull()
+    expect(within(topControls as HTMLElement).getByRole("button", { name: "Save changes" })).not.toBeNull()
+    expect(within(topControls as HTMLElement).getByRole("button", { name: "Cancel" })).not.toBeNull()
+
+    setTopEditControlsIntersecting(false)
+
+    await waitFor(() => {
+      expect(sideRail.getAttribute("aria-hidden")).toBe("false")
+    })
+
+    const pocket = within(sideRail).getByTestId("desktop-edit-pocket")
     expect(pocket.className).toContain("owner-edit-pocket")
     expect(pocket.className).toContain("is-sticky")
-    expect(pocket.getAttribute("data-pocket-state")).toBe("expanded")
-    expect(screen.queryByTestId("owner-side-rail")).toBeNull()
-    expect(screen.getByRole("button", { name: "Save changes" })).not.toBeNull()
-    expect(screen.getByRole("button", { name: "Cancel" })).not.toBeNull()
+    expect(pocket.getAttribute("data-pocket-state")).toBe("visible")
+    expect(within(sideRail).getByText("You are editing this letter.")).not.toBeNull()
+    expect(within(sideRail).getByRole("button", { name: "Save changes" })).not.toBeNull()
+    expect(within(sideRail).getByRole("button", { name: "Cancel" })).not.toBeNull()
+    expect(within(sideRail).queryByRole("button", { name: "Editing" })).toBeNull()
   })
 
   it("opens the mobile bottom sheet from the unverified owner trigger", async () => {

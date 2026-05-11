@@ -1,36 +1,194 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Letters Unsent
 
-## Getting Started
+Letters Unsent is a quiet public archive for unsent letters. Visitors can read letters, write with Cove, and release a letter into the archive with optional owner protection for later editing or removal.
 
-First, run the development server:
+The app is built with Next.js App Router, React, TypeScript, Supabase, OpenAI's Responses API, and Sentry.
+
+## Current Status
+
+- The public archive, individual letter pages, About page, and Changelog page are implemented.
+- Cove's guided writing flow exists at `/submit`.
+- The release flow supports protected and unprotected letters in code.
+- Protected letters use a private token so the owner can edit or remove the letter later.
+- The `/submit` page copy still warns that submissions are not open yet, so public submission availability should be treated as product/deployment controlled.
+- `ContactForm` and `ExportLetterButton` are present but not currently used on a page.
+
+## Local Setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a local environment file with the variables listed below, then start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Most page work lives under `src/app`. Shared UI lives under `src/components`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables
 
-## Learn More
+```text
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_API_URL=
+OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN=
+```
 
-To learn more about Next.js, take a look at the following resources:
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key used by the app.
+- `SUPABASE_API_URL` - Base URL for the app's Supabase API route. Locally this is usually `http://localhost:3000/api/supabase`.
+- `OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN` - OpenAI API key used by Cove and archive moderation.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Useful Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` - Starts the local development server.
+- `npm run build` - Builds the production app.
+- `npm run start` - Runs the built production app.
+- `npm run lint` - Runs the configured Next.js lint command.
+- `npm run test` - Runs Jest tests.
+- `npm run test:watch` - Runs Jest in watch mode.
+- `npm run test:e2e` - Runs Playwright end-to-end tests.
 
-## Deploy on Vercel
+## App Routes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/` - Public archive of letter previews.
+- `/about` - Project background, guidelines, privacy notes, roadmap, and contact information.
+- `/changelog` - Release notes and visible product changes.
+- `/submit` - Cove writing conversation and letter release flow.
+- `/letters/[letterId]` - Full single-letter view, including owner management controls.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API Routes
+
+- `GET /api/supabase` - Fetches all letters for the archive.
+- `POST /api/supabase` - Creates a new letter, with an optional hashed owner token.
+- `GET /api/supabase/singleLetter?letterId=...` - Fetches one letter.
+- `POST /api/supabase/singleLetter` - Verifies a letter owner's token.
+- `PUT /api/supabase/singleLetter` - Updates a verified owner's letter after moderation.
+- `DELETE /api/supabase/singleLetter?letterId=...` - Removes a verified owner's letter.
+- `GET /api/guardian` - Gets Cove's opening message.
+- `POST /api/guardian` - Sends the writing conversation to Cove and receives either a reply or a release-ready letter payload.
+- `POST /api/events` - Receives simple event payloads, currently returning `email.received` events.
+
+## Component Map
+
+This map follows the app shell first, then each route. Indented items sit inside the item above them. Some items only appear in certain states, such as mobile navigation, loading, editing, or after a letter is ready to release.
+
+```text
+Letters Unsent App - The full website experience.
+├─ RootLayout - Wraps every page and keeps shared fonts, styles, and navigation in place.
+│  ├─ NavBar - Lets visitors move around the site.
+│  │  ├─ desktop navigation - Shows full navigation links on wider screens.
+│  │  │  ├─ Home link - Takes visitors back to the letter archive.
+│  │  │  ├─ Release A Letter link - Opens the writing and release flow.
+│  │  │  ├─ FeatherIcon - Adds the small visual divider in the desktop nav.
+│  │  │  └─ About & Contact link - Opens project information and contact details.
+│  │  └─ mobile navigation - Shows a compact menu on smaller screens.
+│  │     ├─ EnvelopeClosedIcon - Opens the mobile menu.
+│  │     └─ NavigationModal - Shows mobile navigation links in an overlay.
+│  │        ├─ EnvelopeOpenIcon - Closes the mobile menu.
+│  │        ├─ Home link - Takes visitors back to the letter archive.
+│  │        ├─ Release A Letter link - Opens the writing and release flow.
+│  │        ├─ About & Contact link - Opens project information and contact details.
+│  │        └─ Changelog link - Opens the release notes.
+│  │
+│  ├─ Home Page `/` - Shows the public archive of letters.
+│  │  ├─ ErrorDisplay - Shows a plain message if letters fail to load.
+│  │  ├─ Spinner - Shows that the letter list is still loading.
+│  │  ├─ Letter preview list - Shows shortened versions of each letter.
+│  │  │  └─ AIGenTag - Marks letters that were generated by AI.
+│  │  │     └─ Tag - Renders a small reusable label.
+│  │  └─ Footer - Shows site links, version, and release information.
+│  │
+│  ├─ About Page `/about` - Explains the project and its policies.
+│  │  └─ AboutLayout - Adds About page metadata and the footer.
+│  │     ├─ About - Holds expandable project information sections.
+│  │     │  ├─ Toggle: Background - Opens or closes the project background section.
+│  │     │  ├─ Toggle: Submission Guidelines - Opens or closes the writing rules section.
+│  │     │  ├─ Toggle: Privacy & Use - Opens or closes the privacy information section.
+│  │     │  ├─ Toggle: Roadmap & Features - Opens or closes planned features.
+│  │     │  └─ Toggle: Contact - Opens or closes contact information.
+│  │     └─ Footer - Shows site links, version, and release information.
+│  │
+│  ├─ Changelog Page `/changelog` - Lists visible changes over time.
+│  │  └─ ChangelogLayout - Adds Changelog page metadata and the footer.
+│  │     ├─ Changelog - Shows version notes and release history.
+│  │     └─ Footer - Shows site links, version, and release information.
+│  │
+│  ├─ Submit Page `/submit` - Handles writing, conversation, and releasing a letter.
+│  │  └─ SubmitLayout - Adds Submit page metadata.
+│  │     └─ Submit - Runs the Cove conversation and publishing flow.
+│  │        ├─ ErrorDisplay - Shows a plain message if the flow fails.
+│  │        ├─ Start conversation button - Begins the writing conversation.
+│  │        └─ Conversation area - Shows the active writing session.
+│  │           ├─ GuardianPanel - Shows Cove's message or a loading state.
+│  │           │  └─ Spinner - Shows that Cove is still replying.
+│  │           ├─ VisitorPanel - Lets the visitor write and send replies.
+│  │           │  ├─ MaximiseIcon - Expands the writing box.
+│  │           │  ├─ MinimiseIcon - Shrinks the writing box.
+│  │           │  └─ RespondIcon - Sends the visitor's reply.
+│  │           └─ ReleaseActionArea - Guides the visitor once a letter is ready.
+│  │              ├─ ReleaseChoicePanel - Asks whether to protect the letter or release it plainly.
+│  │              ├─ NoProtectionWarningStep - Warns that unprotected letters cannot be managed later.
+│  │              ├─ ReleaseSuccessPanel - Confirms the letter has been released.
+│  │              └─ ProtectionFlow - Guides the private token setup.
+│  │                 ├─ CreatePassphraseStep - Lets the visitor write or generate a token.
+│  │                 │  └─ ProtectionStepShell - Provides the shared protection-step layout.
+│  │                 ├─ StorePassphraseStep - Helps the visitor save or copy the token.
+│  │                 │  └─ ProtectionStepShell - Provides the shared protection-step layout.
+│  │                 └─ ProtectionConfirmedStep - Confirms the protected release is complete.
+│  │                    └─ ProtectionStepShell - Provides the shared protection-step layout.
+│  │
+│  └─ Single Letter Page `/letters/[letterId]` - Shows one full letter.
+│     └─ SingleLetterLayout - Wraps the single-letter view and footer.
+│        ├─ Loading - Shows a loading state while the letter page is preparing.
+│        ├─ LetterPage - Fetches the selected letter and handles load errors.
+│        │  ├─ ErrorDisplay - Shows a plain message if the letter cannot load.
+│        │  └─ LetterViewWrapper - Keeps the letter centered, switches between reading and editing, and controls the desktop owner rail.
+│        │     ├─ desktop balance rail - Reserves empty space on desktop so the letter stays centered beside the right rail.
+│        │     ├─ main letter column - Holds the letter metadata, top owner controls, and active letter surface.
+│        │     │  ├─ AIGenTag - Marks letters that were generated by AI.
+│        │     │  │  └─ Tag - Renders a small reusable label.
+│        │     │  ├─ LetterOwnerArea - Handles ownership checks, top owner controls, and duplicate desktop rail actions.
+│        │     │  │  ├─ OwnerVerificationPanel - Lets a visitor enter their private token.
+│        │     │  │  ├─ OwnerActions - Offers edit, remove, or cancel after ownership is verified.
+│        │     │  │  ├─ OwnerEditActions - Offers save or cancel while editing.
+│        │     │  │  ├─ DesktopEditPocket - Shows duplicate save and cancel actions in the desktop rail after the top controls scroll away.
+│        │     │  │  │  └─ OwnerEditActions - Offers save or cancel while editing.
+│        │     │  │  ├─ MobileOwnerSheet - Shows owner controls in a bottom sheet on mobile.
+│        │     │  │  │  └─ OwnerVerificationPanel / OwnerActions / OwnerEditActions - Shows the right owner control for the current state.
+│        │     │  │  └─ DeleteConfirmationModal - Confirms before permanently removing a letter.
+│        │     │  ├─ LetterView - Shows the letter for normal reading.
+│        │     │  └─ LetterEditForm - Lets a verified owner change letter text and details.
+│        │     └─ desktop owner rail - Receives duplicate owner or edit controls on desktop after the top controls scroll away.
+│        └─ Footer - Shows site links, version, and release information.
+│
+├─ GlobalError - Catches serious app-level errors.
+│  └─ NextError - Shows Next.js's fallback error page.
+│
+└─ Existing but not currently used on a page
+   ├─ ContactForm - Draft contact form that is not currently mounted.
+   └─ ExportLetterButton - Empty placeholder file for a possible export feature.
+```
+
+## Data / Moderation Flow
+
+- Public letters are stored in the Supabase `letter` table.
+- The archive page fetches letters through `GET /api/supabase`.
+- Single-letter pages fetch through `GET /api/supabase/singleLetter`.
+- Cove uses OpenAI's Responses API to guide the visitor through drafting a letter.
+- When Cove decides a letter is ready, `/api/guardian` returns a release-ready payload for the submit page.
+- Releasing a protected letter stores only a hashed owner token. The plain token is shown to the visitor and may be saved locally in their browser if they choose.
+- Owner edit and delete actions verify the token before changing stored data.
+- Edited letters are checked by `moderateLetterForArchive` before updates are accepted.
+
+## Known Placeholders
+
+- `src/components/ContactForm.tsx` exists but is not currently mounted on any page.
+- `src/components/LetterSubmit/ExportLetterButton.tsx` is an empty placeholder.
+- Some icon files in `public/icons` appear to be older or duplicate variants.

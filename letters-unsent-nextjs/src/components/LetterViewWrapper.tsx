@@ -12,7 +12,6 @@ import { useEffect, useRef, useState } from "react"
 
 /* Components */
 import AIGenTag from "@/components/AIGenTag"
-import DesktopEditPocket from "@/components/LetterManagement/DesktopEditPocket"
 import LetterOwnerArea from "@/components/LetterManagement/LetterOwnerArea"
 import LetterEditForm from "@/components/LetterManagement/LetterEditForm"
 import LetterView from "@/components/LetterView"
@@ -29,13 +28,13 @@ interface LetterViewWrapperProps {
   letter: Letter
 }
 
-const DESKTOP_EDIT_RAIL_QUERY = "(min-width: 1280px)"
+const DESKTOP_OWNER_RAIL_QUERY = "(min-width: 1280px)"
 const FALLBACK_NAVBAR_OFFSET = 124
 
-function getIsDesktopEditRailSurface(): boolean {
+function getIsDesktopOwnerRailSurface(): boolean {
   return typeof window !== "undefined" &&
     typeof window.matchMedia === "function" &&
-    window.matchMedia(DESKTOP_EDIT_RAIL_QUERY).matches
+    window.matchMedia(DESKTOP_OWNER_RAIL_QUERY).matches
 }
 
 function getNavbarOffset(): number {
@@ -64,8 +63,9 @@ function getNavbarOffset(): number {
 export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [currentLetter, setCurrentLetter] = useState(letter)
-  const [isDesktopEditRailSurface, setIsDesktopEditRailSurface] = useState(getIsDesktopEditRailSurface)
-  const [showDesktopEditRail, setShowDesktopEditRail] = useState(false)
+  const [isDesktopOwnerRailSurface, setIsDesktopOwnerRailSurface] = useState(getIsDesktopOwnerRailSurface)
+  const [showDesktopOwnerRail, setShowDesktopOwnerRail] = useState(false)
+  const [desktopRailMountNode, setDesktopRailMountNode] = useState<HTMLElement | null>(null)
   const topOwnerControlsRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -73,20 +73,20 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
       return
     }
 
-    const mediaQuery = window.matchMedia(DESKTOP_EDIT_RAIL_QUERY)
-    const updateDesktopEditRailSurface = () => setIsDesktopEditRailSurface(mediaQuery.matches)
+    const mediaQuery = window.matchMedia(DESKTOP_OWNER_RAIL_QUERY)
+    const updateDesktopOwnerRailSurface = () => setIsDesktopOwnerRailSurface(mediaQuery.matches)
 
-    updateDesktopEditRailSurface()
-    mediaQuery.addEventListener("change", updateDesktopEditRailSurface)
+    updateDesktopOwnerRailSurface()
+    mediaQuery.addEventListener("change", updateDesktopOwnerRailSurface)
 
     return () => {
-      mediaQuery.removeEventListener("change", updateDesktopEditRailSurface)
+      mediaQuery.removeEventListener("change", updateDesktopOwnerRailSurface)
     }
   }, [])
 
   useEffect(() => {
-    if (!isEditing || !isDesktopEditRailSurface) {
-      setShowDesktopEditRail(false)
+    if (!isDesktopOwnerRailSurface) {
+      setShowDesktopOwnerRail(false)
       return
     }
 
@@ -96,14 +96,14 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
       typeof window === "undefined" ||
       typeof window.IntersectionObserver !== "function"
     ) {
-      setShowDesktopEditRail(false)
+      setShowDesktopOwnerRail(false)
       return
     }
 
     const navbarOffset = getNavbarOffset()
     const observer = new window.IntersectionObserver(
       ([entry]) => {
-        setShowDesktopEditRail(!entry.isIntersecting)
+        setShowDesktopOwnerRail(!entry.isIntersecting)
       },
       {
         root: null,
@@ -117,7 +117,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
     return () => {
       observer.disconnect()
     }
-  }, [isEditing, isDesktopEditRailSurface])
+  }, [isDesktopOwnerRailSurface])
 
   function handleSavedLetter(updatedFields: EditableLetterFields & Pick<Letter, "updated_at">) {
     setCurrentLetter((existingLetter) => ({
@@ -138,7 +138,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
       className={`single-letter-container ${isEditing ? "is-editing" : ""}`}
       data-testid="single-letter-layout"
     >
-      {isDesktopEditRailSurface ? (
+      {isDesktopOwnerRailSurface ? (
         <div
           className="single-letter-balance-rail"
           data-testid="owner-balance-rail"
@@ -168,6 +168,9 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
               editFormId={editFormId}
               onEdit={() => setIsEditing(true)}
               onCancelEdit={handleCancelEditing}
+              isDesktopOwnerRailSurface={isDesktopOwnerRailSurface}
+              showDesktopOwnerRail={showDesktopOwnerRail}
+              desktopRailMountNode={desktopRailMountNode}
             />
           </div>
         </div>
@@ -195,16 +198,12 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
         <p className="timestamp">{currentLetter.updated_at ?? currentLetter.created_at}</p>
       </div>
 
-      {isDesktopEditRailSurface ? (
+      {isDesktopOwnerRailSurface ? (
         <aside
-          className={`single-letter-owner-rail ${showDesktopEditRail ? "is-active" : ""}`}
+          ref={setDesktopRailMountNode}
+          className="single-letter-owner-rail"
           data-testid="owner-side-rail"
-          aria-hidden={!showDesktopEditRail}
-        >
-          {isEditing ? (
-            <DesktopEditPocket editFormId={editFormId} onCancel={handleCancelEditing} />
-          ) : null}
-        </aside>
+        />
       ) : null}
     </div>
   )

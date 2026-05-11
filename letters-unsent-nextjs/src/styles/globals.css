@@ -472,7 +472,11 @@ footer a:hover {
 aside.letter-owner-area button.owner-subtle-action,
 aside.letter-owner-area button.owner-subtle-action:hover,
 aside.letter-owner-area button.owner-question-trigger,
-aside.letter-owner-area button.owner-question-trigger:hover {
+aside.letter-owner-area button.owner-question-trigger:hover,
+.desktop-owner-rail-content button.owner-subtle-action,
+.desktop-owner-rail-content button.owner-subtle-action:hover,
+.desktop-owner-rail-content button.owner-question-trigger,
+.desktop-owner-rail-content button.owner-question-trigger:hover {
   padding: 0;
   border-radius: 0;
   cursor: pointer;
@@ -524,6 +528,13 @@ button.owner-question-trigger {
 
 .owner-edit-action-buttons {
   margin-top: 2px;
+}
+
+.desktop-owner-rail-content {
+  display: flex;
+  justify-content: flex-end;
+  font-family: var(--geist);
+  text-align: right;
 }
 
 .owner-sheet-overlay {
@@ -1770,22 +1781,19 @@ section {
     min-height: 1px;
   }
 
-  .single-letter-owner-rail .owner-edit-pocket {
+  .single-letter-owner-rail .desktop-owner-rail-content {
     position: sticky;
     top: calc(var(--navbar-offset) + 14px);
     z-index: 20;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-8px);
-    transition:
-      opacity 180ms ease,
-      transform 180ms ease;
   }
 
-  .single-letter-owner-rail.is-active .owner-edit-pocket {
+  .single-letter-owner-rail .desktop-owner-rail-edit {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
   }
 
 

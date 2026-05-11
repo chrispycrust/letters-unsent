@@ -1,9 +1,11 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import { createPortal } from "react-dom"
 import { useRouter } from "next/navigation"
 
 import DeleteConfirmationModal from "@/components/LetterManagement/DeleteConfirmationModal"
+import DesktopEditPocket from "@/components/LetterManagement/DesktopEditPocket"
 import MobileOwnerSheet, { type MobileOwnerSheetMode } from "@/components/LetterManagement/MobileOwnerSheet"
 import OwnerActions from "@/components/LetterManagement/OwnerActions"
 import OwnerEditActions from "@/components/LetterManagement/OwnerEditActions"
@@ -19,6 +21,9 @@ interface LetterOwnerAreaProps {
   editFormId: string
   onEdit: () => void
   onCancelEdit: () => void
+  isDesktopOwnerRailSurface?: boolean
+  showDesktopOwnerRail?: boolean
+  desktopRailMountNode?: HTMLElement | null
 }
 
 type MobileSheetMode = "closed" | MobileOwnerSheetMode
@@ -33,6 +38,9 @@ export default function LetterOwnerArea({
   editFormId,
   onEdit,
   onCancelEdit,
+  isDesktopOwnerRailSurface = false,
+  showDesktopOwnerRail = false,
+  desktopRailMountNode,
 }: LetterOwnerAreaProps) {
   const router = useRouter()
   const storageKey = useMemo(() => getLetterPassphraseStorageKey(letterId), [letterId])
@@ -299,9 +307,52 @@ export default function LetterOwnerArea({
     return verificationPanel
   }
 
+  function renderDesktopRailContent() {
+    if (!isDesktopOwnerRailSurface || isMobile || !showDesktopOwnerRail) {
+      return null
+    }
+
+    if (isEditing) {
+      return (
+        <div className="desktop-owner-rail-content desktop-owner-rail-edit">
+          <DesktopEditPocket editFormId={editFormId} onCancel={handleCancelEdit} />
+        </div>
+      )
+    }
+
+    if (isManaging) {
+      return (
+        <div className="desktop-owner-rail-content">
+          {ownerActions}
+        </div>
+      )
+    }
+
+    if (isVerified) {
+      return (
+        <div className="desktop-owner-rail-content">
+          <button
+            type="button"
+            className="owner-subtle-action owner-question-trigger"
+            onClick={handleOpenManagementPanel}
+          >
+            You own this letter - manage it here.
+          </button>
+        </div>
+      )
+    }
+
+    return null
+  }
+
+  const desktopRailContent = renderDesktopRailContent()
+
   return (
     <>
-      <aside className={`letter-owner-area ${isEditing ? "is-editing" : ""}`} aria-live="polite">
+      <aside
+        className={`letter-owner-area ${isEditing ? "is-editing" : ""}`}
+        aria-live="polite"
+      >
         {isMobile ? (
           renderMobileTrigger()
         ) : isEditing ? (
@@ -328,6 +379,10 @@ export default function LetterOwnerArea({
           </button>
         )}
       </aside>
+
+      {desktopRailMountNode && desktopRailContent
+        ? createPortal(desktopRailContent, desktopRailMountNode)
+        : null}
 
       {isMobile && mobileSheetMode !== "closed" ? (
         <MobileOwnerSheet mode={mobileSheetMode} onClose={closeMobileSheet}>

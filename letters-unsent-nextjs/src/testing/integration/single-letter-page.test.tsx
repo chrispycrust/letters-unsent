@@ -44,7 +44,7 @@ describe("Single letter page", () => {
     })
   }
 
-  function setTopEditControlsIntersecting(isIntersecting: boolean) {
+  function setTopOwnerControlsIntersecting(isIntersecting: boolean) {
     if (!intersectionObserverCallback) {
       throw new Error("IntersectionObserver callback was not registered.")
     }
@@ -182,7 +182,7 @@ describe("Single letter page", () => {
     expect(screen.getByRole("button", { name: "You own this letter - manage it here." })).not.toBeNull()
   })
 
-  it("keeps top edit controls and activates a duplicate desktop rail after scroll", async () => {
+  it("keeps top controls and activates duplicate desktop owner rail actions after scroll", async () => {
     mockViewport({ isMobile: false })
     mockIntersectionObserver()
     window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
@@ -219,31 +219,52 @@ describe("Single letter page", () => {
     })
     render(page)
 
-    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    const sideRail = await screen.findByTestId("owner-side-rail")
+    const topControlsBeforeManaging = document.querySelector(".single-letter-owner-top-control")
+    expect(topControlsBeforeManaging).not.toBeNull()
+    await waitFor(() => {
+      expect(
+        within(topControlsBeforeManaging as HTMLElement).getByRole("button", {
+          name: "You own this letter - manage it here.",
+        }),
+      ).not.toBeNull()
+    })
+    expect(
+      within(sideRail).queryByRole("button", {
+        name: "You own this letter - manage it here.",
+      }),
+    ).toBeNull()
+
+    setTopOwnerControlsIntersecting(false)
+
+    const manageButton = await within(sideRail).findByRole("button", {
+      name: "You own this letter - manage it here.",
+    })
+
     fireEvent.click(manageButton)
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }))
+    expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Edit" })).not.toBeNull()
+    expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Remove" })).not.toBeNull()
+    expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Cancel" })).not.toBeNull()
+    expect(within(sideRail).getByRole("button", { name: "Edit" })).not.toBeNull()
+    expect(within(sideRail).getByRole("button", { name: "Remove" })).not.toBeNull()
+    expect(within(sideRail).getByRole("button", { name: "Cancel" })).not.toBeNull()
+
+    fireEvent.click(within(sideRail).getByRole("button", { name: "Edit" }))
 
     const layout = await screen.findByTestId("single-letter-layout")
     const balanceRail = screen.getByTestId("owner-balance-rail")
-    const sideRail = screen.getByTestId("owner-side-rail")
 
     expect(layout.className).toContain("single-letter-container")
     expect(layout.className).toContain("is-editing")
     expect(balanceRail.getAttribute("aria-hidden")).toBe("true")
-    expect(sideRail.getAttribute("aria-hidden")).toBe("true")
-    expect(within(sideRail).getByTestId("desktop-edit-pocket")).not.toBeNull()
-    expect(within(sideRail).queryByRole("button", { name: "Save changes" })).toBeNull()
-
     const topControls = document.querySelector(".single-letter-owner-top-control")
     expect(topControls).not.toBeNull()
     expect(within(topControls as HTMLElement).getByText("You are editing this letter.")).not.toBeNull()
     expect(within(topControls as HTMLElement).getByRole("button", { name: "Save changes" })).not.toBeNull()
     expect(within(topControls as HTMLElement).getByRole("button", { name: "Cancel" })).not.toBeNull()
 
-    setTopEditControlsIntersecting(false)
-
     await waitFor(() => {
-      expect(sideRail.getAttribute("aria-hidden")).toBe("false")
+      expect(within(sideRail).getByTestId("desktop-edit-pocket")).not.toBeNull()
     })
 
     const pocket = within(sideRail).getByTestId("desktop-edit-pocket")

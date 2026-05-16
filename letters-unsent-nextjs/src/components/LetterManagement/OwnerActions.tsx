@@ -1,5 +1,3 @@
-import Link from "next/link"
-
 interface OwnerActionsProps {
   onEdit: () => void
   onRemove: () => void

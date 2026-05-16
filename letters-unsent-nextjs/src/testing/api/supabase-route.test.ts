@@ -21,11 +21,11 @@ const mockedCreateClient = jest.mocked(createClient)
 const mockedArgon2Hash = jest.mocked(argon2.hash)
 
 function mockResolvedAsync<T>(value: T) {
-  return jest.fn(async (..._args: unknown[]) => value)
+  return jest.fn(async () => value)
 }
 
 function mockRejectedAsync(error: unknown) {
-  return jest.fn(async (..._args: unknown[]) => {
+  return jest.fn(async () => {
     throw error
   })
 }

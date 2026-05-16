@@ -1,10 +1,16 @@
 import { test, expect } from '@playwright/test';
 
+type GuardianPostPayload = {
+  updatedConversation?: Array<{
+    content?: string;
+  }>;
+};
+
 test.describe('Submit page (mocked Guardian)', () => {
   test('renders initial Guardian greeting and sends visitor reply', async ({ page }) => {
     const firstMessage = "Welcome. I'm Cove (mock)";
     const followupMessage = 'Thanks. I can help (mock).';
-    let postPayload: any = null;
+    let postPayload: GuardianPostPayload | null = null;
 
     await page.route('**/api/guardian**', async (route) => {
       const request = route.request();
@@ -18,7 +24,7 @@ test.describe('Submit page (mocked Guardian)', () => {
         return;
       }
 
-      postPayload = request.postDataJSON();
+      postPayload = request.postDataJSON() as GuardianPostPayload;
 
       await route.fulfill({
         status: 200,

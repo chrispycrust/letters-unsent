@@ -14,7 +14,7 @@ type MockFetchResponse = {
 function mockFetchSequence(...responses: MockFetchResponse[]) {
   const queue = [...responses]
 
-  return jest.fn(async (..._args: unknown[]) => {
+  return jest.fn(async () => {
     const next = queue.shift()
     if (!next) {
       throw new Error("No mocked fetch response left in queue.")

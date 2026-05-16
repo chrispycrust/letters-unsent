@@ -103,6 +103,18 @@ form {
   background-color: fuchsia; /* to visualize the area of the pocket during development, can remove later */
 }
 
+.desktop-owner-rail-content {
+  background-color: orange;
+}
+
+.single-letter-meta {
+  background-color: #7fbf92;
+}
+
+.single-letter-owner-top-control {
+  background-color: turquoise;
+}
+
 
 @media (width <= 375px) {
 

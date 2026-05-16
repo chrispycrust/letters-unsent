@@ -17,13 +17,12 @@ export default function OwnerVerificationPanel({
 }: OwnerVerificationPanelProps) {
   return (
     <div className="owner-verification-panel">
-      <p className="owner-panel-title">Please enter your token</p>
-
       <label htmlFor="owner-token-input" className="owner-token-label">
       </label>
       <input
         id="owner-token-input"
         className="owner-token-input"
+        aria-label="Token"
         value={token}
         onChange={(event) => onTokenChange(event.target.value)}
         autoComplete="off"
@@ -45,7 +44,7 @@ export default function OwnerVerificationPanel({
         onClick={onConfirm}
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Checking..." : "Confirm token"}
+        {isSubmitting ? "Checking..." : "Confirm"}
       </button>
 
       {errorMessage ? <p className="owner-area-error">{errorMessage}</p> : null}

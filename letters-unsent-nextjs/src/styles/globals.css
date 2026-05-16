@@ -1341,6 +1341,7 @@ section {
   text-decoration: underline;
   text-underline-offset: 3px;
   font-family: var(--geist);
+  font-size: 1rem;
 }
 
 .release-inline-link {

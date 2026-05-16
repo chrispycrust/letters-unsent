@@ -490,6 +490,7 @@ button.owner-subtle-action {
   cursor: pointer;
   font-weight: 400;
   transition-duration: 0.5s;
+  text-align: left;
 }
 
 button.owner-subtle-action:hover {
@@ -509,10 +510,9 @@ button.owner-question-trigger {
 
 .owner-edit-pocket {
   display: inline-flex;
-  justify-content: flex-end;
   min-width: 0;
   font-family: var(--geist);
-  text-align: right;
+  text-align: left;
 }
 
 .owner-edit-pocket.is-visible {
@@ -532,9 +532,8 @@ button.owner-question-trigger {
 
 .desktop-owner-rail-content {
   display: flex;
-  justify-content: flex-end;
   font-family: var(--geist);
-  text-align: right;
+  text-align: left;
 }
 
 .owner-sheet-overlay {
@@ -597,8 +596,9 @@ button.owner-question-trigger {
 
 .owner-verification-panel {
   display: flex;
-  flex-direction: column;
-  gap: 7px;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: end;
 }
 
 .owner-panel-title {
@@ -1596,16 +1596,24 @@ section {
     justify-content: space-between;
     align-items: flex-start;
     gap: 14px;
+    height: 70px;
   }
 
   .single-letter-meta {
     align-items: flex-start;
+    flex-basis: 400px;
+    flex-grow: 1;
+  }
+
+  .single-letter-owner-top-control {
+    display: flex;
+    justify-content: right;
+    flex-grow: 2;
   }
 
   .letter-owner-area {
-    width: fit-content;
-    min-width: 270px;
-    max-width: 320px;
+    min-width: 400px;
+    max-width: inherit;
   }
 
   .letter-owner-area.is-editing {

@@ -598,7 +598,7 @@ button.owner-question-trigger {
   display: flex;
   flex-direction: row;
   gap: 10px;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .owner-panel-title {
@@ -1352,29 +1352,42 @@ section {
   border: 0;
   padding: 0;
   margin: 0;
+}
+
+.release-action-options-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+}
+
+.release-option-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .release-option-card {
   border: 1px solid var(--release-border);
   border-radius: 8px;
   padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 4px;
   background: transparent;
+  cursor: pointer;
 }
 
 .release-option-card input[type="radio"],
 .release-option-card input[type="checkbox"] {
-  margin-right: 8px;
+  align-self: center;
+  grid-row: 1 / span 2;
+  margin: 0;
 }
 
-.release-option-card.is-selected {
-  border-color: var(--accent-700);
-  box-shadow: inset 0 0 0 1px var(--accent-700);
+.release-option-card.is-selected .release-option-title {
+  font-weight: 600;
 }
 
 .release-option-title {
@@ -1383,9 +1396,11 @@ section {
 }
 
 .release-option-helper {
+  grid-column: 2;
   font-family: var(--geist);
   font-size: 0.95rem;
   color: var(--release-muted);
+  line-height: 1.4;
 }
 
 .release-token-input-wrap {
@@ -1393,6 +1408,7 @@ section {
   flex-direction: column;
   gap: 6px;
   font-family: var(--geist);
+  min-width: 0;
 }
 
 .release-token-input {
@@ -1411,6 +1427,7 @@ section {
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+  min-width: 0;
 }
 
 .release-generated-token,
@@ -1422,6 +1439,7 @@ section {
   font-size: 1.05rem;
   padding: 10px 12px;
   overflow-wrap: anywhere;
+  width: 100%;
 }
 
 .release-store-options {
@@ -1665,6 +1683,21 @@ section {
 
   .release-action-area {
     min-height: auto;
+  }
+
+  .release-action-options-container {
+    gap: 14px;
+  }
+
+  .release-option-row {
+    display: grid;
+    grid-template-columns: minmax(190px, 0.8fr) minmax(260px, 1.2fr);
+    align-items: center;
+    column-gap: 16px;
+  }
+
+  .release-option-card {
+    min-height: 72px;
   }
 
   .release-choice-actions,

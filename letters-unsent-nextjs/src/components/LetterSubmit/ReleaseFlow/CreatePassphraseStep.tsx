@@ -25,6 +25,28 @@ export default function CreatePassphraseStep({
   onContinue,
   canContinue,
 }: CreatePassphraseStepProps) {
+  function handleCustomPassphraseFocus() {
+    if (passphraseMode !== "custom") {
+      onSelectCustom()
+    }
+  }
+
+  function handleCustomPassphraseChange(value: string) {
+    if (passphraseMode !== "custom") {
+      onSelectCustom()
+    }
+
+    onCustomPassphraseChange(value)
+  }
+
+  function handleGenerateAnother() {
+    if (passphraseMode !== "generated") {
+      onSelectGenerated()
+    }
+
+    onGenerateAnother()
+  }
+
   return (
     <ProtectionStepShell
       title="Protect your letter"
@@ -44,61 +66,64 @@ export default function CreatePassphraseStep({
       <fieldset className="release-options-fieldset">
         <legend className="sr-only">Choose token method</legend>
 
-        <label className={`release-option-card ${passphraseMode === "custom" ? "is-selected" : ""}`}>
-          <input
-            type="radio"
-            name="passphrase-option"
-            aria-label="Write my own"
-            checked={passphraseMode === "custom"}
-            onChange={onSelectCustom}
-          />
-          <span className="release-option-title">Write my own</span>
-          <span className="release-option-helper">
-            Choose a phrase you’ll remember. You can reuse one you already use for another letter, if you
-            prefer.
-          </span>
-        </label>
+        <div className="release-action-options-container">
+          <div className="release-option-row">
+            <label className={`release-option-card ${passphraseMode === "custom" ? "is-selected" : ""}`}>
+              <input
+                type="radio"
+                name="passphrase-option"
+                aria-label="Write my own"
+                checked={passphraseMode === "custom"}
+                onChange={onSelectCustom}
+              />
+              <span className="release-option-title">Write my own</span>
+              <span className="release-option-helper">
+                Choose a phrase you’ll remember. You can reuse one you already use for another letter, if you
+                prefer.
+              </span>
+            </label>
 
-        {passphraseMode === "custom" ? (
-          <div className="release-token-input-wrap">
-            <label htmlFor="custom-passphrase-input">Token</label>
-            <input
-              id="custom-passphrase-input"
-              type="text"
-              value={customPassphrase}
-              onChange={(event) => onCustomPassphraseChange(event.target.value)}
-              className="release-token-input"
-              autoComplete="off"
-            />
+            <div className="release-token-input-wrap">
+              <label htmlFor="custom-passphrase-input">Token</label>
+              <input
+                id="custom-passphrase-input"
+                type="text"
+                value={customPassphrase}
+                onFocus={handleCustomPassphraseFocus}
+                onChange={(event) => handleCustomPassphraseChange(event.target.value)}
+                className="release-token-input"
+                autoComplete="off"
+              />
+            </div>
           </div>
-        ) : null}
 
-        <label className={`release-option-card ${passphraseMode === "generated" ? "is-selected" : ""}`}>
-          <input
-            type="radio"
-            name="passphrase-option"
-            aria-label="Create one for me"
-            checked={passphraseMode === "generated"}
-            onChange={onSelectGenerated}
-          />
-          <span className="release-option-title">Create one for me</span>
-          <span className="release-option-helper">Create a stronger phrase automatically.</span>
-        </label>
+          <div className="release-option-row">
+            <label className={`release-option-card ${passphraseMode === "generated" ? "is-selected" : ""}`}>
+              <input
+                type="radio"
+                name="passphrase-option"
+                aria-label="Create one for me"
+                checked={passphraseMode === "generated"}
+                onChange={onSelectGenerated}
+              />
+              <span className="release-option-title">Create one for me</span>
+              <span className="release-option-helper">Create a stronger phrase automatically.</span>
+            </label>
 
-        {passphraseMode === "generated" ? (
-          <div className="release-generated-wrap">
-            <p className="release-generated-token" aria-label="Generated token">
-              {generatedPassphrase}
-            </p>
-            <button
-              type="button"
-              className="release-link-button release-inline-link"
-              onClick={onGenerateAnother}
-            >
-              Generate another
-            </button>
+            <div className="release-generated-wrap">
+              <p className="release-generated-token" aria-label="Generated token">
+                {generatedPassphrase}
+              </p>
+              <button
+                type="button"
+                className="release-link-button release-inline-link"
+                onClick={handleGenerateAnother}
+              >
+                Generate another
+              </button>
+            </div>
           </div>
-        ) : null}
+        </div>
       </fieldset>
     </ProtectionStepShell>
   )

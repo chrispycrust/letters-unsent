@@ -23,7 +23,7 @@ export default function ProtectionFlow({
   const [step, setStep] = useState<"create" | "store" | "confirmed">("create")
   const [passphraseMode, setPassphraseMode] = useState<"custom" | "generated">("custom")
   const [customPassphrase, setCustomPassphrase] = useState("")
-  const [generatedPassphrase, setGeneratedPassphrase] = useState("")
+  const [generatedPassphrase, setGeneratedPassphrase] = useState(() => generatePassphrase(4))
 
   const [saveOnDevice, setSaveOnDevice] = useState(false)
   const [tokenCopied, setTokenCopied] = useState(false)
@@ -49,7 +49,6 @@ export default function ProtectionFlow({
 
   function handleSelectGenerated() {
     setPassphraseMode("generated")
-    setGeneratedPassphrase((current) => current || generatePassphrase(4))
   }
 
   function handleGenerateAnother() {

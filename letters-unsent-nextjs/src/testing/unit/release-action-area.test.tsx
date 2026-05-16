@@ -65,6 +65,9 @@ describe("ReleaseActionArea", () => {
     expect(screen.getByText("Protect your letter")).not.toBeNull();
     const continueButton = screen.getByRole("button", { name: "Continue" }) as HTMLButtonElement;
     expect(continueButton.disabled).toBe(true);
+    expect(screen.getByLabelText("Generated token").textContent?.trim()).toMatch(
+      /^[a-z]+-[a-z]+-[a-z]+-[a-z]+$/,
+    );
   });
 
   it("creates and replaces generated passphrases", () => {

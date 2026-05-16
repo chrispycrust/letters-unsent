@@ -10,7 +10,9 @@ type EditableLetterFields = Pick<Letter, "content" | "intended_recipient" | "aut
 
 interface LetterEditFormProps {
   letterId: string
+  formId?: string
   initialLetter: EditableLetterFields
+  showInlineActions?: boolean
   onCancel?: () => void
   onSaveSuccess?: (updatedFields: EditableLetterFields & Pick<Letter, "updated_at">) => void
 }
@@ -31,7 +33,9 @@ function shouldClearStoredPassphrase(status: number, code?: string): boolean {
 
 export default function LetterEditForm({
   letterId,
+  formId,
   initialLetter,
+  showInlineActions = true,
   onCancel,
   onSaveSuccess,
 }: LetterEditFormProps) {
@@ -228,7 +232,7 @@ export default function LetterEditForm({
   }
 
   return (
-    <form className="letter-edit-form" onSubmit={handleSubmit}>
+    <form id={formId} className="letter-edit-form" onSubmit={handleSubmit}>
       <label htmlFor="edit-intended-recipient" className="sr-only">
         Intended recipient
       </label>
@@ -292,27 +296,29 @@ export default function LetterEditForm({
         </div>
       ) : null}
 
-      <div className="letter-edit-actions">
-        <p>For this letter</p>
-        <button
-          type="button"
-          className="owner-subtle-action"
-          onClick={() => {
-            if (onCancel) {
-              onCancel()
-              return
-            }
+      {showInlineActions ? (
+        <div className="letter-edit-actions">
+          <p>For this letter</p>
+          <button
+            type="button"
+            className="owner-subtle-action"
+            onClick={() => {
+              if (onCancel) {
+                onCancel()
+                return
+              }
 
-            router.push(`/letters/${letterId}`)
-          }}
-          disabled={isSaving}
-        >
-          Cancel
-        </button>
-        <button type="submit" className="owner-subtle-action" disabled={isSaving}>
-          {isSaving ? "Saving..." : "Save changes"}
-        </button>
-      </div>
+              router.push(`/letters/${letterId}`)
+            }}
+            disabled={isSaving}
+          >
+            Cancel
+          </button>
+          <button type="submit" className="owner-subtle-action" disabled={isSaving}>
+            {isSaving ? "Saving..." : "Save changes"}
+          </button>
+        </div>
+      ) : null}
     </form>
   )
 }

@@ -48,9 +48,9 @@
     --letter-colour: #514e42;
     --ai-gen-tag-colour: #676353;
     --accent: #7fbf92;       /* muted mint (same family as your light accent) */
-    --sage-700: #a8d3bc;
-    --sage-600: #91c8ad;
-    --sage-100: #3d5044;
+    --accent-700: #a8d3bc;
+    --accent-700: #91c8ad;
+    --accent-100: #3d5044;
     --release-panel-bg: #3a3933;
     --release-border: #575248;
     --release-muted: #cfc7b2;
@@ -498,7 +498,7 @@ button.owner-subtle-action:hover {
 }
 
 button.owner-subtle-action:focus-visible {
-  outline: 2px solid var(--sage-600);
+  outline: 2px solid var(--accent-700);
   outline-offset: 3px;
   border-radius: 3px;
 }
@@ -623,7 +623,7 @@ button.owner-question-trigger {
 }
 
 .owner-token-input:focus-visible {
-  outline: 2px solid var(--sage-600);
+  outline: 2px solid var(--accent-700);
   outline-offset: 2px;
 }
 
@@ -767,7 +767,7 @@ button.owner-question-trigger {
 .letter-edit-recipient-input:focus-visible,
 .letter-edit-content-input:focus-visible,
 .letter-edit-author-input:focus-visible {
-  outline: 2px solid var(--sage-600);
+  outline: 2px solid var(--accent-700);
   outline-offset: 3px;
   border-radius: 8px;
 }
@@ -775,7 +775,7 @@ button.owner-question-trigger {
 .letter-edit-success {
   margin: 0;
   font-family: var(--geist);
-  color: var(--sage-700);
+  color: var(--accent-700);
 }
 
 .letter-edit-error-block {
@@ -1301,12 +1301,12 @@ section {
 }
 
 .release-primary-button {
-  background: var(--sage-600);
+  background: var(--accent);
   color: #ffffff;
 }
 
 .release-primary-button:hover {
-  background: var(--sage-700);
+  background: var(--accent-700);
   color: #ffffff;
 }
 
@@ -1322,7 +1322,7 @@ section {
 }
 
 .release-secondary-button:hover {
-  background: var(--sage-100);
+  background: var(--accent-100);
   color: var(--foreground);
 }
 
@@ -1337,7 +1337,7 @@ section {
   border: none;
   padding: 0;
   width: fit-content;
-  color: var(--sage-700);
+  color: var(--accent-700);
   text-decoration: underline;
   text-underline-offset: 3px;
   font-family: var(--geist);
@@ -1372,8 +1372,8 @@ section {
 }
 
 .release-option-card.is-selected {
-  border-color: var(--sage-600);
-  box-shadow: inset 0 0 0 1px var(--sage-600);
+  border-color: var(--accent-700);
+  box-shadow: inset 0 0 0 1px var(--accent-700);
 }
 
 .release-option-title {
@@ -1435,7 +1435,7 @@ section {
 
 .release-copy-confirmation {
   font-family: var(--geist);
-  color: var(--sage-700);
+  color: var(--accent-700);
 }
 
 .release-confirm-checkbox {
@@ -1485,7 +1485,7 @@ section {
 
 .release-confirmation-item::before {
   content: "✓";
-  color: var(--sage-700);
+  color: var(--accent-700);
   margin-right: 8px;
 }
 

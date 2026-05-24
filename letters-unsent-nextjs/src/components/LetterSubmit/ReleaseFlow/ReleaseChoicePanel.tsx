@@ -11,7 +11,7 @@ export default function ReleaseChoicePanel({
 }: ReleaseChoicePanelProps) {
   return (
     <section className="release-panel release-choice-panel" aria-live="polite">
-      <h2>Your letter is ready to be released.</h2>
+      <h2>Keep a way back to your letter</h2>
       <p>Before it is published to the archive, choose how you’d like to continue.</p>
 
       <div className="release-choice-actions">

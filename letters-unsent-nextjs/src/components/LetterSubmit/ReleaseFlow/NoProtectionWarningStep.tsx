@@ -19,10 +19,10 @@ export default function NoProtectionWarningStep({
       <p className="release-small-copy">This choice cannot be added afterwards.</p>
 
       <div className="release-choice-actions">
-        <button type="button" className="release-secondary-button" onClick={onBack} disabled={isSubmitting}>
+        <button type="button" className="release-primary-button" onClick={onBack} disabled={isSubmitting}>
           Go back
         </button>
-        <button type="button" className="release-primary-button" onClick={onConfirm} disabled={isSubmitting}>
+        <button type="button" className="release-secondary-button" onClick={onConfirm} disabled={isSubmitting}>
           {isSubmitting ? "Releasing..." : "I understand, release the letter without protection"}
         </button>
       </div>

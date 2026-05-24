@@ -67,7 +67,7 @@ export default function CreatePassphraseStep({
         <legend className="sr-only">Choose token method</legend>
 
         <div className="release-action-options-container">
-          <div className="release-option-row">
+          <div>
             <label className={`release-option-card ${passphraseMode === "custom" ? "is-selected" : ""}`}>
               <input
                 type="radio"
@@ -76,28 +76,31 @@ export default function CreatePassphraseStep({
                 checked={passphraseMode === "custom"}
                 onChange={onSelectCustom}
               />
-              <span className="release-option-title">Write my own</span>
-              <span className="release-option-helper">
-                Choose a phrase you’ll remember. You can reuse one you already use for another letter, if you
-                prefer.
-              </span>
-            </label>
-
-            <div className="release-token-input-wrap">
-              <label htmlFor="custom-passphrase-input">Token</label>
-              <input
-                id="custom-passphrase-input"
-                type="text"
-                value={customPassphrase}
-                onFocus={handleCustomPassphraseFocus}
-                onChange={(event) => handleCustomPassphraseChange(event.target.value)}
-                className="release-token-input"
-                autoComplete="off"
-              />
+              <div className="release-option-content">
+                <p className="release-option-title">Write my own</p>
+                <p className="release-option-helper">
+                  Choose a phrase you’ll remember. You can reuse one you already use for another letter, if you
+                  prefer.
+                </p>
+              
+                <div className="release-token-input-wrap">
+                {/* <label htmlFor="custom-passphrase-input">Token</label> */}
+                <input
+                  id="custom-passphrase-input"
+                  type="text"
+                  value={customPassphrase}
+                  onFocus={handleCustomPassphraseFocus}
+                  placeholder="Enter your token here"
+                  onChange={(event) => handleCustomPassphraseChange(event.target.value)}
+                  className="release-token-input"
+                  autoComplete="off"
+                />
+              </div>
             </div>
+            </label>
           </div>
 
-          <div className="release-option-row">
+          <div>
             <label className={`release-option-card ${passphraseMode === "generated" ? "is-selected" : ""}`}>
               <input
                 type="radio"
@@ -106,22 +109,24 @@ export default function CreatePassphraseStep({
                 checked={passphraseMode === "generated"}
                 onChange={onSelectGenerated}
               />
-              <span className="release-option-title">Create one for me</span>
-              <span className="release-option-helper">Create a stronger phrase automatically.</span>
-            </label>
 
-            <div className="release-generated-wrap">
-              <p className="release-generated-token" aria-label="Generated token">
-                {generatedPassphrase}
-              </p>
-              <button
-                type="button"
-                className="release-link-button release-inline-link"
-                onClick={handleGenerateAnother}
-              >
-                Generate another
-              </button>
-            </div>
+              <div className="release-option-content">
+                <p className="release-option-title">Create one for me</p>
+                <p className="release-option-helper">Create a stronger phrase automatically.</p>
+                <div className="release-generated-wrap">
+                  <p className="release-generated-token" aria-label="Generated token">
+                    {generatedPassphrase}
+                  </p>
+                  <button
+                    type="button"
+                    className="release-link-button release-inline-link"
+                    onClick={handleGenerateAnother}
+                  >
+                    Regenerate
+                  </button>
+                </div>
+              </div>
+            </label>
           </div>
         </div>
       </fieldset>

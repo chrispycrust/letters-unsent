@@ -12,8 +12,6 @@ interface StorePassphraseStepProps {
   onBack: () => void
   onContinue: () => void
   canContinue: boolean
-  isSubmitting: boolean
-  errorMessage?: string
 }
 
 export default function StorePassphraseStep({
@@ -28,28 +26,25 @@ export default function StorePassphraseStep({
   onBack,
   onContinue,
   canContinue,
-  isSubmitting,
-  errorMessage,
 }: StorePassphraseStepProps) {
   return (
     <ProtectionStepShell
       title="Keep your token somewhere safe"
-      stepLabel="Step 2 of 3"
+      stepLabel="Step 2 of 4"
       description="This is your token - a private key to edit or remove your letter later:"
       warning="Remember: Anyone with this token can edit or remove your letter."
-      errorMessage={errorMessage}
       actions={
         <>
-          <button type="button" className="release-secondary-button" onClick={onBack} disabled={isSubmitting}>
+          <button type="button" className="release-secondary-button" onClick={onBack}>
             Back
           </button>
           <button
             type="button"
             className="release-primary-button"
             onClick={onContinue}
-            disabled={!canContinue || isSubmitting}
+            disabled={!canContinue}
           >
-            {isSubmitting ? "Releasing..." : "Continue"}
+            Review release
           </button>
         </>
       }
@@ -64,7 +59,7 @@ export default function StorePassphraseStep({
 
         {/* --------- options for storing the token --------- */}
 
-        <p>We won't show this token again.
+        <p>We won&apos;t show this token again.
           To store it, you can choose one or both options below:
         </p>
 
@@ -97,7 +92,7 @@ export default function StorePassphraseStep({
             <div className="release-option-content">
                 <p className="release-option-title">Copy it yourself</p>
                 <span className="release-option-helper">
-                  Save the token somwhere safe like your notes or password manager.
+                  Save the token somewhere safe like your notes or password manager.
                   You must check the box below to move to the next stage.
                 </span>
               <div className="release-store-option-detail">

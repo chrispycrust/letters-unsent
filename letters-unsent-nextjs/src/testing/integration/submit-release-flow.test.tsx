@@ -12,7 +12,9 @@ type MockFetchResponse = {
 function mockFetchSequence(...responses: MockFetchResponse[]) {
   const queue = [...responses]
 
-  return jest.fn(async () => {
+  return jest.fn(async (...args: [RequestInfo | URL, RequestInit?]) => {
+    void args
+
     const nextResponse = queue.shift()
     if (!nextResponse) {
       throw new Error("No mocked fetch response left in queue.")
@@ -72,7 +74,7 @@ describe("Submit page release flow", () => {
     fireEvent.click(screen.getByRole("button", { name: /submit a response/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Your letter is ready to be released.")).not.toBeNull();
+      expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
     });
 
     expect(screen.getByRole("button", { name: "Protect this letter" })).not.toBeNull();
@@ -122,16 +124,16 @@ describe("Submit page release flow", () => {
     fireEvent.click(screen.getByRole("button", { name: /submit a response/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Your letter is ready to be released.")).not.toBeNull();
+      expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
-    const tokenInput = screen.getByLabelText("Token");
+    const tokenInput = screen.getByPlaceholderText("Enter your token here");
     fireEvent.change(tokenInput, { target: { value: "quiet-sage-morning" } });
 
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
     await waitFor(() => {
-      expect(screen.getByText("Keep it somewhere safe")).not.toBeNull();
+      expect(screen.getByText("Keep your token somewhere safe")).not.toBeNull();
     });
 
     const supabaseCallsBeforeSubmit = fetchMock.mock.calls.filter((call) =>
@@ -139,7 +141,16 @@ describe("Submit page release flow", () => {
     );
     expect(supabaseCallsBeforeSubmit.length).toBe(0);
 
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    fireEvent.click(screen.getByRole("button", { name: "Review release" }));
+
+    expect(screen.getByText("Ready to release your letter?")).not.toBeNull();
+
+    const supabaseCallsBeforeConfirm = fetchMock.mock.calls.filter((call) =>
+      String(call[0]).includes("/api/supabase"),
+    );
+    expect(supabaseCallsBeforeConfirm.length).toBe(0);
+
+    fireEvent.click(screen.getByRole("button", { name: "Release letter" }));
 
     await waitFor(() => {
       const call = fetchMock.mock.calls.find((entry) => entry[0] === "/api/supabase");
@@ -198,7 +209,7 @@ describe("Submit page release flow", () => {
     fireEvent.click(screen.getByRole("button", { name: /submit a response/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Your letter is ready to be released.")).not.toBeNull();
+      expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Release without protection" }));

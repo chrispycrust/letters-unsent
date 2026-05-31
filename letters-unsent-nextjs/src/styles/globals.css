@@ -1576,11 +1576,13 @@ section {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  line-height: 1em;
 }
 
 .release-confirmation-item {
   font-family: var(--geist);
   margin: 0;
+  font-size: 0.95rem;
 }
 
 .release-confirmation-item::before {

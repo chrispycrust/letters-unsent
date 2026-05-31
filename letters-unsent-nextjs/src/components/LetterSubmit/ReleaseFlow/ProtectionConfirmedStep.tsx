@@ -21,7 +21,7 @@ export default function ProtectionConfirmedStep({
   return (
     <ProtectionStepShell
       title="Your letter is protected"
-      stepLabel="Step 3 of 3"
+      stepLabel="Step 4 of 4"
       description="Keep your token safe. You’ll need it later to edit or remove this letter."
       actions={
         <>

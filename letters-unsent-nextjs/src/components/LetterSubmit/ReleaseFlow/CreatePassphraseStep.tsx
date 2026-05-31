@@ -50,7 +50,7 @@ export default function CreatePassphraseStep({
   return (
     <ProtectionStepShell
       title="Protect your letter"
-      stepLabel="Step 1 of 3"
+      stepLabel="Step 1 of 4"
       description="Choose a private token. You’ll need it later to edit or remove this letter."
       actions={
         <>

@@ -51,7 +51,7 @@ describe("ReleaseActionArea", () => {
   it("shows the release choice panel with three expected actions", () => {
     renderReleaseActionArea();
 
-    expect(screen.getByText("Your letter is ready to be released.")).not.toBeNull();
+    expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
     expect(screen.getByRole("button", { name: "Protect this letter" })).not.toBeNull();
     expect(screen.getByRole("button", { name: "Release without protection" })).not.toBeNull();
     expect(screen.getByRole("button", { name: "Return to conversation" })).not.toBeNull();
@@ -80,7 +80,7 @@ describe("ReleaseActionArea", () => {
 
     expect(firstGenerated).toMatch(/^[a-z]+-[a-z]+-[a-z]+-[a-z]+$/);
 
-    fireEvent.click(screen.getByRole("button", { name: "Generate another" }));
+    fireEvent.click(screen.getByRole("button", { name: "Regenerate" }));
     const secondGenerated = screen.getByLabelText("Generated token").textContent?.trim();
 
     expect(secondGenerated).toMatch(/^[a-z]+-[a-z]+-[a-z]+-[a-z]+$/);
@@ -95,7 +95,7 @@ describe("ReleaseActionArea", () => {
     const generatedToken = screen.getByLabelText("Generated token").textContent?.trim();
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
 
-    expect(screen.getByText("Keep it somewhere safe")).not.toBeNull();
+    expect(screen.getByText("Keep your token somewhere safe")).not.toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Back" }));
     expect(screen.getByText("Protect your letter")).not.toBeNull();
 
@@ -104,7 +104,7 @@ describe("ReleaseActionArea", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
     await waitFor(() => {
-      expect(screen.getByText("Keep it somewhere safe")).not.toBeNull();
+      expect(screen.getByText("Keep your token somewhere safe")).not.toBeNull();
     });
   });
 
@@ -116,22 +116,27 @@ describe("ReleaseActionArea", () => {
     fireEvent.click(screen.getByLabelText("Create one for me"));
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
 
-    expect(screen.getByText("Keep it somewhere safe")).not.toBeNull();
+    expect(screen.getByText("Keep your token somewhere safe")).not.toBeNull();
 
-    const continueButton = screen.getByRole("button", { name: "Continue" }) as HTMLButtonElement;
-    expect(continueButton.disabled).toBe(true);
+    const reviewButton = screen.getByRole("button", { name: "Review release" }) as HTMLButtonElement;
+    expect(reviewButton.disabled).toBe(true);
 
     fireEvent.click(screen.getByRole("button", { name: "Copy token" }));
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
     });
 
-    expect(continueButton.disabled).toBe(true);
+    expect(reviewButton.disabled).toBe(true);
     expect(setItemSpy).toHaveBeenCalledTimes(0);
 
     fireEvent.click(screen.getByLabelText("I have saved it somewhere safe"));
-    expect(continueButton.disabled).toBe(false);
-    fireEvent.click(continueButton);
+    expect(reviewButton.disabled).toBe(false);
+    fireEvent.click(reviewButton);
+
+    expect(screen.getByText("Ready to release your letter?")).not.toBeNull();
+    expect(onSubmitLetter).toHaveBeenCalledTimes(0);
+
+    fireEvent.click(screen.getByRole("button", { name: "Release letter" }));
 
     await waitFor(() => {
       expect(onSubmitLetter).toHaveBeenCalledTimes(1);
@@ -153,7 +158,12 @@ describe("ReleaseActionArea", () => {
 
     const selectedToken = screen.getByLabelText("Selected token").textContent?.trim();
     fireEvent.click(screen.getByLabelText("Save it on this device"));
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    fireEvent.click(screen.getByRole("button", { name: "Review release" }));
+
+    expect(screen.getByText("Ready to release your letter?")).not.toBeNull();
+    expect(onSubmitLetter).toHaveBeenCalledTimes(0);
+
+    fireEvent.click(screen.getByRole("button", { name: "Release letter" }));
 
     await waitFor(() => {
       expect(onSubmitLetter).toHaveBeenCalledTimes(1);

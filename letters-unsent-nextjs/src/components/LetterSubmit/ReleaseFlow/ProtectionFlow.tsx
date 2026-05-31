@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react"
 
+import ConfirmProtectedReleaseStep from "@/components/LetterSubmit/ReleaseFlow/ConfirmProtectedReleaseStep"
 import CreatePassphraseStep from "@/components/LetterSubmit/ReleaseFlow/CreatePassphraseStep"
 import ProtectionConfirmedStep from "@/components/LetterSubmit/ReleaseFlow/ProtectionConfirmedStep"
 import StorePassphraseStep from "@/components/LetterSubmit/ReleaseFlow/StorePassphraseStep"
@@ -20,7 +21,7 @@ export default function ProtectionFlow({
   onViewLetter,
   onClose,
 }: ProtectionFlowProps) {
-  const [step, setStep] = useState<"create" | "store" | "confirmed">("create")
+  const [step, setStep] = useState<"create" | "store" | "confirm" | "confirmed">("create")
   const [passphraseMode, setPassphraseMode] = useState<"custom" | "generated">("custom")
   const [customPassphrase, setCustomPassphrase] = useState("")
   const [generatedPassphrase, setGeneratedPassphrase] = useState(() => generatePassphrase(4))
@@ -77,8 +78,17 @@ export default function ProtectionFlow({
     }
   }
 
-  async function handleContinueFromStore() {
-    if (!selectedPassphrase || !canContinueFromStore || isSubmitting) {
+  function handleContinueFromStore() {
+    if (!selectedPassphrase || !canContinueFromStore) {
+      return
+    }
+
+    setSubmitError("")
+    setStep("confirm")
+  }
+
+  async function handleConfirmRelease() {
+    if (!selectedPassphrase || isSubmitting) {
       return
     }
 
@@ -92,11 +102,15 @@ export default function ProtectionFlow({
         tokenCopied,
       })
 
+      console.log("Release result:", result)
+
       if (saveOnDevice) {
         localStorage.setItem(getLetterPassphraseStorageKey(result.id), selectedPassphrase)
       }
 
       setReleasedLetterId(result.id)
+      console.log("Release result after setReleasedLetterId updated:", result)
+
       setStep("confirmed")
     } catch (error) {
       const message = error instanceof Error ? error.message : "Something went wrong while releasing your letter."
@@ -140,6 +154,20 @@ export default function ProtectionFlow({
         }}
         onContinue={handleContinueFromStore}
         canContinue={canContinueFromStore}
+      />
+    )
+  }
+
+  if (step === "confirm") {
+    return (
+      <ConfirmProtectedReleaseStep
+        savedOnDevice={saveOnDevice}
+        tokenCopied={tokenCopied}
+        onBack={() => {
+          setStep("store")
+          setSubmitError("")
+        }}
+        onConfirm={handleConfirmRelease}
         isSubmitting={isSubmitting}
         errorMessage={submitError}
       />

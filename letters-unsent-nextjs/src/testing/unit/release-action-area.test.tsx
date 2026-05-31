@@ -70,6 +70,25 @@ describe("ReleaseActionArea", () => {
     );
   });
 
+  it("requires custom passphrases to be saved before review", () => {
+    const { onSubmitLetter } = renderReleaseActionArea();
+
+    fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
+    fireEvent.change(screen.getByPlaceholderText("Enter your token here"), {
+      target: { value: "quiet-sage-morning" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+
+    expect(screen.getByText("Keep your token somewhere safe")).not.toBeNull();
+
+    const reviewButton = screen.getByRole("button", { name: "Review release" }) as HTMLButtonElement;
+    expect(reviewButton.disabled).toBe(true);
+    expect(onSubmitLetter).toHaveBeenCalledTimes(0);
+
+    fireEvent.click(screen.getByLabelText("I have saved it somewhere safe"));
+    expect(reviewButton.disabled).toBe(false);
+  });
+
   it("creates and replaces generated passphrases", () => {
     renderReleaseActionArea();
     fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));

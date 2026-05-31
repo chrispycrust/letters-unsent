@@ -2,7 +2,6 @@ import ProtectionStepShell from "@/components/LetterSubmit/ReleaseFlow/Protectio
 
 interface StorePassphraseStepProps {
   passphrase: string
-  isGeneratedPassphrase: boolean
   saveOnDevice: boolean
   tokenCopied: boolean
   savedElsewhereConfirmed: boolean
@@ -16,7 +15,6 @@ interface StorePassphraseStepProps {
 
 export default function StorePassphraseStep({
   passphrase,
-  isGeneratedPassphrase,
   saveOnDevice,
   tokenCopied,
   savedElsewhereConfirmed,
@@ -100,17 +98,15 @@ export default function StorePassphraseStep({
                   {tokenCopied ? <span className="release-copy-confirmation">Token copied to clipboard</span> : 'Copy token'}
                 </button>
                 
-                {isGeneratedPassphrase ? (
-                  <label className="release-confirm-checkbox">
-                    <input
-                      type="checkbox"
-                      aria-label="I have saved it somewhere safe"
-                      checked={savedElsewhereConfirmed}
-                      onChange={onToggleSavedElsewhereConfirmed}
-                    />
-                    <span>I have saved it somewhere safe</span>
-                  </label>
-                ) : null}
+                <label className="release-confirm-checkbox">
+                  <input
+                    type="checkbox"
+                    aria-label="I have saved it somewhere safe"
+                    checked={savedElsewhereConfirmed}
+                    onChange={onToggleSavedElsewhereConfirmed}
+                  />
+                  <span>I have saved it somewhere safe</span>
+                </label>
               </div>
             </div>
           </label>

@@ -141,6 +141,7 @@ describe("Submit page release flow", () => {
     );
     expect(supabaseCallsBeforeSubmit.length).toBe(0);
 
+    fireEvent.click(screen.getByLabelText("I have saved it somewhere safe"));
     fireEvent.click(screen.getByRole("button", { name: "Review release" }));
 
     expect(screen.getByText("Ready to release your letter?")).not.toBeNull();

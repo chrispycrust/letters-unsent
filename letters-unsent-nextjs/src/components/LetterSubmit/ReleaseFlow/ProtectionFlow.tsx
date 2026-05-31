@@ -66,8 +66,7 @@ export default function ProtectionFlow({
   }
 
   const canContinueFromCreate = Boolean(selectedPassphrase)
-  const canContinueFromStore =
-    passphraseMode === "generated" ? saveOnDevice || savedElsewhereConfirmed : true
+  const canContinueFromStore = saveOnDevice || savedElsewhereConfirmed
 
   async function handleCopyToken() {
     try {
@@ -102,15 +101,11 @@ export default function ProtectionFlow({
         tokenCopied,
       })
 
-      console.log("Release result:", result)
-
       if (saveOnDevice) {
         localStorage.setItem(getLetterPassphraseStorageKey(result.id), selectedPassphrase)
       }
 
       setReleasedLetterId(result.id)
-      console.log("Release result after setReleasedLetterId updated:", result)
-
       setStep("confirmed")
     } catch (error) {
       const message = error instanceof Error ? error.message : "Something went wrong while releasing your letter."
@@ -141,7 +136,6 @@ export default function ProtectionFlow({
     return (
       <StorePassphraseStep
         passphrase={selectedPassphrase}
-        isGeneratedPassphrase={passphraseMode === "generated"}
         saveOnDevice={saveOnDevice}
         tokenCopied={tokenCopied}
         savedElsewhereConfirmed={savedElsewhereConfirmed}

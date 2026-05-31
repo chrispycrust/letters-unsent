@@ -70,7 +70,17 @@ describe("ReleaseActionArea", () => {
     );
   });
 
-  it("requires custom passphrases to be saved before review", () => {
+  it("can return from the protection flow to release options", () => {
+    renderReleaseActionArea();
+
+    fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
+    fireEvent.click(screen.getByRole("button", { name: "Return to release options" }));
+
+    expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
+    expect(screen.getByRole("button", { name: "Release without protection" })).not.toBeNull();
+  });
+
+  it("requires custom passphrases to be saved before review", async () => {
     const { onSubmitLetter } = renderReleaseActionArea();
 
     fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
@@ -84,6 +94,15 @@ describe("ReleaseActionArea", () => {
     const reviewButton = screen.getByRole("button", { name: "Review release" }) as HTMLButtonElement;
     expect(reviewButton.disabled).toBe(true);
     expect(onSubmitLetter).toHaveBeenCalledTimes(0);
+
+    fireEvent.click(screen.getByLabelText("Copy it yourself"));
+    expect(reviewButton.disabled).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy token" }));
+    await waitFor(() => {
+      expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
+    });
+    expect(reviewButton.disabled).toBe(true);
 
     fireEvent.click(screen.getByLabelText("I have saved it somewhere safe"));
     expect(reviewButton.disabled).toBe(false);
@@ -140,6 +159,9 @@ describe("ReleaseActionArea", () => {
     const reviewButton = screen.getByRole("button", { name: "Review release" }) as HTMLButtonElement;
     expect(reviewButton.disabled).toBe(true);
 
+    fireEvent.click(screen.getByLabelText("Copy it yourself"));
+    expect(reviewButton.disabled).toBe(true);
+
     fireEvent.click(screen.getByRole("button", { name: "Copy token" }));
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
@@ -165,6 +187,58 @@ describe("ReleaseActionArea", () => {
     expect(submitArgs.ownerPassphrase).toMatch(/^[a-z]+-[a-z]+-[a-z]+-[a-z]+$/);
     expect(submitArgs.savePassphraseOnDevice).toBe(false);
     expect(submitArgs.tokenCopied).toBe(true);
+  });
+
+  it("requires every selected storage path to be complete", async () => {
+    renderReleaseActionArea();
+
+    fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
+    fireEvent.click(screen.getByLabelText("Create one for me"));
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+
+    const reviewButton = screen.getByRole("button", { name: "Review release" }) as HTMLButtonElement;
+    fireEvent.click(screen.getByLabelText("Save it on this device"));
+    expect(reviewButton.disabled).toBe(false);
+
+    fireEvent.click(screen.getByLabelText("Copy it yourself"));
+    expect(reviewButton.disabled).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy token" }));
+    await waitFor(() => {
+      expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
+    });
+    expect(reviewButton.disabled).toBe(true);
+
+    fireEvent.click(screen.getByLabelText("I have saved it somewhere safe"));
+    expect(reviewButton.disabled).toBe(false);
+  });
+
+  it("keeps storage choices selected when returning from confirmation", async () => {
+    renderReleaseActionArea();
+
+    fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
+    fireEvent.click(screen.getByLabelText("Create one for me"));
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+
+    const saveOnDeviceCheckbox = screen.getByLabelText("Save it on this device") as HTMLInputElement;
+    const manualSaveCheckbox = screen.getByLabelText("Copy it yourself") as HTMLInputElement;
+    const savedElsewhereCheckbox = screen.getByLabelText("I have saved it somewhere safe") as HTMLInputElement;
+
+    fireEvent.click(saveOnDeviceCheckbox);
+    fireEvent.click(manualSaveCheckbox);
+    fireEvent.click(screen.getByRole("button", { name: "Copy token" }));
+    await waitFor(() => {
+      expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
+    });
+    fireEvent.click(savedElsewhereCheckbox);
+    fireEvent.click(screen.getByRole("button", { name: "Review release" }));
+
+    expect(screen.getByText("Ready to release your letter?")).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+
+    expect((screen.getByLabelText("Save it on this device") as HTMLInputElement).checked).toBe(true);
+    expect((screen.getByLabelText("Copy it yourself") as HTMLInputElement).checked).toBe(true);
+    expect((screen.getByLabelText("I have saved it somewhere safe") as HTMLInputElement).checked).toBe(true);
   });
 
   it("writes passphrase to localStorage only when save-on-device is selected", async () => {

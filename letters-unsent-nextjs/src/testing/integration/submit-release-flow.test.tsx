@@ -41,6 +41,12 @@ describe("Submit page release flow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     window.localStorage.clear();
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: jest.fn().mockResolvedValue(undefined),
+      },
+    });
   });
 
   it("enters ready-to-release state without persisting directly", async () => {
@@ -141,6 +147,11 @@ describe("Submit page release flow", () => {
     );
     expect(supabaseCallsBeforeSubmit.length).toBe(0);
 
+    fireEvent.click(screen.getByLabelText("Copy it yourself"));
+    fireEvent.click(screen.getByRole("button", { name: "Copy token" }));
+    await waitFor(() => {
+      expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
+    });
     fireEvent.click(screen.getByLabelText("I have saved it somewhere safe"));
     fireEvent.click(screen.getByRole("button", { name: "Review release" }));
 

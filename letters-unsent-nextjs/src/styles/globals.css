@@ -7,6 +7,7 @@
 :root {
   --background: #f3f1df;
   --foreground: #3e3d38;
+
   --background-desat-1: #e5e3d4;
   --background-desat-2: #58503c;
   --background-error-message: hsl(0, 100%, 89%);
@@ -18,6 +19,7 @@
   --accent-100: #e4eee8;
   --release-panel-bg: #faf8f2;
   --release-border: #d6d2c5;
+  --release-border-darker: #9f9b8c;
   --release-muted: #5f5b50;
   --font-size-smaller: 0.9em;
   --font-size: 1.1em;
@@ -1325,7 +1327,7 @@ section {
 
 .release-secondary-button {
   background: transparent;
-  border: 1px solid var(--release-border);
+  border: 1px solid var(--release-border-darker);
   color: var(--foreground);
 }
 
@@ -1357,6 +1359,11 @@ section {
 
 .release-link-button:hover {
   text-decoration: none;
+}
+
+.release-link-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .release-inline-link {
@@ -1401,6 +1408,11 @@ section {
   background: transparent;
 }
 
+.release-option-card.is-selected {
+  border-color: var(--accent);
+  background: var(--background-desat-1);
+}
+
 .release-option-card input[type="radio"],
 .release-option-card input[type="checkbox"] {
   appearance: none;
@@ -1436,10 +1448,36 @@ section {
 }
 
 .release-option-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
   font-family: var(--Lora);
   font-size: 1.15rem;
   font-weight: 500;
   margin-bottom: 6px;
+  padding-bottom: 0;
+}
+
+.release-store-option-detail-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.release-recommended-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid rgba(67, 112, 87, 0.28);
+  border-radius: 999px;
+  background: rgba(67, 112, 87, 0.1);
+  color: #315f49;
+  font-family: var(--geist);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .release-option-helper {
@@ -1456,6 +1494,10 @@ section {
   gap: 6px;
   font-family: var(--geist);
   min-width: 0;
+}
+
+.release-token-guidance {
+  margin: 0;
 }
 
 .release-generated-wrap {
@@ -1503,6 +1545,14 @@ section {
 
 .release-store-option-row {
   width: 100%;
+}
+
+.release-store-requirement {
+  margin: -12px 0 0;
+  font-family: var(--geist);
+  font-size: 0.95rem;
+  color: var(--release-muted);
+  text-align: center;
 }
 
 .release-copy-option {

@@ -3,11 +3,14 @@ import ProtectionStepShell from "@/components/LetterSubmit/ReleaseFlow/Protectio
 interface StorePassphraseStepProps {
   passphrase: string
   saveOnDevice: boolean
+  manualSaveSelected: boolean
   tokenCopied: boolean
   savedElsewhereConfirmed: boolean
   onToggleSaveOnDevice: () => void
+  onToggleManualSave: () => void
   onCopyToken: () => void
   onToggleSavedElsewhereConfirmed: () => void
+  onReturnToOptions: () => void
   onBack: () => void
   onContinue: () => void
   canContinue: boolean
@@ -16,11 +19,14 @@ interface StorePassphraseStepProps {
 export default function StorePassphraseStep({
   passphrase,
   saveOnDevice,
+  manualSaveSelected,
   tokenCopied,
   savedElsewhereConfirmed,
   onToggleSaveOnDevice,
+  onToggleManualSave,
   onCopyToken,
   onToggleSavedElsewhereConfirmed,
+  onReturnToOptions,
   onBack,
   onContinue,
   canContinue,
@@ -35,6 +41,9 @@ export default function StorePassphraseStep({
         <>
           <button type="button" className="release-secondary-button" onClick={onBack}>
             Back
+          </button>
+          <button type="button" className="release-link-button" onClick={onReturnToOptions}>
+            Return to release options
           </button>
           <button
             type="button"
@@ -58,7 +67,7 @@ export default function StorePassphraseStep({
         {/* --------- options for storing the token --------- */}
 
         <p>We won&apos;t show this token again.
-          To store it, you can choose one or both options below:
+          To store it, choose at least one storage option below and complete its required steps to continue.
         </p>
 
         <div className="release-store-option-row">
@@ -72,8 +81,9 @@ export default function StorePassphraseStep({
             <div className="release-option-content">
               <p className="release-option-title">Store it on this device</p>
               <span className="release-option-helper">
-                Anyone with access to this browser profile may be able to use it.
-                If local storage is cleared, the token will be removed.
+                Saves the token only in this browser profile on this device. If you use another device or browser,
+                or clear browser storage, you&apos;ll need to enter the token manually. We recommend saving your own copy
+                somewhere safe too.
               </span>
             </div>
           </label>
@@ -82,34 +92,48 @@ export default function StorePassphraseStep({
         </div>
 
         <div className="release-store-option-row">
-          <label className="release-option-card">
+          <div className={`release-option-card ${manualSaveSelected ? "is-selected" : ""}`}>
             <input
+              id="manual-save-option"
               type="checkbox"
-              aria-label="checkbox"
+              aria-label="Copy it yourself"
+              checked={manualSaveSelected}
+              onChange={onToggleManualSave}
             />
             <div className="release-option-content">
-                <p className="release-option-title">Copy it yourself</p>
+              <label htmlFor="manual-save-option" className="release-option-title">
+                Copy it yourself <span className="release-recommended-badge">Recommended</span>
+              
                 <span className="release-option-helper">
-                  Save the token somewhere safe like your notes or password manager.
-                  You must check the box below to move to the next stage.
+                  Save the token somewhere safe like your notes or password manager. To continue with this option,
+                  copy the token and confirm you saved it somewhere safe.
                 </span>
-              <div className="release-store-option-detail">
-                <button type="button" className="release-secondary-button" onClick={onCopyToken}>
-                  {tokenCopied ? <span className="release-copy-confirmation">Token copied to clipboard</span> : 'Copy token'}
-                </button>
-                
-                <label className="release-confirm-checkbox">
-                  <input
-                    type="checkbox"
-                    aria-label="I have saved it somewhere safe"
-                    checked={savedElsewhereConfirmed}
-                    onChange={onToggleSavedElsewhereConfirmed}
-                  />
-                  <span>I have saved it somewhere safe</span>
-                </label>
-              </div>
+
+                <div className="release-store-option-detail-container">
+                  <div className="release-store-option-detail">
+                    <button
+                      type="button"
+                      className="release-secondary-button"
+                      onClick={onCopyToken}
+                      disabled={!manualSaveSelected}
+                    >
+                      {tokenCopied ? <span className="release-copy-confirmation">Token copied to clipboard</span> : 'Copy token'}
+                    </button>
+                    <label className="release-confirm-checkbox">
+                      <input
+                        type="checkbox"
+                        aria-label="I have saved it somewhere safe"
+                        checked={savedElsewhereConfirmed}
+                        disabled={!manualSaveSelected}
+                        onChange={onToggleSavedElsewhereConfirmed}
+                      />
+                      <span>I have saved it somewhere safe</span>
+                    </label>
+                  </div>
+                </div>
+              </label>
             </div>
-          </label>
+          </div>
         </div>
       </div>
     </ProtectionStepShell>

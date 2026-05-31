@@ -27,6 +27,7 @@ export default function ProtectionFlow({
   const [generatedPassphrase, setGeneratedPassphrase] = useState(() => generatePassphrase(4))
 
   const [saveOnDevice, setSaveOnDevice] = useState(false)
+  const [manualSaveSelected, setManualSaveSelected] = useState(false)
   const [tokenCopied, setTokenCopied] = useState(false)
   const [savedElsewhereConfirmed, setSavedElsewhereConfirmed] = useState(false)
   const [releasedLetterId, setReleasedLetterId] = useState<string | null>(null)
@@ -39,6 +40,7 @@ export default function ProtectionFlow({
 
   function resetStoreChoices() {
     setSaveOnDevice(false)
+    setManualSaveSelected(false)
     setTokenCopied(false)
     setSavedElsewhereConfirmed(false)
     setSubmitError("")
@@ -66,7 +68,24 @@ export default function ProtectionFlow({
   }
 
   const canContinueFromCreate = Boolean(selectedPassphrase)
-  const canContinueFromStore = saveOnDevice || savedElsewhereConfirmed
+  const hasSelectedStorageMethod = saveOnDevice || manualSaveSelected
+  const manualSaveComplete = !manualSaveSelected || (tokenCopied && savedElsewhereConfirmed)
+  const canContinueFromStore = hasSelectedStorageMethod && manualSaveComplete
+
+  function handleReturnToOptions() {
+    setSubmitError("")
+    onBackToChoice()
+  }
+
+  function handleToggleManualSave() {
+    const nextManualSaveSelected = !manualSaveSelected
+    setManualSaveSelected(nextManualSaveSelected)
+
+    if (!nextManualSaveSelected) {
+      setTokenCopied(false)
+      setSavedElsewhereConfirmed(false)
+    }
+  }
 
   async function handleCopyToken() {
     try {
@@ -125,7 +144,7 @@ export default function ProtectionFlow({
         onSelectGenerated={handleSelectGenerated}
         onCustomPassphraseChange={setCustomPassphrase}
         onGenerateAnother={handleGenerateAnother}
-        onBack={onBackToChoice}
+        onReturnToOptions={handleReturnToOptions}
         onContinue={handleContinueFromCreate}
         canContinue={canContinueFromCreate}
       />
@@ -137,11 +156,14 @@ export default function ProtectionFlow({
       <StorePassphraseStep
         passphrase={selectedPassphrase}
         saveOnDevice={saveOnDevice}
+        manualSaveSelected={manualSaveSelected}
         tokenCopied={tokenCopied}
         savedElsewhereConfirmed={savedElsewhereConfirmed}
         onToggleSaveOnDevice={() => setSaveOnDevice((current) => !current)}
+        onToggleManualSave={handleToggleManualSave}
         onCopyToken={handleCopyToken}
         onToggleSavedElsewhereConfirmed={() => setSavedElsewhereConfirmed((current) => !current)}
+        onReturnToOptions={handleReturnToOptions}
         onBack={() => {
           setStep("create")
           setSubmitError("")
@@ -161,6 +183,7 @@ export default function ProtectionFlow({
           setStep("store")
           setSubmitError("")
         }}
+        onReturnToOptions={handleReturnToOptions}
         onConfirm={handleConfirmRelease}
         isSubmitting={isSubmitting}
         errorMessage={submitError}

@@ -4,6 +4,7 @@ interface ConfirmProtectedReleaseStepProps {
   savedOnDevice: boolean
   tokenCopied: boolean
   onBack: () => void
+  onReturnToOptions: () => void
   onConfirm: () => void
   isSubmitting: boolean
   errorMessage?: string
@@ -13,6 +14,7 @@ export default function ConfirmProtectedReleaseStep({
   savedOnDevice,
   tokenCopied,
   onBack,
+  onReturnToOptions,
   onConfirm,
   isSubmitting,
   errorMessage,
@@ -34,6 +36,9 @@ export default function ConfirmProtectedReleaseStep({
         <>
           <button type="button" className="release-secondary-button" onClick={onBack} disabled={isSubmitting}>
             Back
+          </button>
+          <button type="button" className="release-link-button" onClick={onReturnToOptions} disabled={isSubmitting}>
+            Return to release options
           </button>
           <button type="button" className="release-primary-button" onClick={onConfirm} disabled={isSubmitting}>
             {isSubmitting ? "Releasing..." : "Release letter"}

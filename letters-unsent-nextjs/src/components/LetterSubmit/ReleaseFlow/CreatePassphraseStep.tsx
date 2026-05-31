@@ -8,7 +8,7 @@ interface CreatePassphraseStepProps {
   onSelectGenerated: () => void
   onCustomPassphraseChange: (value: string) => void
   onGenerateAnother: () => void
-  onBack: () => void
+  onReturnToOptions: () => void
   onContinue: () => void
   canContinue: boolean
 }
@@ -21,7 +21,7 @@ export default function CreatePassphraseStep({
   onSelectGenerated,
   onCustomPassphraseChange,
   onGenerateAnother,
-  onBack,
+  onReturnToOptions,
   onContinue,
   canContinue,
 }: CreatePassphraseStepProps) {
@@ -54,8 +54,8 @@ export default function CreatePassphraseStep({
       description="Choose a private token. You’ll need it later to edit or remove this letter."
       actions={
         <>
-          <button type="button" className="release-secondary-button" onClick={onBack}>
-            Back
+          <button type="button" className="release-link-button" onClick={onReturnToOptions}>
+            Return to release options
           </button>
           <button type="button" className="release-primary-button" onClick={onContinue} disabled={!canContinue}>
             Continue
@@ -85,17 +85,20 @@ export default function CreatePassphraseStep({
               
                 <div className="release-token-input-wrap">
                 {/* <label htmlFor="custom-passphrase-input">Token</label> */}
-                <input
-                  id="custom-passphrase-input"
-                  type="text"
-                  value={customPassphrase}
-                  onFocus={handleCustomPassphraseFocus}
-                  placeholder="Enter your token here"
-                  onChange={(event) => handleCustomPassphraseChange(event.target.value)}
-                  className="release-token-input"
-                  autoComplete="off"
-                />
+                  <input
+                    id="custom-passphrase-input"
+                    type="text"
+                    value={customPassphrase}
+                    onFocus={handleCustomPassphraseFocus}
+                    placeholder="Enter your token here"
+                    onChange={(event) => handleCustomPassphraseChange(event.target.value)}
+                    className="release-token-input"
+                    autoComplete="off"
+                  />
               </div>
+                <span className="release-option-helper release-token-guidance">
+                  Longer phrases are harder to guess. Avoid names, birthdays, or very short tokens.
+                </span>
             </div>
             </label>
           </div>

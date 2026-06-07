@@ -499,6 +499,13 @@ button.owner-subtle-action:hover {
   font-weight: 650;
 }
 
+button.owner-subtle-action:disabled,
+button.owner-subtle-action:disabled:hover {
+  cursor: default;
+  font-weight: 400;
+  opacity: 0.68;
+}
+
 button.owner-subtle-action:focus-visible {
   outline: 2px solid var(--accent-700);
   outline-offset: 3px;
@@ -785,18 +792,6 @@ button.owner-question-trigger {
   flex-direction: column;
   gap: 6px;
   font-family: var(--geist);
-}
-
-.letter-edit-status,
-.letter-edit-locked {
-  font-family: var(--geist);
-  line-height: 1.5;
-}
-
-.letter-edit-locked {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .letter-edit-actions {

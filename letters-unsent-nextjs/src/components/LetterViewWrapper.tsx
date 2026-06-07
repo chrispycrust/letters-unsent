@@ -62,6 +62,7 @@ function getNavbarOffset(): number {
 
 export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
   const [isEditing, setIsEditing] = useState(false)
+  const [ownerPassphrase, setOwnerPassphrase] = useState<string | null>(null)
   const [currentLetter, setCurrentLetter] = useState(letter)
   const [isDesktopOwnerRailSurface, setIsDesktopOwnerRailSurface] = useState(getIsDesktopOwnerRailSurface)
   const [showDesktopOwnerRail, setShowDesktopOwnerRail] = useState(false)
@@ -124,18 +125,26 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
       ...existingLetter,
       ...updatedFields,
     }))
+    setOwnerPassphrase(null)
     setIsEditing(false)
   }
 
+  function handleStartEditing(verifiedOwnerPassphrase: string) {
+    setOwnerPassphrase(verifiedOwnerPassphrase)
+    setIsEditing(true)
+  }
+
   function handleCancelEditing() {
+    setOwnerPassphrase(null)
     setIsEditing(false)
   }
 
   const editFormId = `letter-edit-form-${currentLetter.id}`
+  const isEditMode = isEditing && ownerPassphrase !== null
 
   return (
     <div
-      className={`single-letter-container ${isEditing ? "is-editing" : ""}`}
+      className={`single-letter-container ${isEditMode ? "is-editing" : ""}`}
       data-testid="single-letter-layout"
     >
       {isDesktopOwnerRailSurface ? (
@@ -164,9 +173,9 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
           <div ref={topOwnerControlsRef} className="single-letter-owner-top-control">
             <LetterOwnerArea
               letterId={currentLetter.id}
-              isEditing={isEditing}
+              isEditing={isEditMode}
               editFormId={editFormId}
-              onEdit={() => setIsEditing(true)}
+              onEdit={handleStartEditing}
               onCancelEdit={handleCancelEditing}
               isDesktopOwnerRailSurface={isDesktopOwnerRailSurface}
               showDesktopOwnerRail={showDesktopOwnerRail}
@@ -175,12 +184,13 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
           </div>
         </div>
 
-        {isEditing ? (
+        {isEditMode ? (
           <div className="single-letter single-letter-edit">
             <p className="single-letter-date">{convertDate(currentLetter.created_at)}</p>
             <LetterEditForm
               letterId={currentLetter.id}
               formId={editFormId}
+              ownerPassphrase={ownerPassphrase}
               initialLetter={{
                 content: currentLetter.content,
                 intended_recipient: currentLetter.intended_recipient,

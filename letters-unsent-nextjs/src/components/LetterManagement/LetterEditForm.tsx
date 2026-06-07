@@ -11,6 +11,7 @@ type EditableLetterFields = Pick<Letter, "content" | "intended_recipient" | "aut
 interface LetterEditFormProps {
   letterId: string
   formId?: string
+  ownerPassphrase: string
   initialLetter: EditableLetterFields
   showInlineActions?: boolean
   onCancel?: () => void
@@ -34,6 +35,7 @@ function shouldClearStoredPassphrase(status: number, code?: string): boolean {
 export default function LetterEditForm({
   letterId,
   formId,
+  ownerPassphrase,
   initialLetter,
   showInlineActions = true,
   onCancel,
@@ -42,65 +44,17 @@ export default function LetterEditForm({
   const router = useRouter()
   const storageKey = useMemo(() => getLetterPassphraseStorageKey(letterId), [letterId])
 
-  const [verificationStatus, setVerificationStatus] = useState<"checking" | "verified" | "unverified">("checking")
-  const [ownerPassphrase, setOwnerPassphrase] = useState<string | null>(null)
-
   const [content, setContent] = useState(initialLetter.content)
   const [intendedRecipient, setIntendedRecipient] = useState(initialLetter.intended_recipient ?? "")
   const [authorName, setAuthorName] = useState(initialLetter.author_name ?? "")
 
   const [isSaving, setIsSaving] = useState(false)
+  const [isOwnerTokenRejected, setIsOwnerTokenRejected] = useState(false)
   const [saveMessage, setSaveMessage] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
   const [isModerationError, setIsModerationError] = useState(false)
   const [moderationRejectCount, setModerationRejectCount] = useState(0)
   const contentTextareaRef = useRef<HTMLTextAreaElement | null>(null)
-
-  useEffect(() => {
-    const storedPassphrase = localStorage.getItem(storageKey)
-    if (!storedPassphrase) {
-      setVerificationStatus("unverified")
-      return
-    }
-
-    async function verifyStoredPassphrase() {
-      try {
-        const response = await fetch("/api/supabase/singleLetter", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            letterId,
-            owner_passphrase: storedPassphrase,
-          }),
-        })
-
-        const data = (await response.json().catch(() => null)) as {
-          success?: boolean
-          verified?: boolean
-          code?: string
-        } | null
-
-        if (response.ok && data?.success && data?.verified) {
-          setOwnerPassphrase(storedPassphrase)
-          setVerificationStatus("verified")
-          return
-        }
-
-        if (shouldClearStoredPassphrase(response.status, data?.code)) {
-          localStorage.removeItem(storageKey)
-        }
-        setOwnerPassphrase(null)
-        setVerificationStatus("unverified")
-      } catch {
-        setOwnerPassphrase(null)
-        setVerificationStatus("unverified")
-      }
-    }
-
-    void verifyStoredPassphrase()
-  }, [letterId, storageKey])
 
   useEffect(() => {
     const textarea = contentTextareaRef.current
@@ -119,12 +73,12 @@ export default function LetterEditForm({
     return () => {
       window.cancelAnimationFrame(animationFrameId)
     }
-  }, [content, intendedRecipient, verificationStatus])
+  }, [content, intendedRecipient])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    if (verificationStatus !== "verified" || !ownerPassphrase || isSaving) {
+    if (!ownerPassphrase || isSaving || isOwnerTokenRejected) {
       return
     }
 
@@ -199,10 +153,9 @@ export default function LetterEditForm({
         return
       }
 
-      if (response.status === 401 || data?.code === "INVALID_PASSPHRASE" || data?.code === "MISSING_PASSPHRASE") {
+      if (shouldClearStoredPassphrase(response.status, data?.code)) {
         localStorage.removeItem(storageKey)
-        setVerificationStatus("unverified")
-        setOwnerPassphrase(null)
+        setIsOwnerTokenRejected(true)
         setErrorMessage(TOKEN_NOT_VERIFIED_MESSAGE)
         return
       }
@@ -213,22 +166,6 @@ export default function LetterEditForm({
     } finally {
       setIsSaving(false)
     }
-  }
-
-  if (verificationStatus === "checking") {
-    return <p className="letter-edit-status">Checking your token...</p>
-  }
-
-  if (verificationStatus === "unverified") {
-    return (
-      <div className="letter-edit-locked">
-        <p>{TOKEN_NOT_VERIFIED_MESSAGE}</p>
-        <p>Please return to the letter page and verify it before editing.</p>
-        <Link href={`/letters/${letterId}`} className="owner-subtle-action">
-          Return to this letter
-        </Link>
-      </div>
-    )
   }
 
   return (
@@ -314,7 +251,7 @@ export default function LetterEditForm({
           >
             Cancel
           </button>
-          <button type="submit" className="owner-subtle-action" disabled={isSaving}>
+          <button type="submit" className="owner-subtle-action" disabled={isSaving || isOwnerTokenRejected}>
             {isSaving ? "Saving..." : "Save changes"}
           </button>
         </div>

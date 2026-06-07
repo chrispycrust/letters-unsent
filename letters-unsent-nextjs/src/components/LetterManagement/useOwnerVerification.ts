@@ -141,6 +141,7 @@ export default function useOwnerVerification({
     isVerifying,
     isVerified,
     verifiedPassphrase,
+    verifyPassphrase: verifyToken,
     handleTokenChange,
     confirmToken,
     clearVerificationMessage,

@@ -19,7 +19,7 @@ interface LetterOwnerAreaProps {
   letterId: string
   isEditing: boolean
   editFormId: string
-  onEdit: () => void
+  onEdit: (ownerPassphrase: string) => void
   onCancelEdit: () => void
   isDesktopOwnerRailSurface?: boolean
   showDesktopOwnerRail?: boolean
@@ -48,6 +48,7 @@ export default function LetterOwnerArea({
 
   const [isExpanded, setIsExpanded] = useState(false)
   const [isManaging, setIsManaging] = useState(false)
+  const [isCheckingEdit, setIsCheckingEdit] = useState(false)
   const [mobileSheetMode, setMobileSheetMode] = useState<MobileSheetMode>("closed")
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -61,6 +62,7 @@ export default function LetterOwnerArea({
     isVerifying,
     isVerified,
     verifiedPassphrase,
+    verifyPassphrase,
     handleTokenChange,
     confirmToken,
     clearVerificationMessage,
@@ -97,6 +99,15 @@ export default function LetterOwnerArea({
     setMobileSheetMode("closed")
   }
 
+  function revealVerificationPanel() {
+    if (isMobile) {
+      openMobileSheet("open-unverified")
+      return
+    }
+
+    setIsExpanded(true)
+  }
+
   async function handleConfirmToken() {
     const verified = await confirmToken()
     if (!verified) {
@@ -111,13 +122,7 @@ export default function LetterOwnerArea({
 
   function handleOpenVerificationPanel() {
     clearVerificationMessage()
-
-    if (isMobile) {
-      openMobileSheet("open-unverified")
-      return
-    }
-
-    setIsExpanded(true)
+    revealVerificationPanel()
   }
 
   function handleOpenManagementPanel() {
@@ -129,9 +134,34 @@ export default function LetterOwnerArea({
     setIsManaging(true)
   }
 
-  function handleEditing() {
+  async function handleEditing() {
+    if (isCheckingEdit) {
+      return
+    }
+
+    const passphraseForEdit = verifiedPassphrase
+
+    if (!passphraseForEdit) {
+      clearVerifiedOwnership()
+      setIsManaging(false)
+      handleOpenVerificationPanel()
+      return
+    }
+
+    setIsCheckingEdit(true)
+    clearVerificationMessage()
+
+    const verified = await verifyPassphrase(passphraseForEdit, { silent: false })
+    setIsCheckingEdit(false)
+
+    if (!verified) {
+      setIsManaging(false)
+      revealVerificationPanel()
+      return
+    }
+
     setIsManaging(false)
-    onEdit()
+    onEdit(passphraseForEdit)
 
     if (isMobile) {
       openMobileSheet("editing")
@@ -249,6 +279,7 @@ export default function LetterOwnerArea({
 
   const ownerActions = (
     <OwnerActions
+      isCheckingEdit={isCheckingEdit}
       onEdit={handleEditing}
       onRemove={handleOpenDeleteModal}
       onDismiss={handleDismiss}

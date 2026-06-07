@@ -182,6 +182,61 @@ describe("Single letter page", () => {
     expect(screen.getByRole("button", { name: "You own this letter - manage it here." })).not.toBeNull()
   })
 
+  it("keeps the letter view visible while edit token verification is pending", async () => {
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
+    let resolveEditVerification: ((response: { ok: boolean; json: () => Promise<unknown> }) => void) | undefined
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: "10",
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+      .mockImplementationOnce(async () => new Promise((resolve) => {
+        resolveEditVerification = resolve as (response: { ok: boolean; json: () => Promise<unknown> }) => void
+      }))
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }))
+
+    expect(screen.getByRole("button", { name: "Checking your token..." })).not.toBeNull()
+    expect(screen.getByText("This is the full letter body.")).not.toBeNull()
+    expect(screen.queryByLabelText("Letter content")).toBeNull()
+
+    await act(async () => {
+      resolveEditVerification?.({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+    })
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Letter content")).not.toBeNull()
+    })
+  })
+
   it("keeps top controls and activates duplicate desktop owner rail actions after scroll", async () => {
     mockViewport({ isMobile: false })
     mockIntersectionObserver()
@@ -251,7 +306,11 @@ describe("Single letter page", () => {
 
     fireEvent.click(within(sideRail).getByRole("button", { name: "Edit" }))
 
-    const layout = await screen.findByTestId("single-letter-layout")
+    await waitFor(() => {
+      expect(screen.getByTestId("single-letter-layout").className).toContain("is-editing")
+    })
+
+    const layout = screen.getByTestId("single-letter-layout")
     const balanceRail = screen.getByTestId("owner-balance-rail")
 
     expect(layout.className).toContain("single-letter-container")
@@ -475,7 +534,9 @@ describe("Single letter page", () => {
     fireEvent.click(screen.getByRole("button", { name: "Edit" }))
     const sheet = await screen.findByRole("dialog", { name: "Owner actions" })
 
-    expect(sheet.getAttribute("data-sheet-mode")).toBe("editing")
+    await waitFor(() => {
+      expect(sheet.getAttribute("data-sheet-mode")).toBe("editing")
+    })
     expect(screen.getByRole("button", { name: "Save changes" })).not.toBeNull()
     expect(screen.getByRole("button", { name: "Cancel" })).not.toBeNull()
   })

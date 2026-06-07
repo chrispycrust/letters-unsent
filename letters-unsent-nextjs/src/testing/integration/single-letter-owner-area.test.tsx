@@ -1,5 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, jest } from "@jest/globals"
-import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import LetterOwnerArea from "@/components/LetterManagement/LetterOwnerArea"
 import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
 
@@ -97,10 +97,16 @@ describe("Single letter owner area", () => {
 
   it("passes edit intent to the parent when an edit handler is provided", async () => {
     window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
-    const fetchMock = mockFetchSequence({
-      ok: true,
-      json: async () => ({ success: true, verified: true }),
-    })
+    const fetchMock = mockFetchSequence(
+      {
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      },
+      {
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      },
+    )
     const onEdit = jest.fn()
     global.fetch = fetchMock as unknown as typeof fetch
 
@@ -110,7 +116,49 @@ describe("Single letter owner area", () => {
     fireEvent.click(manageButton)
     fireEvent.click(screen.getByRole("button", { name: "Edit" }))
 
-    expect(onEdit).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(onEdit).toHaveBeenCalledWith("saved-token")
+    })
+  })
+
+  it("keeps owner actions mounted while edit token verification is pending", async () => {
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
+    let resolveEditVerification: ((response: MockFetchResponse) => void) | undefined
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({ success: true, verified: true }),
+      })
+      .mockImplementationOnce(async () => new Promise((resolve) => {
+        resolveEditVerification = resolve as (response: MockFetchResponse) => void
+      }))
+    const onEdit = jest.fn()
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    renderOwnerArea({ onEdit })
+
+    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
+    fireEvent.click(manageButton)
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }))
+
+    expect(screen.getByText(/For this letter/)).not.toBeNull()
+    expect((screen.getByRole("button", { name: "Checking your token..." }) as HTMLButtonElement).disabled).toBe(true)
+    expect((screen.getByRole("button", { name: "Remove" }) as HTMLButtonElement).disabled).toBe(true)
+    expect((screen.getByRole("button", { name: "Cancel" }) as HTMLButtonElement).disabled).toBe(true)
+    expect(onEdit).toHaveBeenCalledTimes(0)
+
+    await act(async () => {
+      resolveEditVerification?.({
+        ok: true,
+        status: 200,
+        json: async () => ({ success: true, verified: true }),
+      })
+    })
+
+    await waitFor(() => {
+      expect(onEdit).toHaveBeenCalledWith("saved-token")
+    })
   })
 
   it("shows retry message after invalid token verification", async () => {

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
 import type { Letter } from "@/types/letter"
@@ -32,6 +32,19 @@ function shouldClearStoredPassphrase(status: number, code?: string): boolean {
   )
 }
 
+function restoreWindowScroll(scrollX: number, scrollY: number) {
+  const html = document.documentElement
+  const body = document.body
+  const previousHtmlScrollBehavior = html.style.scrollBehavior
+  const previousBodyScrollBehavior = body.style.scrollBehavior
+
+  html.style.scrollBehavior = "auto"
+  body.style.scrollBehavior = "auto"
+  window.scrollTo(scrollX, scrollY)
+  html.style.scrollBehavior = previousHtmlScrollBehavior
+  body.style.scrollBehavior = previousBodyScrollBehavior
+}
+
 export default function LetterEditForm({
   letterId,
   formId,
@@ -55,25 +68,50 @@ export default function LetterEditForm({
   const [isModerationError, setIsModerationError] = useState(false)
   const [moderationRejectCount, setModerationRejectCount] = useState(0)
   const contentTextareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const hasMeasuredContentTextareaRef = useRef(false)
 
-  useEffect(() => {
+  const resizeContentTextarea = useCallback(({ allowShrink }: { allowShrink: boolean }) => {
     const textarea = contentTextareaRef.current
     if (!textarea) {
       return
     }
 
-    const resizeToContent = () => {
+    if (allowShrink) {
       textarea.style.height = "auto"
       textarea.style.height = `${textarea.scrollHeight}px`
+      return
     }
 
-    resizeToContent()
-    const animationFrameId = window.requestAnimationFrame(resizeToContent)
+    textarea.style.height = `${Math.max(textarea.offsetHeight, textarea.scrollHeight)}px`
+  }, [])
+
+  useLayoutEffect(() => {
+    const textarea = contentTextareaRef.current
+    if (!textarea) {
+      return
+    }
+
+    const isFocused = document.activeElement === textarea
+    const previousScrollX = window.scrollX
+    const previousScrollY = window.scrollY
+    const allowShrink = !hasMeasuredContentTextareaRef.current || !isFocused
+
+    resizeContentTextarea({ allowShrink })
+    hasMeasuredContentTextareaRef.current = true
+
+    if (!isFocused) {
+      return
+    }
+
+    restoreWindowScroll(previousScrollX, previousScrollY)
+    const animationFrameId = window.requestAnimationFrame(() => {
+      restoreWindowScroll(previousScrollX, previousScrollY)
+    })
 
     return () => {
       window.cancelAnimationFrame(animationFrameId)
     }
-  }, [content, intendedRecipient])
+  }, [content, intendedRecipient, resizeContentTextarea])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -196,6 +234,7 @@ export default function LetterEditForm({
         }`}
         value={content}
         onChange={(event) => setContent(event.target.value)}
+        onBlur={() => resizeContentTextarea({ allowShrink: true })}
       />
 
       <label htmlFor="edit-author-name" className="sr-only">

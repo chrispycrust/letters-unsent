@@ -182,6 +182,94 @@ describe("Single letter page", () => {
     expect(screen.getByRole("button", { name: "You own this letter - manage it here." })).not.toBeNull()
   })
 
+  it("keeps scroll stable when typing in a focused long edit textarea", async () => {
+    const originalScrollTo = window.scrollTo
+    const scrollToMock = jest.fn()
+
+    Object.defineProperty(window, "scrollTo", {
+      configurable: true,
+      writable: true,
+      value: scrollToMock,
+    })
+    Object.defineProperty(window, "scrollX", {
+      configurable: true,
+      value: 0,
+    })
+    Object.defineProperty(window, "scrollY", {
+      configurable: true,
+      value: 1200,
+    })
+
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: "10",
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, verified: true }),
+      })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    try {
+      const page = await LetterPage({
+        params: Promise.resolve({ letterId: "10" }),
+      })
+      render(page)
+
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "You own this letter - manage it here." })).not.toBeNull()
+      })
+
+      fireEvent.click(screen.getByRole("button", { name: "You own this letter - manage it here." }))
+      fireEvent.click(screen.getByRole("button", { name: "Edit" }))
+
+      const letterBody = await screen.findByLabelText("Letter content") as HTMLTextAreaElement
+      Object.defineProperty(letterBody, "offsetHeight", {
+        configurable: true,
+        value: 2400,
+      })
+      Object.defineProperty(letterBody, "scrollHeight", {
+        configurable: true,
+        value: 2600,
+      })
+
+      letterBody.focus()
+      fireEvent.change(letterBody, {
+        target: { value: `${letterBody.value}\nA small edit.` },
+      })
+
+      await waitFor(() => {
+        expect(letterBody.style.height).toBe("2600px")
+      })
+      expect(scrollToMock).toHaveBeenCalledWith(0, 1200)
+    } finally {
+      Object.defineProperty(window, "scrollTo", {
+        configurable: true,
+        writable: true,
+        value: originalScrollTo,
+      })
+    }
+  })
+
   it("keeps the letter view visible while edit token verification is pending", async () => {
     window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
     let resolveEditVerification: ((response: { ok: boolean; json: () => Promise<unknown> }) => void) | undefined

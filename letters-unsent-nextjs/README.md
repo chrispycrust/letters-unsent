@@ -141,6 +141,8 @@ Letters Unsent App - The full website experience.
 │  │                 │  └─ ProtectionStepShell - Provides the shared protection-step layout.
 │  │                 ├─ StorePassphraseStep - Helps the visitor save or copy the token.
 │  │                 │  └─ ProtectionStepShell - Provides the shared protection-step layout.
+│  │                 ├─ ConfirmProtectedReleaseStep - Asks the visitor to confirm the protected release.
+│  │                 │  └─ ProtectionStepShell - Provides the shared protection-step layout.
 │  │                 └─ ProtectionConfirmedStep - Confirms the protected release is complete.
 │  │                    └─ ProtectionStepShell - Provides the shared protection-step layout.
 │  │

@@ -75,7 +75,126 @@ OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN=
 - `POST /api/guardian` - Sends the writing conversation to Cove and receives either a reply or a release-ready letter payload.
 - `POST /api/events` - Receives simple event payloads, currently returning `email.received` events.
 
-## Component Map
+## Architecture Maps
+
+These maps are intentionally overlapping. The master map is the quickest orientation point, the component map explains the render tree in plain language, the state map shows where important state lives, and the flow maps show what happens over time.
+
+### Master Architecture Map
+
+This map combines route-level components, important state, and key event handlers. It intentionally excludes minor presentational markup and purely visual props.
+
+```text
+Letters Unsent App
+├─ RootLayout
+│  renders: NavBar + active route page
+│
+├─ NavBar
+│  state: showModal, windowInnerWidth
+│  renders:
+│    desktop width -> Release A Letter link, FeatherIcon, About & Contact link
+│    mobile width -> EnvelopeClosedIcon button
+│    showModal=true -> NavigationModal
+│
+├─ Home Page `/`
+│  state: letters, responseOk, errorMessage
+│  functions: loadAllLetters(), determineLetterDisplay()
+│  API: GET /api/supabase
+│  renders: ErrorDisplay, Spinner, letter preview links, AIGenTag, Footer
+│
+├─ About Page `/about`
+│  state: toggleBackground, toggleGuidelines, togglePrivacy, toggleRoadmap, toggleContact
+│  renders: Toggle sections + Footer from AboutLayout
+│
+├─ Changelog Page `/changelog`
+│  state: none
+│  renders: Changelog + Footer from ChangelogLayout
+│
+├─ Submit Page `/submit`
+│  └─ Submit
+│     state:
+│       coveMessage, visitorInput, conversation, responseOk, errorMessage
+│       conversationStart, pendingReleasePayload, releaseLocked
+│     functions:
+│       greetVisitor(), handleSubmit(), handleSubmitLetter()
+│       returnToConversation(), startNewLetterFlow()
+│     APIs:
+│       GET /api/guardian
+│       POST /api/guardian
+│       POST /api/supabase
+│     renders:
+│       Start conversation button
+│       GuardianPanel -> Spinner while Cove is loading
+│       VisitorPanel while no release payload exists
+│       ReleaseActionArea once Cove returns a release-ready payload
+│
+│     └─ ReleaseActionArea
+│        state: mode, isSubmitting, errorMessage, releasedLetterId
+│        functions: handleSubmitUnprotected()
+│        renders by mode:
+│          idle -> ReleaseChoicePanel
+│          warn-unprotected -> NoProtectionWarningStep
+│          protect -> ProtectionFlow
+│          released -> ReleaseSuccessPanel
+│
+│        └─ ProtectionFlow
+│           state:
+│             step, passphraseMode, customPassphrase, generatedPassphrase
+│             saveOnDevice, manualSaveSelected, tokenCopied
+│             savedElsewhereConfirmed, releasedLetterId, isSubmitting, submitError
+│           functions:
+│             handleSelectCustom(), handleSelectGenerated(), handleGenerateAnother()
+│             handleContinueFromCreate(), handleCopyToken()
+│             handleContinueFromStore(), handleConfirmRelease()
+│           renders by step:
+│             create -> CreatePassphraseStep -> ProtectionStepShell
+│             store -> StorePassphraseStep -> ProtectionStepShell
+│             confirm -> ConfirmProtectedReleaseStep -> ProtectionStepShell
+│             confirmed -> ProtectionConfirmedStep -> ProtectionStepShell
+│
+└─ Single Letter Page `/letters/[letterId]`
+   └─ LetterPage
+      server data: fetched letter response
+      API: GET /api/supabase/singleLetter
+      renders: ErrorDisplay or LetterViewWrapper
+
+      └─ LetterViewWrapper
+         state:
+           isEditing, ownerPassphrase, currentLetter
+           isDesktopOwnerRailSurface, showDesktopOwnerRail, desktopRailMountNode
+         functions:
+           handleSavedLetter(), handleStartEditing(), handleCancelEditing()
+         renders:
+           LetterOwnerArea
+           LetterView when not editing
+           LetterEditForm when editing
+           desktop balance rail + owner rail on wide screens
+
+         ├─ LetterOwnerArea
+         │  state:
+         │    isExpanded, isManaging, isCheckingEdit, mobileSheetMode
+         │    isDeleteModalOpen, isDeleting, deleteErrorMessage, deleteSuccess
+         │  verification state from useOwnerVerification:
+         │    tokenInput, verificationMessage, isVerifying, isVerified, verifiedPassphrase
+         │  functions:
+         │    handleConfirmToken(), handleEditing(), handleCancelEdit()
+         │    handleOpenDeleteModal(), handleConfirmDelete()
+         │  APIs:
+         │    POST /api/supabase/singleLetter
+         │    DELETE /api/supabase/singleLetter
+         │  renders:
+         │    OwnerVerificationPanel, OwnerActions, OwnerEditActions
+         │    DesktopEditPocket, MobileOwnerSheet, DeleteConfirmationModal
+         │
+         └─ LetterEditForm
+            state:
+              content, intendedRecipient, authorName, isSaving
+              isOwnerTokenRejected, saveMessage, errorMessage
+              isModerationError, moderationRejectCount
+            functions: handleSubmit(), resizeContentTextarea()
+            API: PUT /api/supabase/singleLetter
+```
+
+### Component Map
 
 This map follows the app shell first, then each route. Indented items sit inside the item above them. Some items only appear in certain states, such as mobile navigation, loading, editing, or after a letter is ready to release.
 
@@ -176,6 +295,276 @@ Letters Unsent App - The full website experience.
 └─ Existing but not currently used on a page
    ├─ ContactForm - Draft contact form that is not currently mounted.
    └─ ExportLetterButton - Empty placeholder file for a possible export feature.
+```
+
+### State Ownership Map
+
+This map focuses on where important UI and flow state lives. Presentational components with no meaningful state are omitted unless they receive state through props.
+
+```text
+Global / Shell
+├─ RootLayout
+│  owns: no React state
+│  provides: shared fonts, global styles, NavBar
+│
+└─ NavBar
+   owns:
+     showModal - whether the mobile navigation modal is open
+     windowInnerWidth - measured browser width used to choose desktop or mobile navigation
+   passes:
+     onClose -> NavigationModal
+
+Archive
+└─ Home Page `/`
+   owns:
+     letters - loaded archive rows
+     responseOk - loading/success gate for archive fetch
+     errorMessage - archive load failure message
+   decides:
+     Spinner vs empty state vs letter preview list
+
+Static Pages
+├─ About Page `/about`
+│  owns:
+│    toggleBackground
+│    toggleGuidelines
+│    togglePrivacy
+│    toggleRoadmap
+│    toggleContact
+│  decides:
+│    which Toggle panels are open
+│
+└─ Changelog Page `/changelog`
+   owns: no React state
+
+Submit / Release
+└─ Submit
+   owns:
+     coveMessage - latest Cove text shown in GuardianPanel
+     visitorInput - current visitor response draft
+     conversation - system/user/assistant messages sent to Cove
+     responseOk - Cove loading/success gate
+     errorMessage - submit flow failure message
+     conversationStart - start button vs active conversation
+     pendingReleasePayload - release-ready letter payload from Cove
+     releaseLocked - prevents another release from the same ready payload
+   decides:
+     start view vs conversation view
+     VisitorPanel vs ReleaseActionArea
+
+   └─ ReleaseActionArea
+      owns:
+        mode - release choice, protected flow, unprotected warning, or success
+        isSubmitting - unprotected release submission lock
+        errorMessage - release submission error
+        releasedLetterId - created letter id for success navigation
+      decides:
+        ReleaseChoicePanel vs NoProtectionWarningStep vs ProtectionFlow vs ReleaseSuccessPanel
+
+      └─ ProtectionFlow
+         owns:
+           step - create, store, confirm, or confirmed
+           passphraseMode - custom or generated
+           customPassphrase
+           generatedPassphrase
+           saveOnDevice
+           manualSaveSelected
+           tokenCopied
+           savedElsewhereConfirmed
+           releasedLetterId
+           isSubmitting
+           submitError
+         decides:
+           which protected-release step renders
+           whether the visitor can continue to the next step
+           whether the token is saved to localStorage after protected release
+
+Single Letter / Owner Management
+└─ LetterViewWrapper
+   owns:
+     isEditing - read mode vs edit mode
+     ownerPassphrase - verified token currently held for edit session
+     currentLetter - current client-side letter data after saves
+     isDesktopOwnerRailSurface - whether desktop rail behavior is active
+     showDesktopOwnerRail - whether the duplicate desktop rail controls should appear
+     desktopRailMountNode - portal target for desktop rail content
+   decides:
+     LetterView vs LetterEditForm
+     whether desktop owner rail exists
+
+   ├─ LetterOwnerArea
+   │  owns:
+   │    isExpanded - desktop verification panel visibility
+   │    isManaging - desktop owner action panel visibility
+   │    isCheckingEdit - edit re-verification lock
+   │    mobileSheetMode - closed, open-unverified, open-verified, or editing
+   │    isDeleteModalOpen
+   │    isDeleting
+   │    deleteErrorMessage
+   │    deleteSuccess
+   │  receives:
+   │    isEditing, editFormId, onEdit, onCancelEdit, desktop rail flags
+   │  decides:
+   │    verification panel vs owner actions vs edit actions
+   │    inline controls vs mobile sheet vs desktop rail portal
+   │    delete modal state
+   │
+   │  └─ useOwnerVerification
+   │     owns:
+   │       tokenInput
+   │       verificationMessage
+   │       isVerifying
+   │       isVerified
+   │       verifiedPassphrase
+   │     side effects:
+   │       silently verifies stored localStorage token on mount
+   │       writes valid token to localStorage
+   │       clears rejected stored token from localStorage
+   │
+   └─ LetterEditForm
+      owns:
+        content
+        intendedRecipient
+        authorName
+        isSaving
+        isOwnerTokenRejected
+        saveMessage
+        errorMessage
+        isModerationError
+        moderationRejectCount
+      receives:
+        letterId, ownerPassphrase, initialLetter, onCancel, onSaveSuccess
+      decides:
+        save button state
+        owner-token rejection state
+        moderation rejection help text
+```
+
+### Flow Maps
+
+These maps show user actions, component boundaries, API routes, and data side effects over time.
+
+#### Submit To Release-Ready Flow
+
+```mermaid
+flowchart TD
+  A[Visitor opens /submit] --> B[Submit renders start view]
+  B --> C[Visitor clicks Start conversation]
+  C --> D[greetVisitor()]
+  D --> E[GET /api/guardian]
+  E --> F[GuardianPanel shows Cove greeting]
+  F --> G[VisitorPanel collects visitor reply]
+  G --> H[handleSubmit()]
+  H --> I[POST /api/guardian with updatedConversation]
+  I --> J{Cove returns releaseReady?}
+  J -- no --> K[Update conversation and show next Cove reply]
+  K --> G
+  J -- yes --> L[normaliseReadyLetterPayload()]
+  L --> M[Set pendingReleasePayload]
+  M --> N[Render ReleaseActionArea]
+```
+
+#### Protected Release Flow
+
+```mermaid
+flowchart TD
+  A[ReleaseActionArea mode=idle] --> B[ReleaseChoicePanel]
+  B -->|Protect this letter| C[mode=protect]
+  C --> D[ProtectionFlow step=create]
+  D --> E[CreatePassphraseStep]
+  E -->|custom or generated token selected| F[step=store]
+  F --> G[StorePassphraseStep]
+  G -->|storage method confirmed| H[step=confirm]
+  H --> I[ConfirmProtectedReleaseStep]
+  I -->|Release letter| J[handleConfirmRelease()]
+  J --> K[Submit.handleSubmitLetter()]
+  K --> L[POST /api/supabase]
+  L --> M[API hashes owner_passphrase with Argon2]
+  M --> N[Supabase inserts letter row with owner_passphrase_hash]
+  N --> O{saveOnDevice?}
+  O -- yes --> P[Save plain token to localStorage for this letter id]
+  O -- no --> Q[Do not store token locally]
+  P --> R[step=confirmed]
+  Q --> R
+  R --> S[ProtectionConfirmedStep]
+```
+
+#### Unprotected Release Flow
+
+```mermaid
+flowchart TD
+  A[ReleaseActionArea mode=idle] --> B[ReleaseChoicePanel]
+  B -->|Release without protection| C[mode=warn-unprotected]
+  C --> D[NoProtectionWarningStep]
+  D -->|Back| A
+  D -->|Confirm unprotected release| E[handleSubmitUnprotected()]
+  E --> F[Submit.handleSubmitLetter ownerPassphrase=null]
+  F --> G[POST /api/supabase]
+  G --> H[Supabase inserts letter row with owner_passphrase_hash=null]
+  H --> I[mode=released]
+  I --> J[ReleaseSuccessPanel]
+```
+
+#### Owner Verification Flow
+
+```mermaid
+flowchart TD
+  A[Visitor opens /letters/letterId] --> B[LetterViewWrapper renders LetterOwnerArea]
+  B --> C[useOwnerVerification mounts]
+  C --> D{Stored token in localStorage?}
+  D -- yes --> E[POST /api/supabase/singleLetter silently]
+  D -- no --> F[Show Is this letter yours?]
+  E --> G{Token valid?}
+  G -- yes --> H[isVerified=true and verifiedPassphrase set]
+  G -- no --> I[Clear stored token and stay unverified]
+  F --> J[Visitor enters token]
+  J --> K[confirmToken()]
+  K --> L[POST /api/supabase/singleLetter]
+  L --> M{Token valid?}
+  M -- yes --> H
+  M -- no --> N[Show verification error or rate-limit message]
+  H --> O[Show owner management actions]
+```
+
+#### Owner Edit Flow
+
+```mermaid
+flowchart TD
+  A[OwnerActions] -->|Edit| B[handleEditing()]
+  B --> C[Re-verify verifiedPassphrase]
+  C --> D[POST /api/supabase/singleLetter]
+  D --> E{Token still valid?}
+  E -- no --> F[Clear verified ownership and show verification panel]
+  E -- yes --> G[LetterViewWrapper enters edit mode]
+  G --> H[LetterEditForm]
+  H -->|Save changes| I[LetterEditForm.handleSubmit()]
+  I --> J[PUT /api/supabase/singleLetter]
+  J --> K[API verifies owner token]
+  K --> L[API moderates updated letter]
+  L --> M{Moderation allowed?}
+  M -- no --> N[Return moderation error to LetterEditForm]
+  M -- yes --> O[Supabase updates letter row]
+  O --> P[onSaveSuccess updates currentLetter]
+  P --> Q[LetterViewWrapper returns to read mode]
+```
+
+#### Owner Delete Flow
+
+```mermaid
+flowchart TD
+  A[OwnerActions] -->|Remove| B[Open DeleteConfirmationModal]
+  B -->|Cancel| C[Close modal]
+  B -->|Confirm delete| D[handleConfirmDelete()]
+  D --> E{verifiedPassphrase exists?}
+  E -- no --> F[Show token not verified error]
+  E -- yes --> G[DELETE /api/supabase/singleLetter]
+  G --> H[API verifies owner token]
+  H --> I{Token valid?}
+  I -- no --> J[Show token error or rate-limit message]
+  I -- yes --> K[Supabase deletes letter row]
+  K --> L[Remove stored token from localStorage]
+  L --> M[Show delete success]
+  M --> N[Redirect to /]
 ```
 
 ## Data / Moderation Flow

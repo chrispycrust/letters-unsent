@@ -1,0 +1,14 @@
+flowchart TD
+  A["OwnerActions"] -->|Remove| B["Open DeleteConfirmationModal"]
+  B -->|Cancel| C["Close modal"]
+  B -->|Confirm delete| D["handleConfirmDelete"]
+  D --> E{"verifiedPassphrase exists?"}
+  E -->|No| F["Show token not verified error"]
+  E -->|Yes| G["DELETE /api/supabase/singleLetter"]
+  G --> H["API verifies owner token"]
+  H --> I{"Token valid?"}
+  I -->|No| J["Show token error or rate-limit message"]
+  I -->|Yes| K["Supabase deletes letter row"]
+  K --> L["Remove stored token from localStorage"]
+  L --> M["Show delete success"]
+  M --> N["Redirect to /"]

@@ -1,0 +1,14 @@
+flowchart TD
+  A["ReleaseActionArea mode: idle"] --> B["ReleaseChoicePanel"]
+  B -->|Return to conversation| C0["Back to Cove conversation"]
+  B -->|Release without protection| C["mode: warn-unprotected"]
+  C --> D["NoProtectionWarningStep"]
+  D -->|Back| A
+  D -->|Confirm unprotected release| E["handleSubmitUnprotected"]
+  E --> F["Submit.handleSubmitLetter with ownerPassphrase: null"]
+  F --> G["POST /api/supabase"]
+  G --> H["Supabase inserts letter row with owner_passphrase_hash: null"]
+  H --> I["mode: released"]
+  I --> J["ReleaseSuccessPanel"]
+  J -->|View letter| K["Open released letter"]
+  J -->|Return to conversation| C0

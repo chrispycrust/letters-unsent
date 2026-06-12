@@ -1,0 +1,17 @@
+flowchart TD
+  A["OwnerActions"] -->|Edit| B["handleEditing"]
+  B --> C["Re-verify verifiedPassphrase"]
+  C --> D["POST /api/supabase/singleLetter"]
+  D --> E{"Token still valid?"}
+  E -->|No| F["Clear verified ownership and show verification panel"]
+  E -->|Yes| G["LetterViewWrapper enters edit mode"]
+  G --> H["LetterEditForm"]
+  H -->|Save changes| I["LetterEditForm.handleSubmit"]
+  I --> J["PUT /api/supabase/singleLetter"]
+  J --> K["API verifies owner token"]
+  K --> L["API moderates updated letter"]
+  L --> M{"Moderation allowed?"}
+  M -->|No| N["Return moderation error to LetterEditForm"]
+  M -->|Yes| O["Supabase updates letter row"]
+  O --> P["onSaveSuccess updates currentLetter"]
+  P --> Q["LetterViewWrapper returns to read mode"]

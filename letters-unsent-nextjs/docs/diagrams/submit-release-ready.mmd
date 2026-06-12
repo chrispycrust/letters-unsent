@@ -1,0 +1,15 @@
+flowchart TD
+  A["Visitor opens /submit"] --> B["Submit renders start view"]
+  B --> C["Visitor clicks Start conversation"]
+  C --> D["greetVisitor"]
+  D --> E["GET /api/guardian"]
+  E --> F["GuardianPanel shows Cove greeting"]
+  F --> G["VisitorPanel collects visitor reply"]
+  G --> H["handleSubmit"]
+  H --> I["POST /api/guardian with updatedConversation"]
+  I --> J{"Cove returns releaseReady?"}
+  J -->|No| K["Update conversation and show next Cove reply"]
+  K --> G
+  J -->|Yes| L["normaliseReadyLetterPayload"]
+  L --> M["Set pendingReleasePayload"]
+  M --> N["Render ReleaseActionArea"]

@@ -1,0 +1,16 @@
+flowchart TD
+  A["Visitor opens /letters/:letterId"] --> B["LetterViewWrapper renders LetterOwnerArea"]
+  B --> C["useOwnerVerification mounts"]
+  C --> D{"Stored token in localStorage?"}
+  D -->|Yes| E["POST /api/supabase/singleLetter silently"]
+  D -->|No| F["Show 'Is this letter yours?'"]
+  E --> G{"Token valid?"}
+  G -->|Yes| H["Set isVerified and verifiedPassphrase"]
+  G -->|No| I["Clear stored token and stay unverified"]
+  F --> J["Visitor enters token"]
+  J --> K["confirmToken"]
+  K --> L["POST /api/supabase/singleLetter"]
+  L --> M{"Token valid?"}
+  M -->|Yes| H
+  M -->|No| N["Show verification error or rate-limit message"]
+  H --> O["Show owner management actions"]

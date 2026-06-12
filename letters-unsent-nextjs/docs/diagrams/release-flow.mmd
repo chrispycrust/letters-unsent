@@ -1,0 +1,42 @@
+flowchart TD
+  A["ReleaseActionArea mode: idle"] --> B["ReleaseChoicePanel"]
+
+  B -->|Return to conversation| C0["Back to Cove conversation"]
+
+  B -->|Protect this letter| C["mode: protect"]
+  C --> D["ProtectionFlow step: create"]
+  D -->|Return to release options| A
+  D --> E["CreatePassphraseStep"]
+  E -->|Custom or generated token selected| F["step: store"]
+  F -->|Back| D
+  F -->|Return to release options| A
+  F --> G["StorePassphraseStep"]
+  G -->|Storage method confirmed| H["step: confirm"]
+  H -->|Back| F
+  H -->|Return to release options| A
+  H --> I["ConfirmProtectedReleaseStep"]
+  I -->|Release letter| J["handleConfirmRelease"]
+  J --> K["Submit.handleSubmitLetter with ownerPassphrase"]
+  K --> L["POST /api/supabase"]
+  L --> M["API hashes owner_passphrase with Argon2"]
+  M --> N["Supabase inserts letter row with owner_passphrase_hash"]
+  N --> O{"saveOnDevice?"}
+  O -->|Yes| P["Save plain token to localStorage for this letter id"]
+  O -->|No| Q["Do not store token locally"]
+  P --> R["step: confirmed"]
+  Q --> R
+  R --> S["ProtectionConfirmedStep"]
+  S -->|View letter| S1["Open released letter"]
+  S -->|Close| C0
+
+  B -->|Release without protection| T["mode: warn-unprotected"]
+  T --> U["NoProtectionWarningStep"]
+  U -->|Back| A
+  U -->|Confirm unprotected release| V["handleSubmitUnprotected"]
+  V --> W["Submit.handleSubmitLetter with ownerPassphrase: null"]
+  W --> X["POST /api/supabase"]
+  X --> Y["Supabase inserts letter row with owner_passphrase_hash: null"]
+  Y --> Z["mode: released"]
+  Z --> AA["ReleaseSuccessPanel"]
+  AA -->|View letter| S1
+  AA -->|Return to conversation| C0

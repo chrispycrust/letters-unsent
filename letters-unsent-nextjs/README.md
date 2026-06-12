@@ -165,8 +165,8 @@ Letters Unsent App
            handleSavedLetter(), handleStartEditing(), handleCancelEditing()
          renders:
            LetterOwnerArea
-           LetterView when not editing
-           LetterEditForm when editing
+           isEditing=false -> LetterView
+           isEditing=true -> LetterEditForm
            desktop balance rail + owner rail on wide screens
 
          ├─ LetterOwnerArea
@@ -185,7 +185,16 @@ Letters Unsent App
          │    OwnerVerificationPanel, OwnerActions, OwnerEditActions
          │    DesktopEditPocket, MobileOwnerSheet, DeleteConfirmationModal
          │
+         ├─ LetterView
+         │  props: letter=currentLetter
+         │  state: none
+         │  renders:
+         │    date, recipient when present, content, author sign-off when present
+         │
          └─ LetterEditForm
+            props:
+              letterId, formId, ownerPassphrase, initialLetter
+              onCancel, onSaveSuccess
             state:
               content, intendedRecipient, authorName, isSaving
               isOwnerTokenRejected, saveMessage, errorMessage
@@ -442,129 +451,100 @@ Single Letter / Owner Management
 
 ### Flow Maps
 
-These maps show user actions, component boundaries, API routes, and data side effects over time.
+These maps show user actions, component boundaries, API routes, and data side effects over time. The README versions are intentionally abbreviated so they render cleanly inline. Fuller standalone Mermaid files for printing/exporting live in `docs/diagrams`.
 
 #### Submit To Release-Ready Flow
 
 ```mermaid
 flowchart TD
-  A[Visitor opens /submit] --> B[Submit renders start view]
-  B --> C[Visitor clicks Start conversation]
-  C --> D[greetVisitor()]
-  D --> E[GET /api/guardian]
-  E --> F[GuardianPanel shows Cove greeting]
-  F --> G[VisitorPanel collects visitor reply]
-  G --> H[handleSubmit()]
-  H --> I[POST /api/guardian with updatedConversation]
-  I --> J{Cove returns releaseReady?}
-  J -- no --> K[Update conversation and show next Cove reply]
-  K --> G
-  J -- yes --> L[normaliseReadyLetterPayload()]
-  L --> M[Set pendingReleasePayload]
-  M --> N[Render ReleaseActionArea]
+  A["Open submit page"] --> B["Start conversation"]
+  B --> C["Load Cove greeting"]
+  C --> D["Visitor writes reply"]
+  D --> E["Send conversation to Cove"]
+  E --> F{"Release-ready letter?"}
+  F -->|No| G["Show next Cove reply"]
+  G --> D
+  F -->|Yes| H["Store ready letter payload"]
+  H --> I["Show release options"]
 ```
 
-#### Protected Release Flow
+#### Release Flow
 
 ```mermaid
 flowchart TD
-  A[ReleaseActionArea mode=idle] --> B[ReleaseChoicePanel]
-  B -->|Protect this letter| C[mode=protect]
-  C --> D[ProtectionFlow step=create]
-  D --> E[CreatePassphraseStep]
-  E -->|custom or generated token selected| F[step=store]
-  F --> G[StorePassphraseStep]
-  G -->|storage method confirmed| H[step=confirm]
-  H --> I[ConfirmProtectedReleaseStep]
-  I -->|Release letter| J[handleConfirmRelease()]
-  J --> K[Submit.handleSubmitLetter()]
-  K --> L[POST /api/supabase]
-  L --> M[API hashes owner_passphrase with Argon2]
-  M --> N[Supabase inserts letter row with owner_passphrase_hash]
-  N --> O{saveOnDevice?}
-  O -- yes --> P[Save plain token to localStorage for this letter id]
-  O -- no --> Q[Do not store token locally]
-  P --> R[step=confirmed]
-  Q --> R
-  R --> S[ProtectionConfirmedStep]
-```
-
-#### Unprotected Release Flow
-
-```mermaid
-flowchart TD
-  A[ReleaseActionArea mode=idle] --> B[ReleaseChoicePanel]
-  B -->|Release without protection| C[mode=warn-unprotected]
-  C --> D[NoProtectionWarningStep]
-  D -->|Back| A
-  D -->|Confirm unprotected release| E[handleSubmitUnprotected()]
-  E --> F[Submit.handleSubmitLetter ownerPassphrase=null]
-  F --> G[POST /api/supabase]
-  G --> H[Supabase inserts letter row with owner_passphrase_hash=null]
-  H --> I[mode=released]
-  I --> J[ReleaseSuccessPanel]
+  A["Release options"] --> B{"Protect letter?"}
+  B -->|Return to conversation| C["Back to Cove conversation"]
+  B -->|Yes| D["Create token"]
+  D -->|Return to options| A
+  D --> E["Choose storage method"]
+  E -->|Back| D
+  E -->|Return to options| A
+  E --> F["Confirm protected release"]
+  F -->|Back| E
+  F -->|Return to options| A
+  F -->|Release| G["Create letter with token"]
+  G --> H["Hash token on server"]
+  H --> I{"Save token on device?"}
+  I -->|Yes| J["Store token locally"]
+  I -->|No| K["Do not store token"]
+  J --> L["Protected release complete"]
+  K --> L
+  L -->|View letter| M["Open released letter"]
+  L -->|Close| C
+  B -->|No| N["Show unprotected warning"]
+  N -->|Back| A
+  N -->|Confirm| O["Create letter without token"]
+  O --> P["Unprotected release complete"]
+  P -->|View letter| M
+  P -->|Return to conversation| C
 ```
 
 #### Owner Verification Flow
 
 ```mermaid
 flowchart TD
-  A[Visitor opens /letters/letterId] --> B[LetterViewWrapper renders LetterOwnerArea]
-  B --> C[useOwnerVerification mounts]
-  C --> D{Stored token in localStorage?}
-  D -- yes --> E[POST /api/supabase/singleLetter silently]
-  D -- no --> F[Show Is this letter yours?]
-  E --> G{Token valid?}
-  G -- yes --> H[isVerified=true and verifiedPassphrase set]
-  G -- no --> I[Clear stored token and stay unverified]
-  F --> J[Visitor enters token]
-  J --> K[confirmToken()]
-  K --> L[POST /api/supabase/singleLetter]
-  L --> M{Token valid?}
-  M -- yes --> H
-  M -- no --> N[Show verification error or rate-limit message]
-  H --> O[Show owner management actions]
+  A["Open letter page"] --> B{"Stored token exists?"}
+  B -->|Yes| C["Verify stored token"]
+  B -->|No| D["Ask for token"]
+  C --> E{"Token valid?"}
+  D --> F["Visitor enters token"]
+  F --> G["Verify entered token"]
+  G --> E
+  E -->|Yes| H["Show owner actions"]
+  E -->|No| I["Stay unverified"]
+  I --> J["Show error or rate-limit message"]
 ```
 
 #### Owner Edit Flow
 
 ```mermaid
 flowchart TD
-  A[OwnerActions] -->|Edit| B[handleEditing()]
-  B --> C[Re-verify verifiedPassphrase]
-  C --> D[POST /api/supabase/singleLetter]
-  D --> E{Token still valid?}
-  E -- no --> F[Clear verified ownership and show verification panel]
-  E -- yes --> G[LetterViewWrapper enters edit mode]
-  G --> H[LetterEditForm]
-  H -->|Save changes| I[LetterEditForm.handleSubmit()]
-  I --> J[PUT /api/supabase/singleLetter]
-  J --> K[API verifies owner token]
-  K --> L[API moderates updated letter]
-  L --> M{Moderation allowed?}
-  M -- no --> N[Return moderation error to LetterEditForm]
-  M -- yes --> O[Supabase updates letter row]
-  O --> P[onSaveSuccess updates currentLetter]
-  P --> Q[LetterViewWrapper returns to read mode]
+  A["Owner clicks Edit"] --> B["Re-verify token"]
+  B --> C{"Token valid?"}
+  C -->|No| D["Return to verification"]
+  C -->|Yes| E["Show edit form"]
+  E --> F["Owner saves changes"]
+  F --> G["Verify token on API"]
+  G --> H["Moderate updated letter"]
+  H --> I{"Allowed?"}
+  I -->|No| J["Show moderation error"]
+  I -->|Yes| K["Update Supabase row"]
+  K --> L["Update page and exit edit mode"]
 ```
 
 #### Owner Delete Flow
 
 ```mermaid
 flowchart TD
-  A[OwnerActions] -->|Remove| B[Open DeleteConfirmationModal]
-  B -->|Cancel| C[Close modal]
-  B -->|Confirm delete| D[handleConfirmDelete()]
-  D --> E{verifiedPassphrase exists?}
-  E -- no --> F[Show token not verified error]
-  E -- yes --> G[DELETE /api/supabase/singleLetter]
-  G --> H[API verifies owner token]
-  H --> I{Token valid?}
-  I -- no --> J[Show token error or rate-limit message]
-  I -- yes --> K[Supabase deletes letter row]
-  K --> L[Remove stored token from localStorage]
-  L --> M[Show delete success]
-  M --> N[Redirect to /]
+  A["Owner clicks Remove"] --> B["Open delete modal"]
+  B -->|Cancel| C["Close modal"]
+  B -->|Confirm| D["Verify token on API"]
+  D --> E{"Token valid?"}
+  E -->|No| F["Show token error"]
+  E -->|Yes| G["Delete Supabase row"]
+  G --> H["Clear local token"]
+  H --> I["Show success"]
+  I --> J["Redirect home"]
 ```
 
 ## Data / Moderation Flow

@@ -237,7 +237,6 @@ export default function LetterEditForm({
         }`}
         value={content}
         onChange={(event) => setContent(event.target.value)}
-        // onBlur={() => resizeContentTextarea({ allowShrink: true })}
       />
 
       <label htmlFor="edit-author-name" className="sr-only">

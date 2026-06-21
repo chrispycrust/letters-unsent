@@ -5,6 +5,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
 import type { Letter } from "@/types/letter"
+import type { SubmitEvent as ReactSubmitEvent } from "react"
 
 type EditableLetterFields = Pick<Letter, "content" | "intended_recipient" | "author_name">
 
@@ -37,10 +38,11 @@ function restoreWindowScroll(scrollX: number, scrollY: number) {
   const body = document.body
   const previousHtmlScrollBehavior = html.style.scrollBehavior
   const previousBodyScrollBehavior = body.style.scrollBehavior
-
+  
   html.style.scrollBehavior = "auto"
   body.style.scrollBehavior = "auto"
-  window.scrollTo(scrollX, scrollY)
+  window.scrollTo(scrollX, scrollY) // set as previous scroll position in useLayoutEffect
+
   html.style.scrollBehavior = previousHtmlScrollBehavior
   body.style.scrollBehavior = previousBodyScrollBehavior
 }
@@ -67,9 +69,9 @@ export default function LetterEditForm({
   const [errorMessage, setErrorMessage] = useState("")
   const [isModerationError, setIsModerationError] = useState(false)
   const [moderationRejectCount, setModerationRejectCount] = useState(0)
+
   const contentTextareaRef = useRef<HTMLTextAreaElement | null>(null)
   const hasMeasuredContentTextareaRef = useRef(false)
-
   const resizeContentTextarea = useCallback(({ allowShrink }: { allowShrink: boolean }) => {
     const textarea = contentTextareaRef.current
     if (!textarea) {
@@ -104,6 +106,7 @@ export default function LetterEditForm({
     }
 
     restoreWindowScroll(previousScrollX, previousScrollY)
+    
     const animationFrameId = window.requestAnimationFrame(() => {
       restoreWindowScroll(previousScrollX, previousScrollY)
     })
@@ -113,7 +116,7 @@ export default function LetterEditForm({
     }
   }, [content, intendedRecipient, resizeContentTextarea])
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: ReactSubmitEvent<HTMLFormElement>) {
     event.preventDefault()
 
     if (!ownerPassphrase || isSaving || isOwnerTokenRejected) {
@@ -234,7 +237,7 @@ export default function LetterEditForm({
         }`}
         value={content}
         onChange={(event) => setContent(event.target.value)}
-        onBlur={() => resizeContentTextarea({ allowShrink: true })}
+        // onBlur={() => resizeContentTextarea({ allowShrink: true })}
       />
 
       <label htmlFor="edit-author-name" className="sr-only">

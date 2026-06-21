@@ -47,6 +47,15 @@ function restoreWindowScroll(scrollX: number, scrollY: number) {
   body.style.scrollBehavior = previousBodyScrollBehavior
 }
 
+function restoreBodyScroll(scrollX: number, scrollY: number) {
+  const previousBodyScrollBehavior = document.body.style.scrollBehavior
+
+  document.body.style.scrollBehavior = "auto"
+  document.body.scrollLeft = scrollX
+  document.body.scrollTop = scrollY
+  document.body.style.scrollBehavior = previousBodyScrollBehavior
+}
+
 export default function LetterEditForm({
   letterId,
   formId,
@@ -71,21 +80,25 @@ export default function LetterEditForm({
   const [moderationRejectCount, setModerationRejectCount] = useState(0)
 
   const contentTextareaRef = useRef<HTMLTextAreaElement | null>(null)
-  const hasMeasuredContentTextareaRef = useRef(false)
-  const resizeContentTextarea = useCallback(({ allowShrink }: { allowShrink: boolean }) => {
+  const resizeContentTextarea = useCallback(() => {
     const textarea = contentTextareaRef.current
     if (!textarea) {
       return
     }
 
-    if (allowShrink) {
-      textarea.style.height = "auto"
-      textarea.style.height = `${textarea.scrollHeight}px`
-      return
+    textarea.style.height = "auto"
+    textarea.style.height = `${textarea.scrollHeight}px`
+  }, [])
+  const pendingScrollPositionRef = useRef<{ x: number; y: number } | null>(null)
+
+  function handleContentChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    pendingScrollPositionRef.current = {
+      x: document.body.scrollLeft,
+      y: document.body.scrollTop,
     }
 
-    textarea.style.height = `${Math.max(textarea.offsetHeight, textarea.scrollHeight)}px`
-  }, [])
+    setContent(event.target.value)
+  }
 
   useLayoutEffect(() => {
     const textarea = contentTextareaRef.current
@@ -94,27 +107,29 @@ export default function LetterEditForm({
     }
 
     const isFocused = document.activeElement === textarea
-    const previousScrollX = window.scrollX
-    const previousScrollY = window.scrollY
-    const allowShrink = !hasMeasuredContentTextareaRef.current || !isFocused
-
-    resizeContentTextarea({ allowShrink })
-    hasMeasuredContentTextareaRef.current = true
-
-    if (!isFocused) {
-      return
+    const previousScroll = pendingScrollPositionRef.current ?? {
+      x: document.body.scrollLeft,
+      y: document.body.scrollTop,
     }
 
-    restoreWindowScroll(previousScrollX, previousScrollY)
-    
-    const animationFrameId = window.requestAnimationFrame(() => {
-      restoreWindowScroll(previousScrollX, previousScrollY)
-    })
+    resizeContentTextarea()
 
-    return () => {
-      window.cancelAnimationFrame(animationFrameId)
+    if (isFocused) {
+      restoreBodyScroll(previousScroll.x, previousScroll.y)
+
+      requestAnimationFrame(() => {
+        restoreBodyScroll(previousScroll.x, previousScroll.y)
+      })
     }
+
+    pendingScrollPositionRef.current = null
+
+    // return () => {
+    //   window.cancelAnimationFrame(animationFrameId)
+    // }
   }, [content, intendedRecipient, resizeContentTextarea])
+
+
 
   async function handleSubmit(event: ReactSubmitEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -236,7 +251,7 @@ export default function LetterEditForm({
             : "single-letter-content-no-recipient"
         }`}
         value={content}
-        onChange={(event) => setContent(event.target.value)}
+        onChange={handleContentChange}
       />
 
       <label htmlFor="edit-author-name" className="sr-only">

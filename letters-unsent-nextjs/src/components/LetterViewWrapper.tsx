@@ -68,6 +68,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
   const [showDesktopOwnerRail, setShowDesktopOwnerRail] = useState(false)
   const [desktopRailMountNode, setDesktopRailMountNode] = useState<HTMLElement | null>(null)
   const topOwnerControlsRef = useRef<HTMLDivElement | null>(null)
+  const pendingEditScrollRef = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
@@ -130,6 +131,12 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
   }
 
   function handleStartEditing(verifiedOwnerPassphrase: string) {
+    pendingEditScrollRef.current = {
+      x: document.body.scrollLeft,
+      y: document.body.scrollTop,
+    }
+    console.log("pendingEditScrollRef start editing", pendingEditScrollRef.current)
+
     setOwnerPassphrase(verifiedOwnerPassphrase)
     setIsEditing(true)
   }
@@ -199,6 +206,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
               showInlineActions={false}
               onCancel={handleCancelEditing}
               onSaveSuccess={handleSavedLetter}
+              initialScrollPosition={pendingEditScrollRef.current}
             />
           </div>
         ) : (

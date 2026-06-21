@@ -17,6 +17,7 @@ interface LetterEditFormProps {
   showInlineActions?: boolean
   onCancel?: () => void
   onSaveSuccess?: (updatedFields: EditableLetterFields & Pick<Letter, "updated_at">) => void
+  initialScrollPosition: { x: number; y: number } | null
 }
 
 const TOKEN_NOT_VERIFIED_MESSAGE = "We couldn’t verify your token."
@@ -31,20 +32,6 @@ function shouldClearStoredPassphrase(status: number, code?: string): boolean {
     code === "MISSING_PASSPHRASE" ||
     code === "LETTER_NOT_FOUND"
   )
-}
-
-function restoreWindowScroll(scrollX: number, scrollY: number) {
-  const html = document.documentElement
-  const body = document.body
-  const previousHtmlScrollBehavior = html.style.scrollBehavior
-  const previousBodyScrollBehavior = body.style.scrollBehavior
-  
-  html.style.scrollBehavior = "auto"
-  body.style.scrollBehavior = "auto"
-  window.scrollTo(scrollX, scrollY) // set as previous scroll position in useLayoutEffect
-
-  html.style.scrollBehavior = previousHtmlScrollBehavior
-  body.style.scrollBehavior = previousBodyScrollBehavior
 }
 
 function restoreBodyScroll(scrollX: number, scrollY: number) {
@@ -64,6 +51,7 @@ export default function LetterEditForm({
   showInlineActions = true,
   onCancel,
   onSaveSuccess,
+  initialScrollPosition
 }: LetterEditFormProps) {
   const router = useRouter()
   const storageKey = useMemo(() => getLetterPassphraseStorageKey(letterId), [letterId])
@@ -79,6 +67,7 @@ export default function LetterEditForm({
   const [isModerationError, setIsModerationError] = useState(false)
   const [moderationRejectCount, setModerationRejectCount] = useState(0)
 
+  const initialScrollPositionRef = useRef(initialScrollPosition)
   const contentTextareaRef = useRef<HTMLTextAreaElement | null>(null)
   const resizeContentTextarea = useCallback(() => {
     const textarea = contentTextareaRef.current
@@ -101,12 +90,16 @@ export default function LetterEditForm({
   }
 
   useLayoutEffect(() => {
+
+    if (initialScrollPositionRef.current) {
+      restoreBodyScroll(initialScrollPositionRef.current.x, initialScrollPositionRef.current.y)
+    }
+
     const textarea = contentTextareaRef.current
     if (!textarea) {
       return
     }
 
-    const isFocused = document.activeElement === textarea
     const previousScroll = pendingScrollPositionRef.current ?? {
       x: document.body.scrollLeft,
       y: document.body.scrollTop,
@@ -114,22 +107,16 @@ export default function LetterEditForm({
 
     resizeContentTextarea()
 
-    if (isFocused) {
-      restoreBodyScroll(previousScroll.x, previousScroll.y)
+    restoreBodyScroll(previousScroll.x, previousScroll.y)
 
-      requestAnimationFrame(() => {
-        restoreBodyScroll(previousScroll.x, previousScroll.y)
-      })
-    }
+    requestAnimationFrame(() => {
+      restoreBodyScroll(previousScroll.x, previousScroll.y)
+    })
 
     pendingScrollPositionRef.current = null
-
-    // return () => {
-    //   window.cancelAnimationFrame(animationFrameId)
-    // }
+    initialScrollPositionRef.current = null
+    
   }, [content, intendedRecipient, resizeContentTextarea])
-
-
 
   async function handleSubmit(event: ReactSubmitEvent<HTMLFormElement>) {
     event.preventDefault()

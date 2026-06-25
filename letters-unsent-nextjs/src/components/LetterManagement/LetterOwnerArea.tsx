@@ -24,6 +24,7 @@ interface LetterOwnerAreaProps {
   isDesktopOwnerRailSurface?: boolean
   showDesktopOwnerRail?: boolean
   desktopRailMountNode?: HTMLElement | null
+  isSaving: boolean
 }
 
 type MobileSheetMode = "closed" | MobileOwnerSheetMode
@@ -41,6 +42,7 @@ export default function LetterOwnerArea({
   isDesktopOwnerRailSurface = false,
   showDesktopOwnerRail = false,
   desktopRailMountNode,
+  isSaving,
 }: LetterOwnerAreaProps) {
   const router = useRouter()
   const storageKey = useMemo(() => getLetterPassphraseStorageKey(letterId), [letterId])
@@ -287,7 +289,11 @@ export default function LetterOwnerArea({
   )
 
   const editActions = (
-    <OwnerEditActions editFormId={editFormId} onCancel={handleCancelEdit} />
+    <OwnerEditActions 
+      editFormId={editFormId} 
+      onCancel={handleCancelEdit} 
+      isSaving={isSaving} 
+    />
   )
 
   function renderMobileTrigger() {
@@ -346,7 +352,11 @@ export default function LetterOwnerArea({
     if (isEditing) {
       return (
         <div className="desktop-owner-rail-content desktop-owner-rail-edit">
-          <DesktopEditPocket editFormId={editFormId} onCancel={handleCancelEdit} />
+          <DesktopEditPocket 
+            editFormId={editFormId} 
+            onCancel={handleCancelEdit} 
+            isSaving={isSaving}
+          />
         </div>
       )
     }

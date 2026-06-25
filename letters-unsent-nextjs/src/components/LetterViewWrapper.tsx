@@ -47,8 +47,7 @@ function getNavbarOffset(): number {
     .getPropertyValue("--navbar-offset")
     .trim()
   const parsedOffset = Number.parseInt(rawOffset, 10)
-
-  return Number.isFinite(parsedOffset) ? parsedOffset + 14 : FALLBACK_NAVBAR_OFFSET
+return Number.isFinite(parsedOffset) ? parsedOffset + 14 : FALLBACK_NAVBAR_OFFSET
 }
 
 /* 
@@ -69,6 +68,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
   const [desktopRailMountNode, setDesktopRailMountNode] = useState<HTMLElement | null>(null)
   const topOwnerControlsRef = useRef<HTMLDivElement | null>(null)
   const pendingEditScrollRef = useRef<{ x: number; y: number } | null>(null)
+  const [isSavingProp, setIsSavingProp] = useState(false)
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
@@ -135,7 +135,6 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
       x: document.body.scrollLeft,
       y: document.body.scrollTop,
     }
-    console.log("pendingEditScrollRef start editing", pendingEditScrollRef.current)
 
     setOwnerPassphrase(verifiedOwnerPassphrase)
     setIsEditing(true)
@@ -187,6 +186,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
               isDesktopOwnerRailSurface={isDesktopOwnerRailSurface}
               showDesktopOwnerRail={showDesktopOwnerRail}
               desktopRailMountNode={desktopRailMountNode}
+              isSaving={isSavingProp}
             />
           </div>
         </div>
@@ -203,10 +203,11 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
                 intended_recipient: currentLetter.intended_recipient,
                 author_name: currentLetter.author_name,
               }}
-              showInlineActions={false}
               onCancel={handleCancelEditing}
               onSaveSuccess={handleSavedLetter}
               initialScrollPosition={pendingEditScrollRef.current}
+              isSaving={isSavingProp}
+              onSavingChange={setIsSavingProp}
             />
           </div>
         ) : (

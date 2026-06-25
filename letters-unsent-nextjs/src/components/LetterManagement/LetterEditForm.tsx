@@ -14,10 +14,11 @@ interface LetterEditFormProps {
   formId?: string
   ownerPassphrase: string
   initialLetter: EditableLetterFields
-  showInlineActions?: boolean
   onCancel?: () => void
   onSaveSuccess?: (updatedFields: EditableLetterFields & Pick<Letter, "updated_at">) => void
   initialScrollPosition: { x: number; y: number } | null
+  isSaving: boolean
+  onSavingChange: (isSaving: boolean) => void
 }
 
 const TOKEN_NOT_VERIFIED_MESSAGE = "We couldn’t verify your token."
@@ -34,24 +35,15 @@ function shouldClearStoredPassphrase(status: number, code?: string): boolean {
   )
 }
 
-function restoreBodyScroll(scrollX: number, scrollY: number) {
-  const previousBodyScrollBehavior = document.body.style.scrollBehavior
-
-  document.body.style.scrollBehavior = "auto"
-  document.body.scrollLeft = scrollX
-  document.body.scrollTop = scrollY
-  document.body.style.scrollBehavior = previousBodyScrollBehavior
-}
-
 export default function LetterEditForm({
   letterId,
   formId,
   ownerPassphrase,
   initialLetter,
-  showInlineActions = true,
-  onCancel,
   onSaveSuccess,
-  initialScrollPosition
+  initialScrollPosition,
+  isSaving,
+  onSavingChange,
 }: LetterEditFormProps) {
   const router = useRouter()
   const storageKey = useMemo(() => getLetterPassphraseStorageKey(letterId), [letterId])
@@ -60,7 +52,6 @@ export default function LetterEditForm({
   const [intendedRecipient, setIntendedRecipient] = useState(initialLetter.intended_recipient ?? "")
   const [authorName, setAuthorName] = useState(initialLetter.author_name ?? "")
 
-  const [isSaving, setIsSaving] = useState(false)
   const [isOwnerTokenRejected, setIsOwnerTokenRejected] = useState(false)
   const [saveMessage, setSaveMessage] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
@@ -68,7 +59,11 @@ export default function LetterEditForm({
   const [moderationRejectCount, setModerationRejectCount] = useState(0)
 
   const initialScrollPositionRef = useRef(initialScrollPosition)
+
+  const pendingScrollPositionRef = useRef<{ x: number; y: number } | null>(null)
+
   const contentTextareaRef = useRef<HTMLTextAreaElement | null>(null)
+
   const resizeContentTextarea = useCallback(() => {
     const textarea = contentTextareaRef.current
     if (!textarea) {
@@ -78,7 +73,15 @@ export default function LetterEditForm({
     textarea.style.height = "auto"
     textarea.style.height = `${textarea.scrollHeight}px`
   }, [])
-  const pendingScrollPositionRef = useRef<{ x: number; y: number } | null>(null)
+
+  function restoreBodyScroll(scrollX: number, scrollY: number) {
+    const previousBodyScrollBehavior = document.body.style.scrollBehavior
+
+    document.body.style.scrollBehavior = "auto"
+    document.body.scrollLeft = scrollX
+    document.body.scrollTop = scrollY
+    document.body.style.scrollBehavior = previousBodyScrollBehavior
+  }
 
   function handleContentChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     pendingScrollPositionRef.current = {
@@ -95,27 +98,29 @@ export default function LetterEditForm({
       restoreBodyScroll(initialScrollPositionRef.current.x, initialScrollPositionRef.current.y)
     }
 
-    const textarea = contentTextareaRef.current
-    if (!textarea) {
+    if (!contentTextareaRef.current) {
       return
     }
 
-    const previousScroll = pendingScrollPositionRef.current ?? {
-      x: document.body.scrollLeft,
-      y: document.body.scrollTop,
-    }
+    const scrollPositionToRestore = 
+      initialScrollPositionRef.current ?? 
+      pendingScrollPositionRef.current ?? 
+      {
+        x: document.body.scrollLeft,
+        y: document.body.scrollTop,
+      }
 
     resizeContentTextarea()
 
-    restoreBodyScroll(previousScroll.x, previousScroll.y)
+    restoreBodyScroll(scrollPositionToRestore.x, scrollPositionToRestore.y)
 
     requestAnimationFrame(() => {
-      restoreBodyScroll(previousScroll.x, previousScroll.y)
+      restoreBodyScroll(scrollPositionToRestore.x, scrollPositionToRestore.y)
     })
 
-    pendingScrollPositionRef.current = null
     initialScrollPositionRef.current = null
-    
+    pendingScrollPositionRef.current = null
+
   }, [content, intendedRecipient, resizeContentTextarea])
 
   async function handleSubmit(event: ReactSubmitEvent<HTMLFormElement>) {
@@ -125,7 +130,7 @@ export default function LetterEditForm({
       return
     }
 
-    setIsSaving(true)
+    onSavingChange(true)
     setSaveMessage("")
     setErrorMessage("")
     setIsModerationError(false)
@@ -207,7 +212,7 @@ export default function LetterEditForm({
     } catch {
       setErrorMessage("We couldn’t save your changes right now. Please try again.")
     } finally {
-      setIsSaving(false)
+      onSavingChange(false)
     }
   }
 
@@ -273,30 +278,6 @@ export default function LetterEditForm({
               ) : null}
             </>
           ) : null}
-        </div>
-      ) : null}
-
-      {showInlineActions ? (
-        <div className="letter-edit-actions">
-          <p>For this letter</p>
-          <button
-            type="button"
-            className="owner-subtle-action"
-            onClick={() => {
-              if (onCancel) {
-                onCancel()
-                return
-              }
-
-              router.push(`/letters/${letterId}`)
-            }}
-            disabled={isSaving}
-          >
-            Cancel
-          </button>
-          <button type="submit" className="owner-subtle-action" disabled={isSaving || isOwnerTokenRejected}>
-            {isSaving ? "Saving..." : "Save changes"}
-          </button>
         </div>
       ) : null}
     </form>

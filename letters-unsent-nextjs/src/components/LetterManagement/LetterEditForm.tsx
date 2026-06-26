@@ -159,33 +159,32 @@ export default function LetterEditForm({
       if (response.ok && data?.success) {
         setSaveMessage("Your changes have been saved.")
         setModerationRejectCount(0)
-        setTimeout(() => {
-          if (onSaveSuccess) {
-            const savedLetter = data.data?.[0]
-            onSaveSuccess({
-              content: typeof savedLetter?.content === "string" ? savedLetter.content : content.trim(),
-              intended_recipient:
-                typeof savedLetter?.intended_recipient === "string"
-                  ? savedLetter.intended_recipient
-                  : intendedRecipient.trim().length > 0
-                    ? intendedRecipient.trim()
-                    : null,
-              author_name:
-                typeof savedLetter?.author_name === "string"
-                  ? savedLetter.author_name
-                  : authorName.trim().length > 0
-                    ? authorName.trim()
-                    : null,
-              updated_at:
-                typeof savedLetter?.updated_at === "string"
-                  ? savedLetter.updated_at
-                  : new Date().toISOString(),
-            })
-            return
-          }
+        
+        if (onSaveSuccess) {
+          const savedLetter = data.data?.[0]
+          onSaveSuccess({
+            content: typeof savedLetter?.content === "string" ? savedLetter.content : content.trim(),
+            intended_recipient:
+              typeof savedLetter?.intended_recipient === "string"
+                ? savedLetter.intended_recipient
+                : intendedRecipient.trim().length > 0
+                  ? intendedRecipient.trim()
+                  : null,
+            author_name:
+              typeof savedLetter?.author_name === "string"
+                ? savedLetter.author_name
+                : authorName.trim().length > 0
+                  ? authorName.trim()
+                  : null,
+            updated_at:
+              typeof savedLetter?.updated_at === "string"
+                ? savedLetter.updated_at
+                : new Date().toISOString(),
+          })
+          return
+        }
 
-          router.push(`/letters/${letterId}`)
-        }, 900)
+        router.push(`/letters/${letterId}`)
         return
       }
 

@@ -126,8 +126,6 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
       ...existingLetter,
       ...updatedFields,
     }))
-    setOwnerPassphrase(null)
-    setIsEditing(false)
   }
 
   function handleStartEditing(verifiedOwnerPassphrase: string) {

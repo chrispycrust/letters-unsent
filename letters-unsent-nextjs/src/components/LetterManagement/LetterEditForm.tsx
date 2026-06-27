@@ -154,6 +154,7 @@ export default function LetterEditForm({
       } | null
 
       if (response.ok && data?.success) {
+        onSavingChange(false)  
         onSendingFeedback("Your changes have been saved.")
         setModerationRejectCount(0)
         

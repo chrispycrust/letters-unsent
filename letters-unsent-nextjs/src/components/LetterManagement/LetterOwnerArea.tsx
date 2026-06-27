@@ -285,6 +285,7 @@ export default function LetterOwnerArea({
       onEdit={handleEditing}
       onRemove={handleOpenDeleteModal}
       onDismiss={handleDismiss}
+      isMobile={isMobile}
     />
   )
 
@@ -294,6 +295,16 @@ export default function LetterOwnerArea({
       onCancel={handleCancelEdit} 
       isSaving={isSaving} 
     />
+  )
+
+  const manageOwnerButton = (
+    <button
+      type="button"
+      className="owner-subtle-action owner-question-trigger"
+      onClick={handleOpenManagementPanel}
+    >
+      You own this letter - manage it here.
+    </button>
   )
 
   function renderMobileTrigger() {
@@ -311,13 +322,7 @@ export default function LetterOwnerArea({
 
     if (isVerified) {
       return (
-        <button
-          type="button"
-          className="owner-subtle-action owner-question-trigger"
-          onClick={handleOpenManagementPanel}
-        >
-          You own this letter - manage it here.
-        </button>
+        manageOwnerButton
       )
     }
 
@@ -372,13 +377,7 @@ export default function LetterOwnerArea({
     if (isVerified) {
       return (
         <div className="desktop-owner-rail-content">
-          <button
-            type="button"
-            className="owner-subtle-action owner-question-trigger"
-            onClick={handleOpenManagementPanel}
-          >
-            You own this letter - manage it here.
-          </button>
+          {manageOwnerButton}
         </div>
       )
     }
@@ -401,13 +400,7 @@ export default function LetterOwnerArea({
         ) : isManaging ? (
           ownerActions
         ) : isVerified ? (
-          <button
-            type="button"
-            className="owner-subtle-action owner-question-trigger"
-            onClick={handleOpenManagementPanel}
-          >
-            You own this letter - manage it here.
-          </button>
+          manageOwnerButton
         ) : isExpanded ? (
           verificationPanel
         ) : (

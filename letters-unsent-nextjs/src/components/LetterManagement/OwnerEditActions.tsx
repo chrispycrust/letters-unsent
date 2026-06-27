@@ -39,7 +39,7 @@ export default function OwnerEditActions({
   )
 
   const editControls = (
-    <div key="edit-controls" className="owner-actions owner-edit-action-buttons">
+    <div className="owner-actions owner-edit-action-buttons">
       <button
         type="submit"
         form={editFormId}
@@ -58,15 +58,12 @@ export default function OwnerEditActions({
   )
 
   const feedbackControls = (
-    <div key="feedback-controls" className="owner-actions owner-edit-action-buttons">
+    <div className="owner-actions owner-edit-action-buttons">
 
       <button
         type="button"
         className="owner-subtle-action"
-        onClick={(event) => {
-          event.preventDefault()
-          onDismissEditFeedback()
-        }}
+        onClick={onDismissEditFeedback}
       >
         Keep editing
       </button>

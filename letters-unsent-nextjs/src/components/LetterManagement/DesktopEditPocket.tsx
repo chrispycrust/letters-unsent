@@ -4,12 +4,16 @@ interface DesktopEditPocketProps {
   editFormId: string
   onCancel: () => void
   isSaving: boolean
+  editFeedback?: string | null
+  onDismissEditFeedback: () => void
 }
 
 export default function DesktopEditPocket({
   editFormId,
   onCancel,
-  isSaving
+  isSaving,
+  editFeedback,
+  onDismissEditFeedback
 }: DesktopEditPocketProps) {
   return (
     <div
@@ -21,6 +25,8 @@ export default function DesktopEditPocket({
         editFormId={editFormId} 
         onCancel={onCancel} 
         isSaving={isSaving}
+        editFeedback={editFeedback}
+        onDismissEditFeedback={onDismissEditFeedback}
       />
     </div>
   )

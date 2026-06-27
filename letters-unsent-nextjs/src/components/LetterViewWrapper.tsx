@@ -69,6 +69,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
   const topOwnerControlsRef = useRef<HTMLDivElement | null>(null)
   const pendingEditScrollRef = useRef<{ x: number; y: number } | null>(null)
   const [isSavingProp, setIsSavingProp] = useState(false)
+  const [editFeedback, setEditFeedback] = useState<string | null>(null)
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
@@ -133,7 +134,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
       x: document.body.scrollLeft,
       y: document.body.scrollTop,
     }
-
+    setEditFeedback(null)
     setOwnerPassphrase(verifiedOwnerPassphrase)
     setIsEditing(true)
   }
@@ -141,6 +142,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
   function handleCancelEditing() {
     setOwnerPassphrase(null)
     setIsEditing(false)
+    setEditFeedback(null)
   }
 
   const editFormId = `letter-edit-form-${currentLetter.id}`
@@ -185,6 +187,8 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
               showDesktopOwnerRail={showDesktopOwnerRail}
               desktopRailMountNode={desktopRailMountNode}
               isSaving={isSavingProp}
+              editFeedback={editFeedback}
+              onDismissEditFeedback={() => setEditFeedback(null)}
             />
           </div>
         </div>
@@ -206,6 +210,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
               initialScrollPosition={pendingEditScrollRef.current}
               isSaving={isSavingProp}
               onSavingChange={setIsSavingProp}
+              onSendingFeedback={setEditFeedback}
             />
           </div>
         ) : (

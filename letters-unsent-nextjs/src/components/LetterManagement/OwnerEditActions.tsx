@@ -4,46 +4,91 @@ interface OwnerEditActionsProps {
   editFormId: string
   onCancel: () => void
   isSaving: boolean
+  editFeedback?: string | null
+  onDismissEditFeedback: () => void
 }
 
 export default function OwnerEditActions({
   editFormId,
   onCancel,
-  isSaving
+  isSaving,
+  editFeedback,
+  onDismissEditFeedback,
 }: OwnerEditActionsProps) {
   
   const router = useRouter()
+  const hasEditFeedback = Boolean(editFeedback && editFeedback.trim() !== "")
+
+  const stopEditingButton = (
+    <button
+      type="button"
+      className="owner-subtle-action"
+      onClick={() => {
+          if (onCancel) {
+            onDismissEditFeedback?.()
+            onCancel()
+            return
+          }
+
+          // router.push(`/letters/${letterId}`)
+        }}
+      disabled={isSaving}
+    >
+      stop editing
+    </button>
+  )
+
+  const editControls = (
+    <div className="owner-actions owner-edit-action-buttons">
+      <button
+        type="submit"
+        form={editFormId}
+        className="owner-subtle-action"
+        // disabled={isSaving || isOwnerTokenRejected}
+        disabled={isSaving}
+      >
+        {isSaving ? "Saving changes..." : "Save changes"}
+      </button>
+
+      <span className="owner-actions-separator">or</span>
+
+      {stopEditingButton}
+      
+    </div>
+  )
+
+  const feedbackControls = (
+    <div className="owner-actions owner-edit-action-buttons">
+
+      <button
+        type="button"
+        className="owner-subtle-action"
+        onClick={onDismissEditFeedback}
+      >
+        Keep editing
+      </button>
+
+      <span className="owner-actions-separator">or</span>
+
+      {stopEditingButton}
+
+    </div>
+  )
 
   return (
     <div className="owner-edit-actions">
-      <p className="owner-area-title">You are editing this letter.</p>
-      <div className="owner-actions owner-edit-action-buttons">
-        <button
-          type="submit"
-          form={editFormId}
-          className="owner-subtle-action"
-          // disabled={isSaving || isOwnerTokenRejected}
-          disabled={isSaving}
-        >
-          {isSaving ? "Saving changes..." : "Save changes"}
-        </button>
-        <span className="owner-actions-separator">or</span>
-        <button
-          type="button"
-          className="owner-subtle-action"
-          onClick={() => {
-              if (onCancel) {
-                onCancel()
-                return
-              }
+      <p className="owner-area-title">
+        {hasEditFeedback ? editFeedback : "You are editing this letter."}
+      </p>
 
-              // router.push(`/letters/${letterId}`)
-            }}
-          disabled={isSaving}
-        >
-          Cancel
-        </button>
-      </div>
+        {
+          hasEditFeedback ? (
+            feedbackControls
+          ) : (
+            editControls
+          )
+        }
+      
     </div>
   )
 }

@@ -25,6 +25,8 @@ interface LetterOwnerAreaProps {
   showDesktopOwnerRail?: boolean
   desktopRailMountNode?: HTMLElement | null
   isSaving: boolean
+  editFeedback: string | null
+  onDismissEditFeedback: () => void
 }
 
 type MobileSheetMode = "closed" | MobileOwnerSheetMode
@@ -43,6 +45,8 @@ export default function LetterOwnerArea({
   showDesktopOwnerRail = false,
   desktopRailMountNode,
   isSaving,
+  editFeedback,
+  onDismissEditFeedback,
 }: LetterOwnerAreaProps) {
   const router = useRouter()
   const storageKey = useMemo(() => getLetterPassphraseStorageKey(letterId), [letterId])
@@ -293,7 +297,9 @@ export default function LetterOwnerArea({
     <OwnerEditActions 
       editFormId={editFormId} 
       onCancel={handleCancelEdit} 
-      isSaving={isSaving} 
+      isSaving={isSaving}
+      editFeedback={editFeedback} 
+      onDismissEditFeedback={onDismissEditFeedback}
     />
   )
 
@@ -361,6 +367,8 @@ export default function LetterOwnerArea({
             editFormId={editFormId} 
             onCancel={handleCancelEdit} 
             isSaving={isSaving}
+            editFeedback={editFeedback} 
+            onDismissEditFeedback={onDismissEditFeedback}
           />
         </div>
       )

@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { getLetterPassphraseStorageKey } from "@/utils/passphrase/storage"
@@ -19,11 +18,13 @@ interface LetterEditFormProps {
   initialScrollPosition: { x: number; y: number } | null
   isSaving: boolean
   onSavingChange: (isSaving: boolean) => void
+  onSendingFeedback: (feedback: string | null) => void
 }
 
 const TOKEN_NOT_VERIFIED_MESSAGE = "We couldn’t verify your token."
 const TOO_MANY_ATTEMPTS_MESSAGE = "Too many attempts in a short time. Please wait a moment, then try again."
-const MODERATION_REJECT_MESSAGE = "We couldn’t accept these changes under the archive’s safety guidelines."
+const MODERATION_REJECT_MESSAGE = "We couldn’t accept these changes under the archive's safety guidelines."
+                                  + " Please review the content on the about page and try again."
 
 function shouldClearStoredPassphrase(status: number, code?: string): boolean {
   return (
@@ -44,6 +45,7 @@ export default function LetterEditForm({
   initialScrollPosition,
   isSaving,
   onSavingChange,
+  onSendingFeedback
 }: LetterEditFormProps) {
   const router = useRouter()
   const storageKey = useMemo(() => getLetterPassphraseStorageKey(letterId), [letterId])
@@ -53,9 +55,6 @@ export default function LetterEditForm({
   const [authorName, setAuthorName] = useState(initialLetter.author_name ?? "")
 
   const [isOwnerTokenRejected, setIsOwnerTokenRejected] = useState(false)
-  const [saveMessage, setSaveMessage] = useState("")
-  const [errorMessage, setErrorMessage] = useState("")
-  const [isModerationError, setIsModerationError] = useState(false)
   const [moderationRejectCount, setModerationRejectCount] = useState(0)
 
   const initialScrollPositionRef = useRef(initialScrollPosition)
@@ -131,9 +130,7 @@ export default function LetterEditForm({
     }
 
     onSavingChange(true)
-    setSaveMessage("")
-    setErrorMessage("")
-    setIsModerationError(false)
+    onSendingFeedback(null)
 
     try {
       const response = await fetch("/api/supabase/singleLetter", {
@@ -157,7 +154,7 @@ export default function LetterEditForm({
       } | null
 
       if (response.ok && data?.success) {
-        setSaveMessage("Your changes have been saved.")
+        onSendingFeedback("Your changes have been saved.")
         setModerationRejectCount(0)
         
         if (onSaveSuccess) {
@@ -189,27 +186,35 @@ export default function LetterEditForm({
       }
 
       if (response.status === 422 || data?.code === "MODERATION_BLOCKED") {
-        setIsModerationError(true)
-        setErrorMessage(MODERATION_REJECT_MESSAGE)
-        setModerationRejectCount((current) => current + 1)
+        const nextModerationRejectCount = moderationRejectCount + 1
+        setModerationRejectCount(nextModerationRejectCount)
+
+        if (nextModerationRejectCount >= 3) {
+          onSendingFeedback(
+            MODERATION_REJECT_MESSAGE 
+            + " If you believe this letter follows the guidelines, please email dear@letters-unsent.com."
+          )
+          return
+        }
+        onSendingFeedback(MODERATION_REJECT_MESSAGE)
         return
       }
 
       if (response.status === 429 || data?.code === "VERIFICATION_RATE_LIMITED") {
-        setErrorMessage(TOO_MANY_ATTEMPTS_MESSAGE)
+        onSendingFeedback(TOO_MANY_ATTEMPTS_MESSAGE)
         return
       }
 
       if (shouldClearStoredPassphrase(response.status, data?.code)) {
         localStorage.removeItem(storageKey)
         setIsOwnerTokenRejected(true)
-        setErrorMessage(TOKEN_NOT_VERIFIED_MESSAGE)
+        onSendingFeedback(TOKEN_NOT_VERIFIED_MESSAGE)
         return
       }
 
-      setErrorMessage("We couldn’t save your changes right now. Please try again.")
+      onSendingFeedback("We couldn’t save your changes right now. Please try again.")
     } catch {
-      setErrorMessage("We couldn’t save your changes right now. Please try again.")
+      onSendingFeedback("We couldn’t save your changes right now. Please try again.")
     } finally {
       onSavingChange(false)
     }
@@ -258,27 +263,6 @@ export default function LetterEditForm({
         />
       </p>
 
-      {saveMessage ? <p className="letter-edit-success">{saveMessage}</p> : null}
-
-      {errorMessage ? (
-        <div className="letter-edit-error-block">
-          <p className="owner-area-error">{errorMessage}</p>
-          {isModerationError ? (
-            <>
-              <p>
-                <Link href="/about#submission-guidelines" className="owner-subtle-action">
-                  Read the submission guidelines
-                </Link>
-              </p>
-              {moderationRejectCount >= 2 ? (
-                <p>
-                  If you believe this letter follows the guidelines, please email dear@letters-unsent.com for review.
-                </p>
-              ) : null}
-            </>
-          ) : null}
-        </div>
-      ) : null}
     </form>
   )
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 
-const MOBILE_OWNER_SURFACE_QUERY = "(max-width: 700px)"
+const MOBILE_OWNER_SURFACE_QUERY = "(max-width: 1280px)"
 
 function getIsMobileOwnerSurface(): boolean {
   return typeof window !== "undefined" &&

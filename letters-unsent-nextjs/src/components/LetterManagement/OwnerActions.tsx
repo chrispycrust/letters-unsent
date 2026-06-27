@@ -3,7 +3,6 @@ interface OwnerActionsProps {
   onEdit: () => void | Promise<void>
   onRemove: () => void
   onDismiss: () => void
-  isMobile: boolean
 }
 
 export default function OwnerActions({ 
@@ -11,14 +10,11 @@ export default function OwnerActions({
   onEdit,
   onRemove,
   onDismiss,
-  isMobile
 }: OwnerActionsProps) {
   return (
     <div>
       <p className="owner-area-title">For this letter:</p>
-      <div
-        className={`owner-actions ${isMobile ? "" : "is-desktop"}`}
-      >
+      <div className="owner-actions">
         <button
           type="button"
           className="owner-subtle-action"

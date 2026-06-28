@@ -444,6 +444,7 @@ footer a:hover {
   width: 100%;
   padding: 10px 12px;
   text-align: right;
+  align-self: flex-end;
   font-family: var(--geist);
   margin-bottom: 10px;
 }
@@ -458,16 +459,18 @@ footer a:hover {
   opacity: 0.76;
 }
 
-.owner-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-.owner-actions-separator {
+.owner-actions-separator-word,
+.owner-actions-separator-comma {
   font-size: 0.9rem;
   opacity: 0.85;
+}
+
+.owner-actions-separator-comma {
+  margin-right: 8px;
+}
+
+.owner-actions-separator-word {
+  margin: 0 8px 0 8px;
 }
 
 .owner-actions button,
@@ -488,11 +491,15 @@ aside.letter-owner-area button.owner-question-trigger:hover,
 } 
 
 button.owner-subtle-action {
+  font-family: var(--geist);
   font-size: 0.95rem;
   cursor: pointer;
   font-weight: 400;
   transition-duration: 0.5s;
   text-align: left;
+  background: none;
+  padding: 0;
+  margin: 0;
 }
 
 button.owner-subtle-action:hover {
@@ -518,29 +525,19 @@ button.owner-question-trigger {
 }
 
 .owner-edit-pocket {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   font-family: var(--geist);
-  text-align: left;
 }
 
 .owner-edit-pocket.is-visible {
   min-width: min(100%, 270px);
 }
 
-.owner-edit-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.owner-edit-action-buttons {
-  margin-top: 2px;
-}
-
 .desktop-owner-rail-content {
   display: flex;
+  flex-direction: column;
   font-family: var(--geist);
   text-align: left;
 }
@@ -560,7 +557,7 @@ button.owner-question-trigger {
   pointer-events: auto;
   background: var(--background);
   border-top: 1px solid var(--release-border);
-  border-radius: 12px 12px 0 0;
+  border-radius: 5px 5px 0 0;
   box-shadow: 0 -8px 22px rgb(0 0 0 / 10%);
   padding: 8px 16px calc(18px + env(safe-area-inset-bottom));
   transition:
@@ -601,6 +598,7 @@ button.owner-question-trigger {
   flex-direction: column;
   gap: 10px;
   font-family: var(--geist);
+  align-items: center;
 }
 
 .owner-verification-panel {
@@ -1789,12 +1787,6 @@ section {
     max-width: inherit;
   }
 
-  .letter-owner-area.is-editing {
-    position: static;
-    align-self: flex-end;
-    background: transparent;
-  }
-
   .owner-edit-pocket.is-visible {
     padding: 4px 0;
   }
@@ -1994,6 +1986,5 @@ section {
       opacity 180ms ease,
       transform 180ms ease;
   }
-
 
 }

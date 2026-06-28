@@ -39,7 +39,7 @@ export default function OwnerEditActions({
   )
 
   const editControls = (
-    <div key="edit-controls" className="owner-actions owner-edit-action-buttons">
+    <div key="edit-controls">
       <button
         type="submit"
         form={editFormId}
@@ -50,7 +50,7 @@ export default function OwnerEditActions({
         {isSaving ? "Saving changes..." : "Save changes"}
       </button>
 
-      <span className="owner-actions-separator">or</span>
+      <span className="owner-actions-separator-word">or</span>
 
       {stopEditingButton}
       
@@ -71,7 +71,7 @@ export default function OwnerEditActions({
         Keep editing
       </button>
 
-      <span className="owner-actions-separator">or</span>
+      <span className="owner-actions-separator-word">or</span>
 
       {stopEditingButton}
 
@@ -79,10 +79,10 @@ export default function OwnerEditActions({
   )
 
   return (
-    <div className="owner-edit-actions">
-      <p className="owner-area-title">
+    <>
+      <i className="owner-area-title">
         {hasEditFeedback ? editFeedback : "You are editing this letter."}
-      </p>
+      </i>
 
         {
           hasEditFeedback ? (
@@ -91,7 +91,6 @@ export default function OwnerEditActions({
             editControls
           )
         }
-      
-    </div>
+    </>
   )
 }

@@ -145,18 +145,12 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
     setEditFeedback(null)
   }
 
-  function handleDismissEditFeedback() {
-    setEditFeedback(null)
-    setIsSavingProp(false)
-    return
-  }
-
   const editFormId = `letter-edit-form-${currentLetter.id}`
   const isEditMode = isEditing && ownerPassphrase !== null
 
   return (
-    <div
-      className={`single-letter-container ${isEditMode ? "is-editing" : ""}`}
+    <div 
+      className="single-letter-container" 
       data-testid="single-letter-layout"
     >
       {isDesktopOwnerRailSurface ? (
@@ -194,7 +188,7 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
               desktopRailMountNode={desktopRailMountNode}
               isSaving={isSavingProp}
               editFeedback={editFeedback}
-              onDismissEditFeedback={handleDismissEditFeedback}
+              onDismissEditFeedback={() => setEditFeedback(null)}
             />
           </div>
         </div>

@@ -289,7 +289,6 @@ export default function LetterOwnerArea({
       onEdit={handleEditing}
       onRemove={handleOpenDeleteModal}
       onDismiss={handleDismiss}
-      isMobile={isMobile}
     />
   )
 
@@ -336,7 +335,7 @@ export default function LetterOwnerArea({
       <button
         type="button"
         className="owner-subtle-action owner-question-trigger"
-        onClick={handleOpenVerificationPanel}
+        onClick={handleOpenVerificationPanel} 
       >
         Is this letter yours?
       </button>
@@ -360,47 +359,32 @@ export default function LetterOwnerArea({
       return null
     }
 
-    if (isEditing) {
-      return (
-        <div className="desktop-owner-rail-content desktop-owner-rail-edit">
-          <DesktopEditPocket 
-            editFormId={editFormId} 
-            onCancel={handleCancelEdit} 
-            isSaving={isSaving}
-            editFeedback={editFeedback} 
-            onDismissEditFeedback={onDismissEditFeedback}
-          />
-        </div>
-      )
-    }
-
-    if (isManaging) {
-      return (
-        <div className="desktop-owner-rail-content">
-          {ownerActions}
-        </div>
-      )
-    }
-
-    if (isVerified) {
-      return (
-        <div className="desktop-owner-rail-content">
-          {manageOwnerButton}
-        </div>
-      )
-    }
-
-    return null
+    return (
+      <div className={`desktop-owner-rail-content ${isEditing ? "desktop-owner-rail-edit" : ""}`}>
+        {
+          isEditing ? (
+            <DesktopEditPocket 
+              editFormId={editFormId} 
+              onCancel={handleCancelEdit} 
+              isSaving={isSaving}
+              editFeedback={editFeedback} 
+              onDismissEditFeedback={onDismissEditFeedback}
+            />
+          ) : isManaging ? (
+            ownerActions
+          ) : isVerified ? (
+            manageOwnerButton
+          ) : null
+        }
+      </div>
+    )
   }
 
   const desktopRailContent = renderDesktopRailContent()
 
   return (
     <>
-      <aside
-        className={`letter-owner-area ${isEditing ? "is-editing" : ""}`}
-        aria-live="polite"
-      >
+      <aside className="letter-owner-area" aria-live="polite">
         {isMobile ? (
           renderMobileTrigger()
         ) : isEditing ? (

@@ -12,9 +12,9 @@ export default function OwnerActions({
   onDismiss,
 }: OwnerActionsProps) {
   return (
-    <div>
-      <p className="owner-area-title">For this letter:</p>
-      <div className="owner-actions">
+    <>
+      <i className="owner-area-title">For this letter:</i>
+      <div>
         <button
           type="button"
           className="owner-subtle-action"
@@ -24,15 +24,15 @@ export default function OwnerActions({
         >
           {isCheckingEdit ? "Checking your token..." : "Edit"}
         </button>
-        <span className="owner-actions-separator">,</span>
+        <span className="owner-actions-separator-comma">,</span>
         <button type="button" className="owner-subtle-action" onClick={onRemove} disabled={isCheckingEdit}>
           Remove
         </button>
-        <span className="owner-actions-separator">or</span>
+        <span className="owner-actions-separator-word">or</span>
         <button type="button" className="owner-subtle-action" onClick={onDismiss} disabled={isCheckingEdit}>
           Cancel
         </button>
       </div>
-    </div>
+    </>
   )
 }

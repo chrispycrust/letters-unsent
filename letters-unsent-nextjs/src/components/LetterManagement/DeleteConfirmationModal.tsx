@@ -1,3 +1,5 @@
+import { createPortal } from "react-dom"
+
 interface DeleteConfirmationModalProps {
   isOpen: boolean
   isDeleting: boolean
@@ -19,7 +21,7 @@ export default function DeleteConfirmationModal({
     return null
   }
 
-  return (
+  return createPortal(
     <div className="delete-confirmation-overlay" data-testid="delete-confirmation-overlay">
       <div
         className="delete-confirmation-modal"
@@ -40,8 +42,8 @@ export default function DeleteConfirmationModal({
         {isDeleted ? (
           <p className="delete-success-message">Your letter has been removed from the archive.</p>
         ) : (
-          <>
-            <h2 id="delete-confirmation-heading">Remove my letter from the archive</h2>
+          <> 
+            <h2 id="delete-confirmation-heading">Remove this letter?</h2>
             <p>This action cannot be undone. Your letter will be permanently removed.</p>
 
             {errorMessage ? <p className="owner-area-error">{errorMessage}</p> : null}
@@ -49,7 +51,6 @@ export default function DeleteConfirmationModal({
             <div className="delete-confirmation-actions">
               <button
                 type="button"
-                className="owner-subtle-action"
                 onClick={onClose}
                 disabled={isDeleting}
               >
@@ -57,7 +58,7 @@ export default function DeleteConfirmationModal({
               </button>
               <button
                 type="button"
-                className="owner-subtle-action owner-destructive-action"
+                className="owner-destructive-action"
                 onClick={onConfirmDelete}
                 disabled={isDeleting}
               >
@@ -67,6 +68,7 @@ export default function DeleteConfirmationModal({
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

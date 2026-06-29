@@ -29,16 +29,6 @@ export default function DeleteConfirmationModal({
         aria-modal="true"
         aria-labelledby="delete-confirmation-heading"
       >
-        <button
-          type="button"
-          className="delete-modal-close"
-          onClick={onClose}
-          aria-label="Close"
-          disabled={isDeleting}
-        >
-          ×
-        </button>
-
         {isDeleted ? (
           <p className="delete-success-message">Your letter has been removed from the archive.</p>
         ) : (
@@ -49,21 +39,25 @@ export default function DeleteConfirmationModal({
             {errorMessage ? <p className="owner-area-error">{errorMessage}</p> : null}
 
             <div className="delete-confirmation-actions">
+
               <button
                 type="button"
+                className="delete-confirmation-button"
                 onClick={onClose}
                 disabled={isDeleting}
               >
-                Go back
+                No, I'll go back
               </button>
+
               <button
                 type="button"
-                className="owner-destructive-action"
+                className="delete-confirmation-button owner-destructive-action"
                 onClick={onConfirmDelete}
                 disabled={isDeleting}
               >
                 {isDeleting ? "Removing..." : "I understand, please remove my letter"}
               </button>
+
             </div>
           </>
         )}

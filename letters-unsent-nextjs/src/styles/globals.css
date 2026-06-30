@@ -212,9 +212,18 @@ button {
   color: var(--foreground);
 }
 
-button:hover {
+button:not(:disabled):hover {
   background-color: var(--accent-700); /* hsl(132, 43%, 58%); */
   color: var(--button-text-color);
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+button.is-busy:disabled {
+  cursor: wait;
 }
 
 .button-input-area {
@@ -484,16 +493,22 @@ aside.letter-owner-area button.owner-question-trigger:hover,
 .desktop-owner-rail-content button.owner-question-trigger:hover {
   padding: 0;
   border-radius: 0;
-  cursor: pointer;
   background-color: transparent;
   border: none;
   font-family: var(--geist);
 } 
 
+.owner-actions button:not(:disabled),
+aside.letter-owner-area button.owner-subtle-action:not(:disabled),
+aside.letter-owner-area button.owner-question-trigger:not(:disabled),
+.desktop-owner-rail-content button.owner-subtle-action:not(:disabled),
+.desktop-owner-rail-content button.owner-question-trigger:not(:disabled) {
+  cursor: pointer;
+}
+
 button.owner-subtle-action {
   font-family: var(--geist);
   font-size: 0.95rem;
-  cursor: pointer;
   font-weight: 400;
   transition-duration: 0.5s;
   text-align: left;
@@ -502,15 +517,12 @@ button.owner-subtle-action {
   margin: 0;
 }
 
-button.owner-subtle-action:hover {
-  font-weight: 650;
+button.owner-subtle-action:not(:disabled) {
+  cursor: pointer;
 }
 
-button.owner-subtle-action:disabled,
-button.owner-subtle-action:disabled:hover {
-  cursor: default;
-  font-weight: 400;
-  opacity: 0.68;
+button.owner-subtle-action:not(:disabled):hover {
+  font-weight: 650;
 }
 
 button.owner-subtle-action:focus-visible {

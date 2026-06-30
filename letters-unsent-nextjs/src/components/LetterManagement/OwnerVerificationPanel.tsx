@@ -40,9 +40,10 @@ export default function OwnerVerificationPanel({
 
       <button
         type="button"
-        className="owner-subtle-action"
+        className={`owner-subtle-action ${isSubmitting ? "is-busy" : ""}`}
         onClick={onConfirm}
         disabled={isSubmitting}
+        aria-busy={isSubmitting}
       >
         {isSubmitting ? "Checking..." : "Confirm"}
       </button>

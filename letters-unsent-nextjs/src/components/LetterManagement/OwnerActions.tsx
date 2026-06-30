@@ -17,7 +17,7 @@ export default function OwnerActions({
       <div>
         <button
           type="button"
-          className="owner-subtle-action"
+          className={`owner-subtle-action ${isCheckingEdit ? "is-busy" : ""}`}
           onClick={onEdit}
           disabled={isCheckingEdit}
           aria-busy={isCheckingEdit}
@@ -25,7 +25,12 @@ export default function OwnerActions({
           {isCheckingEdit ? "Checking your token..." : "Edit"}
         </button>
         <span className="owner-actions-separator-comma">,</span>
-        <button type="button" className="owner-subtle-action" onClick={onRemove} disabled={isCheckingEdit}>
+        <button 
+          type="button" 
+          className="owner-subtle-action"
+          onClick={onRemove} 
+          disabled={isCheckingEdit}
+        >
           Remove
         </button>
         <span className="owner-actions-separator-word">or</span>

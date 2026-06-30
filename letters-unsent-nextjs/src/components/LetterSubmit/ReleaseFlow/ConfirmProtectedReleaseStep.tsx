@@ -40,7 +40,13 @@ export default function ConfirmProtectedReleaseStep({
           <button type="button" className="release-link-button" onClick={onReturnToOptions} disabled={isSubmitting}>
             Return to release options
           </button>
-          <button type="button" className="release-primary-button" onClick={onConfirm} disabled={isSubmitting}>
+          <button
+            type="button"
+            className={`release-primary-button ${isSubmitting ? "is-busy" : ""}`}
+            onClick={onConfirm}
+            disabled={isSubmitting}
+            aria-busy={isSubmitting}
+          >
             {isSubmitting ? "Releasing..." : "Release letter"}
           </button>
         </>

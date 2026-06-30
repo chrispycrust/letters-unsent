@@ -43,9 +43,10 @@ export default function OwnerEditActions({
       <button
         type="submit"
         form={editFormId}
-        className="owner-subtle-action"
+        className={`owner-subtle-action ${isSaving ? "is-busy" : ""}`}
         // disabled={isSaving || isOwnerTokenRejected}
         disabled={isSaving}
+        aria-busy={isSaving}
       >
         {isSaving ? "Saving changes..." : "Save changes"}
       </button>

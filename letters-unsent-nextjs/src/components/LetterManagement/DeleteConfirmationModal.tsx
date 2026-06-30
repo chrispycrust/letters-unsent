@@ -51,9 +51,10 @@ export default function DeleteConfirmationModal({
 
               <button
                 type="button"
-                className="delete-confirmation-button owner-destructive-action"
+                className={`delete-confirmation-button owner-destructive-action ${isDeleting ? "is-busy" : ""}`}
                 onClick={onConfirmDelete}
                 disabled={isDeleting}
+                aria-busy={isDeleting}
               >
                 {isDeleting ? "Removing..." : "I understand, please remove my letter"}
               </button>

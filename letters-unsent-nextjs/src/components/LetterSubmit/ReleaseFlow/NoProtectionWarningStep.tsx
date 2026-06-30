@@ -22,7 +22,13 @@ export default function NoProtectionWarningStep({
         <button type="button" className="release-primary-button" onClick={onBack} disabled={isSubmitting}>
           Go back
         </button>
-        <button type="button" className="release-secondary-button" onClick={onConfirm} disabled={isSubmitting}>
+        <button
+          type="button"
+          className={`release-secondary-button ${isSubmitting ? "is-busy" : ""}`}
+          onClick={onConfirm}
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
+        >
           {isSubmitting ? "Releasing..." : "I understand, release the letter without protection"}
         </button>
       </div>

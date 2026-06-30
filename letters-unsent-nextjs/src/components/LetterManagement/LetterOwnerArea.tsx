@@ -400,8 +400,9 @@ export default function LetterOwnerArea({
             type="button"
             className="owner-subtle-action owner-question-trigger"
             onClick={handleOpenVerificationPanel}
+            disabled={isVerifying}
           >
-            Is this letter yours?
+            {isVerifying ? "Verifying..." : "Is this letter yours?"}
           </button>
         )}
       </aside>

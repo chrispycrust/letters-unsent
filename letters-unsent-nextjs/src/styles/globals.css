@@ -21,7 +21,8 @@
   --release-border: #d6d2c5;
   --release-border-darker: #9f9b8c;
   --release-muted: #5f5b50;
-  --font-size-smaller: 0.9em;
+  --font-size-tiny: 0.9em;
+  --font-size-small: 0.95em; 
   --font-size: 1.1em;
   --font-size-larger: 1.5em;
   --borderRadius: 5px;
@@ -202,6 +203,7 @@ a {
 }
 
 button {
+  font: inherit;
   border-radius: var(--borderRadius);
   border: none;
   padding: 20px 20px;
@@ -213,7 +215,6 @@ button {
 }
 
 button:not(:disabled):hover {
-  background-color: var(--accent-700); /* hsl(132, 43%, 58%); */
   color: var(--button-text-color);
 }
 
@@ -309,12 +310,11 @@ footer {
   /* padding: 20px 20px 10px 20px; */
   transition-property: border-style;
   transition-duration: 0.5s;
+  font-family: var(--cormorant);
 }
 
 .navbar a
 , button {
-  font-family: var(--cormorant);
-  font-size: 1.1em;
   font-weight: 500;
 }
 
@@ -322,7 +322,7 @@ footer {
   /* margin-top: 80px;  for some reason margins aren't applying*/
   font-family: var(--geist);
   padding: 40px 0px 20px 0px;
-  font-size: var(--font-size-smaller);
+  font-size: var(--font-size-tiny);
   font-weight: 300;
 }
 
@@ -460,18 +460,11 @@ footer a:hover {
 
 .owner-area-title {
   margin: 0;
-  font-size: 0.95rem;
   color: var(--foreground);
 }
 
 .owner-area-helper {
   opacity: 0.76;
-}
-
-.owner-actions-separator-word,
-.owner-actions-separator-comma {
-  font-size: 0.9rem;
-  opacity: 0.85;
 }
 
 .owner-actions-separator-comma {
@@ -508,7 +501,6 @@ aside.letter-owner-area button.owner-question-trigger:not(:disabled),
 
 button.owner-subtle-action {
   font-family: var(--geist);
-  font-size: 0.95rem;
   font-weight: 400;
   transition-duration: 0.5s;
   text-align: left;
@@ -571,7 +563,7 @@ button.owner-question-trigger {
   border-top: 1px solid var(--release-border);
   border-radius: 5px 5px 0 0;
   box-shadow: 0 -8px 22px rgb(0 0 0 / 10%);
-  padding: 8px 16px calc(18px + env(safe-area-inset-bottom));
+  padding: 8px 16px calc(24px + env(safe-area-inset-bottom));
   transition:
     transform 180ms ease,
     max-height 180ms ease;
@@ -589,8 +581,8 @@ button.owner-question-trigger {
 
 .owner-sheet-handle {
   display: block;
-  width: 38px;
-  height: 4px;
+  width: 80px;
+  height: 6px;
   padding: 0;
   margin: 0 auto 14px auto;
   border-radius: 999px;
@@ -611,6 +603,8 @@ button.owner-question-trigger {
   gap: 10px;
   font-family: var(--geist);
   align-items: center;
+  margin-top: 36px;
+  margin-bottom: 12px;
 }
 
 .owner-verification-panel {
@@ -618,16 +612,6 @@ button.owner-question-trigger {
   flex-direction: row;
   gap: 10px;
   justify-content: flex-end;
-}
-
-.owner-panel-title {
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-.owner-token-label {
-  font-size: 0.9rem;
-  opacity: 0.85;
 }
 
 .owner-token-input {
@@ -638,7 +622,6 @@ button.owner-question-trigger {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--geist);
-  font-size: 0.95rem;
 }
 
 .owner-token-input:focus-visible {
@@ -648,7 +631,6 @@ button.owner-question-trigger {
 
 .owner-area-error {
   margin: 0;
-  font-size: 0.92rem;
   color: #7a3029;
 }
 
@@ -683,13 +665,8 @@ button.owner-question-trigger {
   background: transparent;
   border: 0;
   color: var(--foreground);
-  font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
-}
-
-.delete-success-message {
-  font-size: 1rem;
 }
 
 .single-letter-edit {
@@ -840,7 +817,7 @@ p.timestamp {
   font-family: var(--geist);
   color: rgb(136, 136, 136);
   margin-top: 20px;
-  font-size: var(--font-size-smaller);
+  font-size: var(--font-size-tiny);
 }
 
  
@@ -964,11 +941,6 @@ textarea {
   outline: auto;
 }
 
-select
-,.textarea-contact-form {
-  font-size: 1em;
-}
-
 .visitor-input-container {
   width: 100%;
   padding: 10px;
@@ -1058,7 +1030,7 @@ label {
 
 .modal-footer {
   width: 100%;
-  font-size: var(--font-size-smaller);
+  font-size: var(--font-size-tiny);
   margin-bottom: 20px;
 }
 
@@ -1173,7 +1145,7 @@ section {
   background: var(--background-desat-1);
   padding: 5px 10px;
   border-radius: var(--borderRadius);
-  font-size: var(--font-size-smaller);
+  font-size: var(--font-size-tiny);
 }
 
 .changelog-date {
@@ -1190,7 +1162,7 @@ section {
 , .contextual-tags-container {
   font-family: var(--geist);
   opacity: 72%;
-  font-size: var(--font-size-smaller);
+  font-size: var(--font-size-tiny);
 }
 
 .tag {
@@ -1205,7 +1177,7 @@ section {
 .submission_note {
   margin-top: 10px;
   font-family: var(--geist);
-  font-size: var(--font-size-smaller);
+  font-size: var(--font-size-tiny);
   font-weight: 300;
 }
 
@@ -1236,7 +1208,6 @@ section {
 .release-panel h2
 ,.delete-confirmation-modal h2 {
   margin: 0;
-  font-size: 1.55rem;
   line-height: 1.2;
 }
 
@@ -1255,7 +1226,6 @@ section {
 
 .release-step-indicator {
   font-family: var(--geist);
-  font-size: 0.95rem;
   color: var(--release-muted);
 }
 
@@ -1290,7 +1260,6 @@ section {
 .delete-confirmation-button {
   min-height: 48px;
   font-family: var(--geist);
-  font-size: 1rem;
   font-weight: 500;
   border-radius: 8px;
   padding: 10px 16px;
@@ -1356,10 +1325,6 @@ section {
 .release-link-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.release-inline-link {
-  font-size: 0.95rem;
 }
 
 .release-options-fieldset {
@@ -1445,7 +1410,6 @@ section {
   flex-wrap: wrap;
   gap: 12px;
   font-family: var(--Lora);
-  font-size: 1.15rem;
   font-weight: 500;
   margin-bottom: 6px;
   padding-bottom: 0;
@@ -1467,7 +1431,6 @@ section {
   background: rgba(67, 112, 87, 0.1);
   color: #315f49;
   font-family: var(--geist);
-  font-size: 0.72rem;
   font-weight: 600;
   line-height: 1.2;
 }
@@ -1475,7 +1438,6 @@ section {
 .release-option-helper {
   grid-column: 2;
   font-family: var(--geist);
-  font-size: 0.95rem;
   color: var(--release-muted);
   line-height: 1.4;
 }
@@ -1511,7 +1473,7 @@ section {
   overflow-wrap: anywhere;
   text-align: center;
   width: 100%;
-  font-size: 0.9em;
+  font-size: var(--font-size-tiny);
 } 
 
 .release-store-options-container {
@@ -1523,7 +1485,7 @@ section {
 
 .release-store-token-label {
   font-family: var(--geist);
-  font-size: 0.95rem;
+  font-size: var(--font-size-small);
   font-weight: 500;
   color: var(--release-muted);
 }
@@ -1542,7 +1504,7 @@ section {
 .release-store-requirement {
   margin: -12px 0 0;
   font-family: var(--geist);
-  font-size: 0.95rem;
+  font-size: var(--font-size-small);
   color: var(--release-muted);
   text-align: center;
 }
@@ -1573,12 +1535,12 @@ section {
   color: var(--accent-700);
 }
 
-.release-confirm-checkbox
+/* .release-confirm-checkbox
 , .release-warning
 , .release-link-button
 , .release-store-option-detail button.release-secondary-button {
-  font-size: 0.95rem;
- }
+  font-size: var(--font-size-owner-controls-mobile);
+ } */
 
 .release-confirm-checkbox {
   display: flex;
@@ -1607,7 +1569,7 @@ section {
 
 .release-small-copy {
   font-family: var(--geist);
-  font-size: 0.95rem;
+  font-size: var(--font-size-small);
   color: var(--release-muted);
 }
 
@@ -1624,7 +1586,7 @@ section {
 .release-confirmation-item {
   font-family: var(--geist);
   margin: 0;
-  font-size: 0.95rem;
+  font-size: var(--font-size-small);
 }
 
 .release-confirmation-item::before {
@@ -1647,7 +1609,7 @@ section {
 
 .post-release-action,
 .post-release-action:hover {
-  font-size: 0.95rem;
+  font-size: var(--font-size-small);
 }
 
 
@@ -1721,6 +1683,8 @@ section {
     min-width: 0;
     gap: 24px;
   }
+
+
 
 }
 
@@ -1841,7 +1805,7 @@ section {
 
   .release-panel h2
   ,.delete-confirmation-modal h2 {
-    font-size: 1.8rem;
+    font-size: 1.8em;
   }
 
   .release-choice-actions
@@ -1856,6 +1820,12 @@ section {
   .release-panel-actions button
   , .release-choice-actions button {
     width: auto;
+  }
+
+  .letter-owner-area
+  ,.desktop-owner-rail-content
+  ,.owner-bottom-sheet-content {
+    font-size: var(--font-size-tiny);
   }
 
 }
@@ -1877,6 +1847,12 @@ section {
 
   .letter-display {
     padding: 30px 150px;
+  }
+
+  .letter-owner-area
+  ,.desktop-owner-rail-content
+  ,.owner-bottom-sheet-content {
+    font-size: 0.85em;
   }
 
 }

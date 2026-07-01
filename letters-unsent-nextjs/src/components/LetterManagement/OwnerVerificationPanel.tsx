@@ -17,7 +17,7 @@ export default function OwnerVerificationPanel({
 }: OwnerVerificationPanelProps) {
   return (
     <div className="owner-verification-panel">
-      <label htmlFor="owner-token-input" className="owner-token-label">
+      <label htmlFor="owner-token-input">
       </label>
       <input
         id="owner-token-input"

@@ -100,10 +100,13 @@ export default function StorePassphraseStep({
               checked={manualSaveSelected}
               onChange={onToggleManualSave}
             />
-            <div className="release-option-content">
-              <label htmlFor="manual-save-option" className="release-option-title">
-                Copy it yourself <span className="release-recommended-badge">Recommended</span>
-              
+            <div>
+              <label htmlFor="manual-save-option" className="release-option-content">
+                <div className="release-option-title-container">
+                  <p className="release-option-title">Copy it yourself</p> 
+                  <span className="release-recommended-badge">Recommended</span>
+                </div>
+
                 <span className="release-option-helper">
                   Save the token somewhere safe like your notes or password manager. To continue with this option,
                   copy the token and confirm you saved it somewhere safe.

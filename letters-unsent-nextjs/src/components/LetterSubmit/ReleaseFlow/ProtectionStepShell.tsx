@@ -22,7 +22,7 @@ export default function ProtectionStepShell({
   return (
     <section className="release-panel release-protection-step-shell" aria-live="polite">
       <header className="release-panel-header">
-        <h2>{title}</h2>
+        <h4>{title}</h4>
         <span className="release-step-indicator">{stepLabel}</span>
       </header>
 

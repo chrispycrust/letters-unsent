@@ -21,11 +21,19 @@
   --release-border: #d6d2c5;
   --release-border-darker: #9f9b8c;
   --release-muted: #5f5b50;
+  --font-size-2xs: 0.80em;
+  --font-size-xs: 0.85em;
+  --font-size-sm: 0.9em;
   --font-size-tiny: 0.9em;
+  --font-size-md: 0.95em; 
   --font-size-small: 0.95em; 
   --font-size: 1.1em;
+  --font-size-base: 1.1em;
+  --font-size-lg: 1.3em;
   --font-size-larger: 1.5em;
+  --font-size-xlg: 1.5em;
   --borderRadius: 5px;
+  --danger: #7a3029;
 
   --shadow-color: 0deg 0% 59%;
   --shadow-elevation-low:
@@ -1205,7 +1213,7 @@ section {
   gap: 24px;
 }
 
-.release-panel h2
+.release-panel h4
 ,.delete-confirmation-modal h2 {
   margin: 0;
   line-height: 1.2;
@@ -1219,6 +1227,7 @@ section {
 
 .release-panel-header {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: baseline;
   gap: 12px;
@@ -1359,9 +1368,9 @@ section {
   border: 1px solid var(--release-border);
   border-radius: 8px;
   padding: 24px;
-  display: grid;
-  grid-template-columns: 20px 1fr;
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   background: transparent;
 }
 
@@ -1405,14 +1414,15 @@ section {
 }
 
 .release-option-title {
+  font-weight: 600;
+  text-align: center;
+}
+
+.release-option-title-container {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 12px;
-  font-family: var(--Lora);
-  font-weight: 500;
-  margin-bottom: 6px;
-  padding-bottom: 0;
+  align-items: center;
 }
 
 .release-store-option-detail-container {
@@ -1425,7 +1435,7 @@ section {
 .release-recommended-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.1rem 0.45rem;
+  padding: 2px 10px;
   border: 1px solid rgba(67, 112, 87, 0.28);
   border-radius: 999px;
   background: rgba(67, 112, 87, 0.1);
@@ -1433,6 +1443,7 @@ section {
   font-family: var(--geist);
   font-weight: 600;
   line-height: 1.2;
+  font-size: var(--font-size-xs);
 }
 
 .release-option-helper {
@@ -1473,8 +1484,11 @@ section {
   overflow-wrap: anywhere;
   text-align: center;
   width: 100%;
-  font-size: var(--font-size-tiny);
 } 
+
+.release-token-input {
+  font-size: var(--font-size-base)
+}
 
 .release-store-options-container {
   display: flex;
@@ -1556,11 +1570,12 @@ section {
   padding: 12px 24px;
   border-radius: 8px;
   background: var(--background-desat-1);
+  color: var(--danger);
 }
 
 .release-error {
   font-family: var(--geist);
-  color: #7a3029;
+  color: var(--danger);
 }
 
 .release-error-standalone {
@@ -1570,7 +1585,7 @@ section {
 .release-small-copy {
   font-family: var(--geist);
   font-size: var(--font-size-small);
-  color: var(--release-muted);
+  color: var(--danger);
 }
 
 .release-confirmation-list {
@@ -1612,6 +1627,12 @@ section {
   font-size: var(--font-size-small);
 }
 
+.release-panel-header span
+, .release-option-helper
+, .release-confirm-checkbox
+, .release-link-button {
+  font-size: var(--font-size-md);
+}
 
 /*
   --------------------------------
@@ -1658,6 +1679,10 @@ section {
     padding: 36px 32px;
   }
 
+  .release-panel-header {
+    flex-direction: row;
+  }
+
   .release-selected-token {
     padding-left: 48px;
     padding-right: 48px;
@@ -1684,9 +1709,31 @@ section {
     gap: 24px;
   }
 
+  .release-token-input-wrap input
+  ,.release-generated-token {
+    font-size: var(--font-size-xlg);
+  }
 
+  .release-option-title-container {
+    flex-direction: row;
+    align-items: center;
+  }
 
-}
+  .release-panel-header span
+  ,.release-warning {
+    font-size: var(--font-size-xs);
+  }
+
+  .release-option-card {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 24px;
+  }
+
+  .release-option-title {
+    font-weight: 500;
+    text-align: left;
+  }
 
 /*
   --------------------------------
@@ -1815,11 +1862,24 @@ section {
     flex-direction: row;
     justify-content: space-between;
     gap: 24px;
+    font-size: var(--font-size-xs);
   }
 
   .release-panel-actions button
   , .release-choice-actions button {
     width: auto;
+  }
+
+  .release-step-indicator {
+    font-size: var(--font-size-2xs);
+  }
+
+  .release-option-content {
+    font-size: var(--font-size-xs);
+  }
+
+  .release-option-title {
+    font-size: var(--font-size);
   }
 
   .letter-owner-area
@@ -1852,7 +1912,7 @@ section {
   .letter-owner-area
   ,.desktop-owner-rail-content
   ,.owner-bottom-sheet-content {
-    font-size: 0.85em;
+    font-size: var(--font-size-xs);
   }
 
 }
@@ -1956,4 +2016,5 @@ section {
       transform 180ms ease;
   }
 
+}
 }

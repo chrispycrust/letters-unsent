@@ -835,6 +835,13 @@ p.timestamp {
   align-items: center;
 }
 
+.route-loading {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  justify-content: center;
+}
+
 .sign-off {
   font-family: var(--cormorant);
   font-size: 1.3em;

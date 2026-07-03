@@ -14,10 +14,10 @@ import Link from "next/link";
 import type { Letter } from "@/types/letter";
 
 import { truncateContent, tagAIGeneratedLetters } from "@/utils/functions"
-import Spinner from "@/components/Spinner";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Footer from "@/components/Footer";
 import AIGenTag from "@/components/AIGenTag";
+import RouteLoading from "@/components/RouteLoading";
 
 /* 
 -------------------------------------------------------------------------------------------------
@@ -68,9 +68,7 @@ export default function Home() {
   function determineLetterDisplay() {
 
     if (responseOk === false) {
-      return <div className="spinner-container">
-                <Spinner />
-              </div>
+      return <RouteLoading />
 
     } else if (letters.length === 0) {
       return <p>No letters</p>

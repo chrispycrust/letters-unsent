@@ -12,6 +12,7 @@
   --background-desat-2: #58503c;
   --background-error-message: hsl(0, 100%, 89%);
   --button-text-color: #3e3d38;
+  --button-with-background-text-color: var(--button-text-color);
   --letter-colour: #fffff4;
   --ai-gen-tag-colour: #d2d2bf;
   --accent-700: #2f5b4b;
@@ -34,6 +35,7 @@
   --font-size-xlg: 1.5em;
   --borderRadius: 5px;
   --danger: #7a3029;
+  --danger-background: var(--background-desat-1);
 
   --shadow-color: 0deg 0% 59%;
   --shadow-elevation-low:
@@ -55,16 +57,20 @@
     --foreground: #e5e3d4;   /* warm parchment-white */
     --background-desat-1: #3f3e39;
     --background-error-message: HSL(0, 100%, 20%);
-    --button-text-color: #3e3d38;
+    --button-text-color: var(--foreground); 
+    --button-with-background-text-color: #3e3d38;
     --letter-colour: #514e42;
     --ai-gen-tag-colour: #676353;
-    --accent: #7fbf92;       /* muted mint (same family as your light accent) */
+    --accent: #6aa07a;       /* muted mint (same family as your light accent) */
     --accent-700: #a8d3bc;
     --accent-700: #91c8ad;
     --accent-100: #3d5044;
     --release-panel-bg: #3a3933;
     --release-border: #575248;
     --release-muted: #cfc7b2;
+    --danger: #e8a27d;
+    --danger-background: #474441;
+
     /* shadows for dark mode: darker core shadow + optional faint highlight */
     --shadow-color: 0deg 0% 0%;
     --shadow-elevation-low:
@@ -251,7 +257,7 @@ button.is-busy:disabled {
 , .submit-button:hover
 , .start-conversation-button
 , .start-conversation-button:hover  {
-  color: var(--button-text-color);
+  color: var(--button-with-background-text-color);
 }
 
 .sr-only {
@@ -639,7 +645,7 @@ button.owner-question-trigger {
 
 .owner-area-error {
   margin: 0;
-  color: #7a3029;
+  color: var(--danger);
 }
 
 .delete-confirmation-overlay {
@@ -1310,7 +1316,7 @@ section {
 }
 
 .owner-destructive-action:hover {
-  background: #7a3029;
+  background: var(--danger-background);
 }
 
 .release-secondary-button:disabled {
@@ -1446,7 +1452,7 @@ section {
   border: 1px solid rgba(67, 112, 87, 0.28);
   border-radius: 999px;
   background: rgba(67, 112, 87, 0.1);
-  color: #315f49;
+  color: var(--accent);
   font-family: var(--geist);
   font-weight: 600;
   line-height: 1.2;
@@ -1576,7 +1582,7 @@ section {
   font-family: var(--geist);
   padding: 12px 24px;
   border-radius: 8px;
-  background: var(--background-desat-1);
+  background: var(--danger-background);
   color: var(--danger);
 }
 

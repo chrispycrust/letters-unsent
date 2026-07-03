@@ -41,15 +41,12 @@ export default function Home() {
       const res = await fetch("/api/supabase", { 
         method: "GET" 
       })
-
-      if (res.ok === true) {
-        setResponseOk(true)
-      }
-
+      
       const data = await res.json()
 
       if (data.success) {
         setLetters(data.letters)
+        setResponseOk(true)
       } else {
         console.error('Failed to load letters:', data.error)
         setErrorMessage(`Failed to load letters: ${data.error}. Please try again later.`)
@@ -69,9 +66,6 @@ export default function Home() {
 
     if (responseOk === false) {
       return <RouteLoading />
-
-    } else if (letters.length === 0) {
-      return <p>No letters</p>
 
     } else {
       return letters.map((letter) => (

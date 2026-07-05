@@ -83,6 +83,12 @@ export default function LetterOwnerArea({
   }, [isMobile])
 
   useEffect(() => {
+
+    if (isManaging && isMobile) {
+      openMobileSheet("open-verified")
+      return
+    }
+
     if (isEditing && isMobile) {
       openMobileSheet("editing")
       return
@@ -95,7 +101,7 @@ export default function LetterOwnerArea({
       }
       closeMobileSheet()
     }
-  }, [isEditing, isMobile, isVerified, mobileSheetMode])
+  }, [isManaging, isEditing, isMobile, isVerified, mobileSheetMode])
 
   function openMobileSheet(mode: MobileOwnerSheetMode) {
     setMobileSheetMode(mode)
@@ -133,6 +139,7 @@ export default function LetterOwnerArea({
 
   function handleOpenManagementPanel() {
     if (isMobile) {
+      setIsManaging(true)
       openMobileSheet("open-verified")
       return
     }

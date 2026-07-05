@@ -116,14 +116,13 @@ body {
   flex: 1;
   align-items: center;
   justify-content: flex-start;
-  margin: 0 10px;
   /* min-height: 100vh; */
   min-height: 100dvh;
   position: relative;
 
   scroll-behavior: smooth;
   scroll-padding-top: var(--navbar-offset);
-  
+
 }
 
 main {

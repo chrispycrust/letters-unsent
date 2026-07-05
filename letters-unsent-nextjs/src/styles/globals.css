@@ -315,7 +315,7 @@ footer {
   top: 0px;
   background-color: var(--background);
   z-index: 999;
-  padding: 20px 0 25px 0;
+  padding: 20px 10px 25px 10px;
   isolation: isolate;
 }
 
@@ -1958,6 +1958,11 @@ section {
 }
 
 @media (width > 1180px) {
+
+  .navbar {
+    padding-left: 0;
+    padding-right: 0;
+  }
 
   .single-letter-container {
     max-width: 70%;

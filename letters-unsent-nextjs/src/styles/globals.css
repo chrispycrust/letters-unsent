@@ -1760,6 +1760,10 @@ section {
     --font-size: 1.25em;
   }
 
+  .navbar {
+    font-size: var(--font-size-md);
+  }
+
   h1 {
     font-size: 2.5em;
   }
@@ -1904,6 +1908,10 @@ section {
 }
 
 @media (width > 900px) {
+
+  .navbar {
+    font-size: var(--font-size-base);
+  }
 
   .about-section
   ,.submit-container {

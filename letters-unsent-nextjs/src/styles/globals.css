@@ -1747,6 +1747,7 @@ section {
     text-align: left;
   }
 
+}
 /*
   --------------------------------
   SMALL DESKTOP
@@ -1948,29 +1949,19 @@ section {
 
 }
 
-/* 
-  --------------------------------
-  ULTRA WIDE DESKTOP
-  --------------------------------
-*/
-
 @media (width > 1180px) {
 
-  main {
-    width: 1280px;
+  .single-letter-container {
+    max-width: 70%;
   }
 
-  .submit-container {
+   .submit-container {
     width: auto;
     /* padding: 20px; */
   }
 
   .letter-display {
     padding: 30px 250px;
-  }
-
-  .single-letter-container {
-    max-width: 70%;
   }
 
   main:has(.single-letter-display-area) {
@@ -2029,4 +2020,17 @@ section {
   }
 
 }
+
+/* 
+  --------------------------------
+  ULTRA WIDE DESKTOP
+  --------------------------------
+*/
+
+@media (width > 1280px) {
+
+  main {
+    width: 1280px;
+  }
+
 }

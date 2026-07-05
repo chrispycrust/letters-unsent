@@ -56,6 +56,7 @@ export default function LetterOwnerArea({
   const [isManaging, setIsManaging] = useState(false)
   const [isCheckingEdit, setIsCheckingEdit] = useState(false)
   const [mobileSheetMode, setMobileSheetMode] = useState<MobileSheetMode>("closed")
+  const [hasDismissedVerifiedSheet, setHasDismissedVerifiedSheet] = useState(false)
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -84,8 +85,13 @@ export default function LetterOwnerArea({
 
   useEffect(() => {
 
-    if (isManaging && isMobile) {
+    if (isVerified && !isManaging && !isEditing && isMobile && !hasDismissedVerifiedSheet) {
       openMobileSheet("open-verified")
+      return
+    }
+
+    if (isManaging && isMobile) {
+      openMobileSheet("open-verified-actions")
       return
     }
 
@@ -95,8 +101,8 @@ export default function LetterOwnerArea({
     }
 
     if (!isEditing && mobileSheetMode === "editing") {
-      if (isMobile && isVerified) {
-        openMobileSheet("open-verified")
+      if (isMobile && isVerified && isManaging) {
+        openMobileSheet("open-verified-actions")
         return
       }
       closeMobileSheet()
@@ -128,7 +134,7 @@ export default function LetterOwnerArea({
 
     setIsExpanded(false)
     if (isMobile) {
-      openMobileSheet("open-verified")
+      openMobileSheet("open-verified-actions")
     }
   }
 
@@ -140,7 +146,7 @@ export default function LetterOwnerArea({
   function handleOpenManagementPanel() {
     if (isMobile) {
       setIsManaging(true)
-      openMobileSheet("open-verified")
+      openMobileSheet("open-verified-actions")
       return
     }
 
@@ -183,9 +189,11 @@ export default function LetterOwnerArea({
 
   function handleDismiss() {
     setIsManaging(false)
-
+    
     if (isMobile) {
+      setHasDismissedVerifiedSheet(true)
       closeMobileSheet()
+      return
     }
   }
 
@@ -200,9 +208,10 @@ export default function LetterOwnerArea({
 
   function handleCancelEdit() {
     onCancelEdit()
+    setIsManaging(true)
 
     if (isMobile && isVerified) {
-      openMobileSheet("open-verified")
+      openMobileSheet("open-verified-actions")
       return
     }
 
@@ -310,13 +319,26 @@ export default function LetterOwnerArea({
   )
 
   const manageOwnerButton = (
-    <button
-      type="button"
-      className="owner-subtle-action owner-question-trigger"
-      onClick={handleOpenManagementPanel}
-    >
-      You own this letter - manage it here.
-    </button>
+    <>
+      <button
+        type="button"
+        className="owner-subtle-action owner-question-trigger"
+        onClick={handleOpenManagementPanel}
+      >
+        You own this letter - manage it here.
+      </button>
+      {/* <button 
+        type="button"
+        className="owner-subtle-action owner-question-trigger"
+        onClick={() => {
+          setMobileSheetMode("closed")
+          closeMobileSheet()
+        }}
+      >
+        Dismiss
+      </button> */}
+    </>
+    
   )
 
   function renderMobileTrigger() {
@@ -355,6 +377,10 @@ export default function LetterOwnerArea({
     }
 
     if (mobileSheetMode === "open-verified") {
+      return manageOwnerButton
+    }
+
+    if (mobileSheetMode === "open-verified-actions") {
       return ownerActions
     }
 

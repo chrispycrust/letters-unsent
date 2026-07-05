@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FocusEvent, type PointerEvent, type ReactNode } from "react"
 
-export type MobileOwnerSheetMode = "open-unverified" | "open-verified" | "editing"
+export type MobileOwnerSheetMode = "open-unverified" | "open-verified" | "open-verified-actions" | "editing"
 
 type MobileOwnerSheetSnap = "compact" | "full"
 

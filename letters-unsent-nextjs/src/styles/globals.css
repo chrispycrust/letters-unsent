@@ -1977,10 +1977,6 @@ section {
     padding: 30px 250px;
   }
 
-  main:has(.single-letter-display-area) {
-    width: min(calc(100vw - 20px), 1480px);
-  }
-
   .single-letter-display-area {
     width: 100%;
   }

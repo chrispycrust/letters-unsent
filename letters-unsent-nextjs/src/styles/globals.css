@@ -12,7 +12,9 @@
   --background-desat-2: #58503c;
   --background-error-message: hsl(0, 100%, 89%);
   --button-text-color: #3e3d38;
+  --button-text-color-hover: var(--background);
   --button-with-background-text-color: var(--button-text-color);
+  --button-with-background-text-color-hover: var(--background);
   --letter-colour: #fffff4;
   --ai-gen-tag-colour: #d2d2bf;
   --accent-700: #2f5b4b;
@@ -253,15 +255,26 @@ button.is-busy:disabled {
   background: none;
 }
 
+.button-change-textarea:not(:disabled):hover {
+  background: var(--accent-700);
+  color: var(--button-text-color-hover);
+}
+
 .submit-button {
   margin-top: auto;
 }
 
 .submit-button
-, .submit-button:hover
 , .start-conversation-button
-, .start-conversation-button:hover  {
+, .release-primary-button  {
   color: var(--button-with-background-text-color);
+}
+
+.submit-button:not(:disabled):hover
+, .start-conversation-button:not(:disabled):hover
+, .release-primary-button:not(:disabled):hover  {
+  color: var(--button-with-background-text-color-hover);
+  background: var(--accent-700);
 }
 
 .sr-only {
@@ -1326,12 +1339,10 @@ section {
 
 .release-primary-button {
   background: var(--accent);
-  color: #ffffff;
 }
 
 .release-primary-button:hover {
   background: var(--accent-700);
-  color: #ffffff;
 }
 
 .release-primary-button:disabled {
@@ -1425,7 +1436,7 @@ section {
 }
 
 .release-option-card.is-selected {
-  border-color: var(--accent);
+  border-color: var(--accent-700);
   background: var(--background-desat-1);
 }
 
@@ -1452,9 +1463,9 @@ section {
 
 .release-option-card input[type="radio"]:checked,
 .release-option-card input[type="checkbox"]:checked {
-  background-color: var(--accent);
+  background-color: var(--accent-700);
   padding: 2px;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--accent-700);
 }
 
 .release-option-content {
@@ -1489,7 +1500,7 @@ section {
   border: 1px solid rgba(67, 112, 87, 0.28);
   border-radius: 999px;
   background: rgba(67, 112, 87, 0.1);
-  color: var(--accent);
+  color: var(--accent-700);
   font-family: var(--geist);
   font-weight: 600;
   line-height: 1.2;

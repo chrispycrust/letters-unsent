@@ -38,6 +38,7 @@
   --danger-background: var(--background-desat-1);
   --icon-stroke-width: 1.2;
   --icon-stroke-width-on-hover: 1.6;
+  --line-height-base: calc(var(--font-size-base) * 1.5);
 
   --shadow-color: 0deg 0% 59%;
   --shadow-elevation-low:
@@ -198,7 +199,7 @@ li {
   margin-bottom: 1em;
 }
 
-p, ul {
+p, ul, i {
   margin-bottom: 1.5em;
   line-height: calc(var(--font-size) * 1.5);
 }
@@ -474,15 +475,32 @@ footer a:hover {
   align-self: flex-end;
   font-family: var(--geist);
   margin-bottom: 10px;
+  line-height: var(--line-height-base);
+}
+
+.letter-owner-area i {
+  margin-bottom: 0;
 }
 
 .owner-area-title {
-  margin: 0;
+  margin-bottom: 8px;
   color: var(--foreground);
 }
 
 .owner-area-helper {
   opacity: 0.76;
+}
+
+.owner-verification-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.owner-actions {
+  line-height: var(--line-height-base);
 }
 
 .owner-actions-separator-comma {
@@ -625,13 +643,6 @@ button.owner-question-trigger {
   margin-bottom: 12px;
 }
 
-.owner-verification-panel {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
 .owner-token-input {
   min-height: 42px;
   border: 1px solid var(--release-border);
@@ -640,6 +651,8 @@ button.owner-question-trigger {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--geist);
+  margin-right: 10px;
+  font-size: var(--font-size-md);
 }
 
 .owner-token-input:focus-visible {
@@ -1817,9 +1830,9 @@ section {
   .single-letter-topline {
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-end;
     gap: 14px;
-    height: 70px;
+    height: 115px;
   }
 
   .single-letter-meta {
@@ -2065,6 +2078,13 @@ section {
 
   main {
     width: 1280px;
+  }
+
+  .owner-verification-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
   }
 
 }

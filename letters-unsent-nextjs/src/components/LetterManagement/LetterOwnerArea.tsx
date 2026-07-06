@@ -325,7 +325,7 @@ export default function LetterOwnerArea({
         className="owner-subtle-action owner-question-trigger"
         onClick={handleOpenManagementPanel}
       >
-        You own this letter - manage it here.
+        <i>You own this letter - manage it here.</i>
       </button>
       {/* <button 
         type="button"
@@ -349,7 +349,7 @@ export default function LetterOwnerArea({
           className="owner-subtle-action owner-question-trigger"
           onClick={() => openMobileSheet("editing")}
         >
-          You are editing this letter.
+          <i>You are editing this letter.</i>
         </button>
       )
     }
@@ -366,7 +366,7 @@ export default function LetterOwnerArea({
         className="owner-subtle-action owner-question-trigger"
         onClick={handleOpenVerificationPanel} 
       >
-        Is this letter yours?
+       <i>Is this letter yours?</i>
       </button>
     )
   }
@@ -436,7 +436,7 @@ export default function LetterOwnerArea({
             disabled={isVerifying}
             aria-busy={isVerifying}
           >
-            {isVerifying ? "Verifying..." : "Is this letter yours?"}
+            <i>{isVerifying ? "Verifying..." : "Is this letter yours?"}</i>
           </button>
         )}
       </aside>

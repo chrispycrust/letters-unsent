@@ -34,12 +34,12 @@ export default function OwnerEditActions({
         }}
       disabled={isSaving}
     >
-      stop editing
+      Stop editing
     </button>
   )
 
   const editControls = (
-    <div key="edit-controls">
+    <div key="edit-controls" className="owner-actions owner-edit-action-buttons">
       <button
         type="submit"
         form={editFormId}

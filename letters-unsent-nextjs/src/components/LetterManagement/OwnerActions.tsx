@@ -14,7 +14,7 @@ export default function OwnerActions({
   return (
     <>
       <i className="owner-area-title">For this letter:</i>
-      <div>
+      <div className="owner-actions">
         <button
           type="button"
           className={`owner-subtle-action ${isCheckingEdit ? "is-busy" : ""}`}

@@ -6,8 +6,12 @@
 .pnp.js
 .yarn/install-state.gz
 
+# docs
+/docs
+
 # testing
 /src/testing/content-moderation/scenarios.md
+/src/styles/debugging.css
 
 # next.js
 /.next/

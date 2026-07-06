@@ -1997,16 +1997,11 @@ section {
 
 @media (width > 1180px) {
 
-  .navbar {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
   .single-letter-container {
     max-width: 70%;
   }
 
-   .submit-container {
+  .submit-container {
     width: auto;
     /* padding: 20px; */
   }

@@ -255,6 +255,7 @@ export default function LetterEditForm({
         Author name
       </label>
       <p className="sign-off letter-edit-sign-off">
+        <span className="letter-edit-sign-off-mark" aria-hidden="true">—</span>
         <input
           id="edit-author-name"
           className="letter-edit-author-input"

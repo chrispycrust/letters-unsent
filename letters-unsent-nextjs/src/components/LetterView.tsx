@@ -51,7 +51,7 @@ export default function LetterView({ letter }: LetterViewProps) {
 
       {letter.author_name ? (
         <p className="sign-off">
-          <br />— {letter.author_name}
+          — {letter.author_name}
         </p>
       ) : null}
     </div>

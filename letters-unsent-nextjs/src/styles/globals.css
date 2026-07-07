@@ -72,6 +72,7 @@
     --accent-100: #3d5044;
     --release-panel-bg: #3a3933;
     --release-border: #575248;
+    --placeholder-text-color: #9e9584;
     --release-muted: #cfc7b2;
     --danger: #e8a27d;
     --danger-background: #474441;
@@ -779,9 +780,10 @@ button.owner-question-trigger {
   flex: 0 0 auto;
 }
 
-.letter-edit-recipient-input::placeholder,
-.letter-edit-author-input::placeholder {
-  color: rgb(120, 120, 120);
+input.letter-edit-recipient-input::placeholder,
+input.letter-edit-author-input::placeholder {
+  color: var(--placeholder-text-color);
+  /* opacity: 1; */
 }
 
 .letter-edit-recipient-input:focus-visible,

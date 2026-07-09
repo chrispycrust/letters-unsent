@@ -1255,6 +1255,10 @@ section {
   font-weight: 300;
 }
 
+.release-wrapper {
+  width: 100%;
+}
+
 .release-action-area {
   width: 100%;
   margin-top: auto;

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useLayoutEffect, useMemo, useRef, useState } from "react"
 
 import ConfirmProtectedReleaseStep from "@/components/LetterSubmit/ReleaseFlow/ConfirmProtectedReleaseStep"
 import CreatePassphraseStep from "@/components/LetterSubmit/ReleaseFlow/CreatePassphraseStep"
@@ -33,10 +33,25 @@ export default function ProtectionFlow({
   const [releasedLetterId, setReleasedLetterId] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState("")
+  const protectionFlowRef = useRef<HTMLDivElement | null>(null)
 
   const selectedPassphrase = useMemo(() => {
     return passphraseMode === "custom" ? customPassphrase.trim() : generatedPassphrase
   }, [customPassphrase, generatedPassphrase, passphraseMode])
+
+  useLayoutEffect(() => {
+    function resetReleaseStepScroll() {
+      const releaseActionArea = protectionFlowRef.current?.closest(".release-action-area")
+      const releasePanel = protectionFlowRef.current?.querySelector(".release-panel")
+
+      releaseActionArea?.scrollIntoView({ block: "start", behavior: "auto" })
+      releaseActionArea?.scrollTo({ top: 0, left: 0, behavior: "auto" })
+      releasePanel?.scrollTo({ top: 0, left: 0, behavior: "auto" })
+    }
+
+    resetReleaseStepScroll()
+    requestAnimationFrame(resetReleaseStepScroll)
+  }, [step])
 
   function resetStoreChoices() {
     setSaveOnDevice(false)
@@ -134,73 +149,81 @@ export default function ProtectionFlow({
     }
   }
 
-  if (step === "create") {
-    return (
-      <CreatePassphraseStep
-        passphraseMode={passphraseMode}
-        customPassphrase={customPassphrase}
-        generatedPassphrase={generatedPassphrase}
-        onSelectCustom={handleSelectCustom}
-        onSelectGenerated={handleSelectGenerated}
-        onCustomPassphraseChange={setCustomPassphrase}
-        onGenerateAnother={handleGenerateAnother}
-        onReturnToOptions={handleReturnToOptions}
-        onContinue={handleContinueFromCreate}
-        canContinue={canContinueFromCreate}
-      />
-    )
-  }
+  const protectionStep = (() => {
+    if (step === "create") {
+      return (
+        <CreatePassphraseStep
+          passphraseMode={passphraseMode}
+          customPassphrase={customPassphrase}
+          generatedPassphrase={generatedPassphrase}
+          onSelectCustom={handleSelectCustom}
+          onSelectGenerated={handleSelectGenerated}
+          onCustomPassphraseChange={setCustomPassphrase}
+          onGenerateAnother={handleGenerateAnother}
+          onReturnToOptions={handleReturnToOptions}
+          onContinue={handleContinueFromCreate}
+          canContinue={canContinueFromCreate}
+        />
+      )
+    }
 
-  if (step === "store") {
-    return (
-      <StorePassphraseStep
-        passphrase={selectedPassphrase}
-        saveOnDevice={saveOnDevice}
-        manualSaveSelected={manualSaveSelected}
-        tokenCopied={tokenCopied}
-        savedElsewhereConfirmed={savedElsewhereConfirmed}
-        onToggleSaveOnDevice={() => setSaveOnDevice((current) => !current)}
-        onToggleManualSave={handleToggleManualSave}
-        onCopyToken={handleCopyToken}
-        onToggleSavedElsewhereConfirmed={() => setSavedElsewhereConfirmed((current) => !current)}
-        onReturnToOptions={handleReturnToOptions}
-        onBack={() => {
-          setStep("create")
-          setSubmitError("")
-        }}
-        onContinue={handleContinueFromStore}
-        canContinue={canContinueFromStore}
-      />
-    )
-  }
+    if (step === "store") {
+      return (
+        <StorePassphraseStep
+          passphrase={selectedPassphrase}
+          saveOnDevice={saveOnDevice}
+          manualSaveSelected={manualSaveSelected}
+          tokenCopied={tokenCopied}
+          savedElsewhereConfirmed={savedElsewhereConfirmed}
+          onToggleSaveOnDevice={() => setSaveOnDevice((current) => !current)}
+          onToggleManualSave={handleToggleManualSave}
+          onCopyToken={handleCopyToken}
+          onToggleSavedElsewhereConfirmed={() => setSavedElsewhereConfirmed((current) => !current)}
+          onReturnToOptions={handleReturnToOptions}
+          onBack={() => {
+            setStep("create")
+            setSubmitError("")
+          }}
+          onContinue={handleContinueFromStore}
+          canContinue={canContinueFromStore}
+        />
+      )
+    }
 
-  if (step === "confirm") {
+    if (step === "confirm") {
+      return (
+        <ConfirmProtectedReleaseStep
+          savedOnDevice={saveOnDevice}
+          tokenCopied={tokenCopied}
+          onBack={() => {
+            setStep("store")
+            setSubmitError("")
+          }}
+          onReturnToOptions={handleReturnToOptions}
+          onConfirm={handleConfirmRelease}
+          isSubmitting={isSubmitting}
+          errorMessage={submitError}
+        />
+      )
+    }
+
     return (
-      <ConfirmProtectedReleaseStep
+      <ProtectionConfirmedStep
         savedOnDevice={saveOnDevice}
         tokenCopied={tokenCopied}
-        onBack={() => {
-          setStep("store")
-          setSubmitError("")
+        onViewLetter={() => {
+          if (releasedLetterId) {
+            onViewLetter(releasedLetterId)
+          }
         }}
-        onReturnToOptions={handleReturnToOptions}
-        onConfirm={handleConfirmRelease}
-        isSubmitting={isSubmitting}
-        errorMessage={submitError}
+        onClose={onClose}
       />
     )
-  }
+  })()
 
   return (
-    <ProtectionConfirmedStep
-      savedOnDevice={saveOnDevice}
-      tokenCopied={tokenCopied}
-      onViewLetter={() => {
-        if (releasedLetterId) {
-          onViewLetter(releasedLetterId)
-        }
-      }}
-      onClose={onClose}
-    />
+    <div ref={protectionFlowRef} className="release-wrapper">
+      {protectionStep}
+    </div>
   )
 }

@@ -1379,27 +1379,26 @@ section {
   cursor: not-allowed;
 }
 
-.release-link-button,
-.release-link-button:hover {
+button.release-link-button {
   background: transparent;
   border: none;
   padding: 0;
-  width: fit-content;
   color: var(--accent-700);
   text-decoration: underline;
   text-underline-offset: 3px;
   font-family: var(--geist);
 }
 
-.release-link-button {
+button.release-link-button {
   transition: none;
 }
 
-.release-link-button:hover {
+button.release-link-button:not(:disabled):hover {
+  color: var(--accent-700);
   text-decoration: none;
 }
 
-.release-link-button:disabled {
+button.release-link-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

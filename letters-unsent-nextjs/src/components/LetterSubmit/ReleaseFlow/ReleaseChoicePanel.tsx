@@ -21,7 +21,7 @@ export default function ReleaseChoicePanel({
         <button type="button" className="release-secondary-button" onClick={onReleaseWithoutProtection}>
           Release without protection
         </button>
-        <button type="button" className="release-link-button" onClick={onReturnToConversation}>
+        <button type="button" className="release-secondary-button" onClick={onReturnToConversation}>
           Return to conversation
         </button>
       </div>

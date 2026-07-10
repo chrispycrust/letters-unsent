@@ -54,7 +54,7 @@ export default function CreatePassphraseStep({
       description="Choose a private token. You’ll need it later to edit or remove this letter."
       actions={
         <>
-          <button type="button" className="release-link-button" onClick={onReturnToOptions}>
+          <button type="button" className="release-secondary-button" onClick={onReturnToOptions}>
             Return to release options
           </button>
           <button type="button" className="release-primary-button" onClick={onContinue} disabled={!canContinue}>

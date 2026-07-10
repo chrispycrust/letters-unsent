@@ -42,7 +42,7 @@ export default function StorePassphraseStep({
           <button type="button" className="release-secondary-button" onClick={onBack}>
             Back
           </button>
-          <button type="button" className="release-link-button" onClick={onReturnToOptions}>
+          <button type="button" className="release-secondary-button" onClick={onReturnToOptions}>
             Return to release options
           </button>
           <button

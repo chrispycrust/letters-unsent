@@ -37,7 +37,7 @@ export default function ConfirmProtectedReleaseStep({
           <button type="button" className="release-secondary-button" onClick={onBack} disabled={isSubmitting}>
             Back
           </button>
-          <button type="button" className="release-link-button" onClick={onReturnToOptions} disabled={isSubmitting}>
+          <button type="button" className="release-secondary-button" onClick={onReturnToOptions} disabled={isSubmitting}>
             Return to release options
           </button>
           <button

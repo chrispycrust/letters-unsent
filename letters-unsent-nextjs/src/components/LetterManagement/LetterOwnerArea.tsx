@@ -1,12 +1,15 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { useRouter } from "next/navigation"
 
 import DeleteConfirmationModal from "@/components/LetterManagement/DeleteConfirmationModal"
 import DesktopEditPocket from "@/components/LetterManagement/DesktopEditPocket"
-import MobileOwnerSheet, { type MobileOwnerSheetMode } from "@/components/LetterManagement/MobileOwnerSheet"
+import MobileOwnerSheet, {
+  type MobileOwnerSheetMode,
+  type MobileOwnerSheetSnap,
+} from "@/components/LetterManagement/MobileOwnerSheet"
 import OwnerActions from "@/components/LetterManagement/OwnerActions"
 import OwnerEditActions from "@/components/LetterManagement/OwnerEditActions"
 import OwnerVerificationPanel from "@/components/LetterManagement/OwnerVerificationPanel"
@@ -29,7 +32,7 @@ interface LetterOwnerAreaProps {
   onDismissEditFeedback: () => void
 }
 
-type MobileSheetMode = "closed" | MobileOwnerSheetMode
+type MobileSheetPosition = "closed" | MobileOwnerSheetSnap
 
 const TOO_MANY_ATTEMPTS_MESSAGE = "Too many attempts in a short time. Please wait a moment, then try again."
 const TOKEN_NOT_VERIFIED_MESSAGE = "We couldn’t verify your token."
@@ -55,8 +58,8 @@ export default function LetterOwnerArea({
   const [isExpanded, setIsExpanded] = useState(false)
   const [isManaging, setIsManaging] = useState(false)
   const [isCheckingEdit, setIsCheckingEdit] = useState(false)
-  const [mobileSheetMode, setMobileSheetMode] = useState<MobileSheetMode>("closed")
-  const [hasDismissedVerifiedSheet, setHasDismissedVerifiedSheet] = useState(false)
+  const [mobileSheetMode, setMobileSheetMode] = useState<MobileOwnerSheetMode>("open-unverified")
+  const [mobileSheetPosition, setMobileSheetPosition] = useState<MobileSheetPosition>("closed")
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -77,49 +80,52 @@ export default function LetterOwnerArea({
     clearVerifiedOwnership,
   } = useOwnerVerification({ letterId, storageKey })
 
+  const previousIsMobile = useRef(isMobile)
+  const previousIsVerified = useRef(isVerified)
+
   useEffect(() => {
+    const enteredMobileSurface = isMobile && !previousIsMobile.current
+    const becameVerified = isVerified && !previousIsVerified.current
+
+    previousIsMobile.current = isMobile
+    previousIsVerified.current = isVerified
+
     if (!isMobile) {
       closeMobileSheet()
-    }
-  }, [isMobile])
-
-  useEffect(() => {
-
-    if (isVerified && !isManaging && !isEditing && isMobile && !hasDismissedVerifiedSheet) {
-      openMobileSheet("open-verified")
       return
     }
 
-    if (isManaging && isMobile) {
-      openMobileSheet("open-verified-actions")
-      return
-    }
-
-    if (isEditing && isMobile) {
+    if (isEditing) {
       openMobileSheet("editing")
       return
     }
 
-    if (!isEditing && mobileSheetMode === "editing") {
-      if (isMobile && isVerified && isManaging) {
-        openMobileSheet("open-verified-actions")
-        return
-      }
-      closeMobileSheet()
+    if (isVerified) {
+      openMobileSheet(
+        "open-verified-actions",
+        becameVerified || enteredMobileSurface ? "full" : undefined,
+      )
     }
-  }, [isManaging, isEditing, isMobile, isVerified, mobileSheetMode])
+  }, [isEditing, isMobile, isVerified])
 
-  function openMobileSheet(mode: MobileOwnerSheetMode) {
+  function openMobileSheet(mode: MobileOwnerSheetMode, snap?: MobileOwnerSheetSnap) {
     setMobileSheetMode(mode)
+    setMobileSheetPosition((currentPosition) => {
+      if (snap) {
+        return snap
+      }
+
+      return currentPosition === "closed" ? "full" : currentPosition
+    })
   }
 
   function closeMobileSheet() {
-    setMobileSheetMode("closed")
+    setMobileSheetPosition("closed")
   }
 
   function revealVerificationPanel() {
     if (isMobile) {
-      openMobileSheet("open-unverified")
+      openMobileSheet("open-unverified", "full")
       return
     }
 
@@ -134,7 +140,7 @@ export default function LetterOwnerArea({
 
     setIsExpanded(false)
     if (isMobile) {
-      openMobileSheet("open-verified-actions")
+      openMobileSheet("open-verified-actions", "full")
     }
   }
 
@@ -145,8 +151,7 @@ export default function LetterOwnerArea({
 
   function handleOpenManagementPanel() {
     if (isMobile) {
-      setIsManaging(true)
-      openMobileSheet("open-verified-actions")
+      openMobileSheet("open-verified-actions", "full")
       return
     }
 
@@ -187,14 +192,13 @@ export default function LetterOwnerArea({
     }
   }
 
-  function handleDismiss() {
-    setIsManaging(false)
-    
+  function handleMinimiseControls() {
     if (isMobile) {
-      setHasDismissedVerifiedSheet(true)
-      closeMobileSheet()
+      setMobileSheetPosition("compact")
       return
     }
+
+    setIsManaging(false)
   }
 
   function handleCancelVerification() {
@@ -208,14 +212,18 @@ export default function LetterOwnerArea({
 
   function handleCancelEdit() {
     onCancelEdit()
-    setIsManaging(true)
 
     if (isMobile && isVerified) {
       openMobileSheet("open-verified-actions")
       return
     }
 
-    closeMobileSheet()
+    if (isMobile) {
+      closeMobileSheet()
+      return
+    }
+
+    setIsManaging(true)
   }
 
   function handleOpenDeleteModal() {
@@ -272,6 +280,10 @@ export default function LetterOwnerArea({
       if (response.status === 401 || data?.code === "INVALID_PASSPHRASE" || data?.code === "MISSING_PASSPHRASE") {
         setDeleteErrorMessage(TOKEN_NOT_VERIFIED_MESSAGE)
         clearVerifiedOwnership()
+        setIsManaging(false)
+        if (isMobile) {
+          closeMobileSheet()
+        }
         return
       }
 
@@ -304,7 +316,7 @@ export default function LetterOwnerArea({
       isCheckingEdit={isCheckingEdit}
       onEdit={handleEditing}
       onRemove={handleOpenDeleteModal}
-      onDismiss={handleDismiss}
+      onMinimise={handleMinimiseControls}
     />
   )
 
@@ -327,18 +339,7 @@ export default function LetterOwnerArea({
       >
         <i>You own this letter - manage it here.</i>
       </button>
-      {/* <button 
-        type="button"
-        className="owner-subtle-action owner-question-trigger"
-        onClick={() => {
-          setMobileSheetMode("closed")
-          closeMobileSheet()
-        }}
-      >
-        Dismiss
-      </button> */}
     </>
-    
   )
 
   function renderMobileTrigger() {
@@ -347,7 +348,7 @@ export default function LetterOwnerArea({
         <button
           type="button"
           className="owner-subtle-action owner-question-trigger"
-          onClick={() => openMobileSheet("editing")}
+          onClick={() => openMobileSheet("editing", "full")}
         >
           <i>You are editing this letter.</i>
         </button>
@@ -374,10 +375,6 @@ export default function LetterOwnerArea({
   function renderMobileSheetContent() {
     if (mobileSheetMode === "editing") {
       return editActions
-    }
-
-    if (mobileSheetMode === "open-verified") {
-      return manageOwnerButton
     }
 
     if (mobileSheetMode === "open-verified-actions") {
@@ -445,8 +442,12 @@ export default function LetterOwnerArea({
         ? createPortal(desktopRailContent, desktopRailMountNode)
         : null}
 
-      {isMobile && mobileSheetMode !== "closed" ? (
-        <MobileOwnerSheet mode={mobileSheetMode} onClose={closeMobileSheet}>
+      {isMobile && mobileSheetPosition !== "closed" ? (
+        <MobileOwnerSheet
+          mode={mobileSheetMode}
+          snap={mobileSheetPosition}
+          onSnapChange={setMobileSheetPosition}
+        >
           {renderMobileSheetContent()}
         </MobileOwnerSheet>
       ) : null}

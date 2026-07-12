@@ -176,10 +176,12 @@ describe("Single letter page", () => {
     expect(letterBody.className).toContain("letter-edit-content-input")
     expect(letterBody.className).not.toContain("dashed")
 
-    fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
+    fireEvent.click(screen.getByRole("button", { name: "Stop editing" }))
 
     expect(screen.queryByText("You are editing this letter.")).toBeNull()
-    expect(screen.getByRole("button", { name: "You own this letter - manage it here." })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Remove" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Minimise controls" })).not.toBeNull()
   })
 
   it("keeps scroll stable when typing in a focused long edit textarea", async () => {
@@ -387,10 +389,10 @@ describe("Single letter page", () => {
     fireEvent.click(manageButton)
     expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Edit" })).not.toBeNull()
     expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Remove" })).not.toBeNull()
-    expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Cancel" })).not.toBeNull()
+    expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Minimise controls" })).not.toBeNull()
     expect(within(sideRail).getByRole("button", { name: "Edit" })).not.toBeNull()
     expect(within(sideRail).getByRole("button", { name: "Remove" })).not.toBeNull()
-    expect(within(sideRail).getByRole("button", { name: "Cancel" })).not.toBeNull()
+    expect(within(sideRail).getByRole("button", { name: "Minimise controls" })).not.toBeNull()
 
     fireEvent.click(within(sideRail).getByRole("button", { name: "Edit" }))
 
@@ -408,7 +410,7 @@ describe("Single letter page", () => {
     expect(topControls).not.toBeNull()
     expect(within(topControls as HTMLElement).getByText("You are editing this letter.")).not.toBeNull()
     expect(within(topControls as HTMLElement).getByRole("button", { name: "Save changes" })).not.toBeNull()
-    expect(within(topControls as HTMLElement).getByRole("button", { name: "Cancel" })).not.toBeNull()
+    expect(within(topControls as HTMLElement).getByRole("button", { name: "Stop editing" })).not.toBeNull()
 
     await waitFor(() => {
       expect(within(sideRail).getByTestId("desktop-edit-pocket")).not.toBeNull()
@@ -420,7 +422,7 @@ describe("Single letter page", () => {
     expect(pocket.getAttribute("data-pocket-state")).toBe("visible")
     expect(within(sideRail).getByText("You are editing this letter.")).not.toBeNull()
     expect(within(sideRail).getByRole("button", { name: "Save changes" })).not.toBeNull()
-    expect(within(sideRail).getByRole("button", { name: "Cancel" })).not.toBeNull()
+    expect(within(sideRail).getByRole("button", { name: "Stop editing" })).not.toBeNull()
     expect(within(sideRail).queryByRole("button", { name: "Editing" })).toBeNull()
   })
 
@@ -454,10 +456,12 @@ describe("Single letter page", () => {
 
     const sheet = screen.getByRole("dialog", { name: "Owner actions" })
     expect(sheet.getAttribute("data-sheet-mode")).toBe("open-unverified")
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
+    expect(screen.getByRole("button", { name: "Minimise owner controls" }).getAttribute("aria-expanded")).toBe("true")
     expect(screen.getByLabelText("Token")).not.toBeNull()
   })
 
-  it("lets the mobile bottom sheet snap fuller and dismiss", async () => {
+  it("preserves a manual token while minimised and resets it when verification is cancelled", async () => {
     mockViewport({ isMobile: true })
     const fetchMock = jest.fn().mockResolvedValueOnce({
       ok: true,
@@ -485,12 +489,21 @@ describe("Single letter page", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
     const sheet = screen.getByRole("dialog", { name: "Owner actions" })
+    const tokenInput = screen.getByLabelText("Token") as HTMLInputElement
+    fireEvent.change(tokenInput, { target: { value: "draft-token" } })
 
-    fireEvent.click(screen.getByRole("button", { name: "Expand or collapse owner actions" }))
+    fireEvent.click(screen.getByRole("button", { name: "Minimise owner controls" }))
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("compact")
+
+    fireEvent.click(screen.getByRole("button", { name: "Expand owner controls" }))
     expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
+    expect(tokenInput.value).toBe("draft-token")
 
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
     expect(screen.queryByRole("dialog", { name: "Owner actions" })).toBeNull()
+
+    fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
+    expect((screen.getByLabelText("Token") as HTMLInputElement).value).toBe("")
   })
 
   it("opens verified mobile owner actions after auto-verification", async () => {
@@ -525,13 +538,62 @@ describe("Single letter page", () => {
     })
     render(page)
 
-    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
-    fireEvent.click(manageButton)
-
-    const sheet = screen.getByRole("dialog", { name: "Owner actions" })
-    expect(sheet.getAttribute("data-sheet-mode")).toBe("open-verified")
+    const sheet = await screen.findByRole("dialog", { name: "Owner actions" })
+    expect(sheet.getAttribute("data-sheet-mode")).toBe("open-verified-actions")
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
     expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
     expect(screen.getByRole("button", { name: "Remove" })).not.toBeNull()
+    fireEvent.click(screen.getByRole("button", { name: "Minimise controls" }))
+
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("compact")
+    expect(screen.getByRole("button", { name: "Expand owner controls" })).not.toBeNull()
+    expect(screen.queryByRole("button", { name: "Edit" })).toBeNull()
+
+    fireEvent.click(screen.getByRole("button", { name: "Expand owner controls" }))
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
+    expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
+  })
+
+  it("keeps the mobile sheet closed when a stored token fails automatic verification", async () => {
+    mockViewport({ isMobile: true })
+    window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "expired-token")
+    const fetchMock = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          letter: [
+            {
+              id: "10",
+              content: "This is the full letter body.",
+              intended_recipient: "Sam",
+              author_name: "Casey",
+              created_at: "2026-01-19T00:00:00.000Z",
+              updated_at: null,
+              relationship_type: "Friend",
+              emotional_tone: "Reflective",
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        json: async () => ({ success: false, code: "INVALID_PASSPHRASE" }),
+      })
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    const page = await LetterPage({
+      params: Promise.resolve({ letterId: "10" }),
+    })
+    render(page)
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledTimes(2)
+      expect(window.localStorage.getItem(getLetterPassphraseStorageKey("10"))).toBeNull()
+    })
+
+    expect(screen.queryByRole("dialog", { name: "Owner actions" })).toBeNull()
+    expect(screen.getByRole("button", { name: "Is this letter yours?" })).not.toBeNull()
   })
 
   it("updates mobile sheet content in place after token verification", async () => {
@@ -566,20 +628,21 @@ describe("Single letter page", () => {
     render(page)
 
     fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
+    const sheet = screen.getByRole("dialog", { name: "Owner actions" })
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
     fireEvent.change(screen.getByLabelText("Token"), {
       target: { value: "quiet-sage-morning" },
     })
     fireEvent.click(screen.getByRole("button", { name: "Confirm" }))
 
     await waitFor(() => {
-      expect(screen.getByRole("dialog", { name: "Owner actions" }).getAttribute("data-sheet-mode")).toBe(
-        "open-verified",
-      )
+      expect(sheet.getAttribute("data-sheet-mode")).toBe("open-verified-actions")
     })
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
     expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
   })
 
-  it("shows mobile Save and Cancel actions only during edit mode", async () => {
+  it("keeps the mobile sheet full while entering and leaving edit mode", async () => {
     mockViewport({ isMobile: true })
     window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
     const fetchMock = jest.fn()
@@ -615,18 +678,26 @@ describe("Single letter page", () => {
     })
     render(page)
 
-    const manageButton = await screen.findByRole("button", { name: "You own this letter - manage it here." })
-    fireEvent.click(manageButton)
+    const sheet = await screen.findByRole("dialog", { name: "Owner actions" })
+    expect(sheet.getAttribute("data-sheet-mode")).toBe("open-verified-actions")
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
     expect(screen.queryByRole("button", { name: "Save changes" })).toBeNull()
 
     fireEvent.click(screen.getByRole("button", { name: "Edit" }))
-    const sheet = await screen.findByRole("dialog", { name: "Owner actions" })
 
     await waitFor(() => {
       expect(sheet.getAttribute("data-sheet-mode")).toBe("editing")
     })
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
     expect(screen.getByRole("button", { name: "Save changes" })).not.toBeNull()
-    expect(screen.getByRole("button", { name: "Cancel" })).not.toBeNull()
+    fireEvent.click(screen.getByRole("button", { name: "Stop editing" }))
+
+    await waitFor(() => {
+      expect(sheet.getAttribute("data-sheet-mode")).toBe("open-verified-actions")
+    })
+    expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
+    expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
+    expect(screen.queryByRole("button", { name: "Save changes" })).toBeNull()
   })
 
   it("normalises numeric API ids before auto-verifying the stored token", async () => {

@@ -1,76 +1,165 @@
 "use client"
 
-import { useEffect, useRef, useState, type FocusEvent, type PointerEvent, type ReactNode } from "react"
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+  type FocusEvent,
+  type MouseEvent,
+  type PointerEvent,
+  type ReactNode,
+} from "react"
 
-export type MobileOwnerSheetMode = "open-unverified" | "open-verified" | "open-verified-actions" | "editing"
+export type MobileOwnerSheetMode = "open-unverified" | "open-verified-actions" | "editing"
 
-type MobileOwnerSheetSnap = "compact" | "full"
+export type MobileOwnerSheetSnap = "compact" | "full"
+
+const TAP_MOVEMENT_THRESHOLD = 8
+
+interface DragStart {
+  pointerId: number
+  startY: number
+  startSnap: MobileOwnerSheetSnap
+  travelDistance: number
+  startedOnHandle: boolean
+}
 
 interface MobileOwnerSheetProps {
   mode: MobileOwnerSheetMode
+  snap: MobileOwnerSheetSnap
   children: ReactNode
-  onClose: () => void
+  onSnapChange: (snap: MobileOwnerSheetSnap) => void
 }
 
 export default function MobileOwnerSheet({
   mode,
+  snap,
   children,
-  onClose,
+  onSnapChange,
 }: MobileOwnerSheetProps) {
-  const [snap, setSnap] = useState<MobileOwnerSheetSnap>("compact")
   const [dragOffset, setDragOffset] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const contentId = useId()
 
-  const dragStartY = useRef<number | null>(null)
+  const dragStart = useRef<DragStart | null>(null)
+  const handleRef = useRef<HTMLButtonElement | null>(null)
+  const contentRef = useRef<HTMLDivElement | null>(null)
+  const previousSnap = useRef(snap)
+
+  const sheetStyle: CSSProperties & { "--owner-sheet-drag-offset": string } = {
+    "--owner-sheet-drag-offset": `${dragOffset}px`,
+  }
+
+  function isInsideNoDragRegion(target: EventTarget | null) {
+    return target instanceof Element && target.closest("[data-owner-sheet-no-drag]") !== null
+  }
 
   useEffect(() => {
-    dragStartY.current = null
-    setSnap("compact")
-    setDragOffset(0)
-    setIsDragging(false)
-  }, [mode])
+    if (
+      previousSnap.current === "full" &&
+      snap === "compact" &&
+      contentRef.current?.contains(document.activeElement)
+    ) {
+      handleRef.current?.focus()
+    }
 
-  function handlePointerDown(event: PointerEvent<HTMLButtonElement>) {
-    dragStartY.current = event.clientY
+    previousSnap.current = snap
+  }, [snap])
+
+  function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
+    if (
+      dragStart.current !== null ||
+      event.button !== 0 ||
+      event.isPrimary === false ||
+      isInsideNoDragRegion(event.target)
+    ) {
+      return
+    }
+
+    const handle = event.currentTarget.querySelector<HTMLElement>(".owner-sheet-handle")
+    const travelDistance = Math.max(0, event.currentTarget.offsetHeight - (handle?.offsetHeight ?? 0))
+
+    dragStart.current = {
+      pointerId: event.pointerId,
+      startY: event.clientY,
+      startSnap: snap,
+      travelDistance,
+      startedOnHandle: event.target instanceof Element && event.target.closest(".owner-sheet-handle") !== null,
+    }
     setIsDragging(true)
     event.currentTarget.setPointerCapture?.(event.pointerId)
   }
 
-  function handlePointerMove(event: PointerEvent<HTMLButtonElement>) {
-    if (dragStartY.current === null) {
+  function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
+    if (dragStart.current?.pointerId !== event.pointerId) {
       return
     }
 
-    const nextOffset = event.clientY - dragStartY.current
-    setDragOffset(Math.max(-140, Math.min(180, nextOffset)))
+    const delta = event.clientY - dragStart.current.startY
+    const startPosition = dragStart.current.startSnap === "full" ? 0 : dragStart.current.travelDistance
+    const nextPosition = Math.max(
+      0,
+      Math.min(dragStart.current.travelDistance, startPosition + delta),
+    )
+
+    setDragOffset(nextPosition - startPosition)
   }
 
-  function handlePointerUp(event: PointerEvent<HTMLButtonElement>) {
-    if (dragStartY.current === null) {
-      return
+  function resetDrag(event: PointerEvent<HTMLDivElement>) {
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture?.(event.pointerId)
     }
 
-    const finalOffset = event.clientY - dragStartY.current
-
-    if (finalOffset > 80) {
-      onClose()
-    } else if (finalOffset < -60) {
-      setSnap("full")
-    } else {
-      setSnap("compact")
-    }
-
-    dragStartY.current = null
+    dragStart.current = null
     setDragOffset(0)
     setIsDragging(false)
   }
 
+  function handlePointerUp(event: PointerEvent<HTMLDivElement>) {
+    if (dragStart.current?.pointerId !== event.pointerId) {
+      return
+    }
+
+    const { startY, startedOnHandle } = dragStart.current
+    const finalOffset = event.clientY - startY
+    resetDrag(event)
+
+    if (Math.abs(finalOffset) < TAP_MOVEMENT_THRESHOLD) {
+      if (startedOnHandle) {
+        onSnapChange(snap === "compact" ? "full" : "compact")
+      }
+    } else if (finalOffset < 0) {
+      onSnapChange("full")
+    } else {
+      onSnapChange("compact")
+    }
+  }
+
+  function handlePointerCancel(event: PointerEvent<HTMLDivElement>) {
+    if (dragStart.current?.pointerId !== event.pointerId) {
+      return
+    }
+
+    resetDrag(event)
+  }
+
+  function handleHandleClick(event: MouseEvent<HTMLButtonElement>) {
+    // Pointer gestures are settled in handlePointerUp. A click with no pointer
+    // detail comes from keyboard or assistive technology and still toggles.
+    if (event.detail === 0) {
+      onSnapChange(snap === "compact" ? "full" : "compact")
+    }
+  }
+
   function handleFocusCapture(event: FocusEvent<HTMLDivElement>) {
     if (
-      event.target instanceof HTMLInputElement ||
-      event.target instanceof HTMLTextAreaElement
+      snap === "compact" &&
+      (event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement)
     ) {
-      setSnap("full")
+      onSnapChange("full")
     }
   }
 
@@ -85,22 +174,30 @@ export default function MobileOwnerSheet({
         className={`owner-bottom-sheet is-${snap}`}
         data-sheet-mode={mode}
         data-sheet-snap={snap}
-        style={{ transform: `translateY(${dragOffset}px)` }}
+        style={sheetStyle}
         onFocusCapture={handleFocusCapture}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
       >
         <button
+          ref={handleRef}
           type="button"
           className="owner-sheet-handle"
-          aria-label="Expand or collapse owner actions"
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          onClick={() => {
-            setSnap((currentSnap) => currentSnap === "compact" ? "full" : "compact")
-          }}
+          aria-label={snap === "compact" ? "Expand owner controls" : "Minimise owner controls"}
+          aria-expanded={snap === "full"}
+          aria-controls={contentId}
+          onClick={handleHandleClick}
         />
-        <div className="owner-bottom-sheet-content">
+        <div
+          ref={contentRef}
+          id={contentId}
+          className="owner-bottom-sheet-content"
+          data-owner-sheet-no-drag
+          aria-hidden={snap === "compact"}
+          inert={snap === "compact" ? true : undefined}
+        >
           {children}
         </div>
       </div>

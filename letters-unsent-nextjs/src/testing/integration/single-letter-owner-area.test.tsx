@@ -14,7 +14,8 @@ type MockFetchResponse = {
 function mockFetchSequence(...responses: MockFetchResponse[]) {
   const queue = [...responses]
 
-  return jest.fn(async () => {
+  return jest.fn(async (...requestArguments: [input?: RequestInfo | URL, init?: RequestInit]) => {
+    void requestArguments
     const next = queue.shift()
     if (!next) {
       throw new Error("No mocked fetch response left in queue.")
@@ -32,10 +33,16 @@ function renderOwnerArea({
   isEditing = false,
   onEdit = jest.fn(),
   onCancelEdit = jest.fn(),
+  isSaving = false,
+  editFeedback = null,
+  onDismissEditFeedback = jest.fn(),
 }: {
   isEditing?: boolean
-  onEdit?: () => void
+  onEdit?: (ownerPassphrase: string) => void
   onCancelEdit?: () => void
+  isSaving?: boolean
+  editFeedback?: string | null
+  onDismissEditFeedback?: () => void
 } = {}) {
   return render(
     <LetterOwnerArea
@@ -44,6 +51,9 @@ function renderOwnerArea({
       editFormId="test-letter-edit-form"
       onEdit={onEdit}
       onCancelEdit={onCancelEdit}
+      isSaving={isSaving}
+      editFeedback={editFeedback}
+      onDismissEditFeedback={onDismissEditFeedback}
     />,
   )
 }
@@ -124,7 +134,10 @@ describe("Single letter owner area", () => {
   it("keeps owner actions mounted while edit token verification is pending", async () => {
     window.localStorage.setItem(getLetterPassphraseStorageKey("10"), "saved-token")
     let resolveEditVerification: ((response: MockFetchResponse) => void) | undefined
-    const fetchMock = jest.fn()
+    const fetchMock = jest.fn<(
+      input?: RequestInfo | URL,
+      init?: RequestInit,
+    ) => Promise<MockFetchResponse>>()
       .mockResolvedValueOnce({
         ok: true,
         status: 200,
@@ -145,7 +158,7 @@ describe("Single letter owner area", () => {
     expect(screen.getByText(/For this letter/)).not.toBeNull()
     expect((screen.getByRole("button", { name: "Checking your token..." }) as HTMLButtonElement).disabled).toBe(true)
     expect((screen.getByRole("button", { name: "Remove" }) as HTMLButtonElement).disabled).toBe(true)
-    expect((screen.getByRole("button", { name: "Cancel" }) as HTMLButtonElement).disabled).toBe(true)
+    expect((screen.getByRole("button", { name: "Minimise controls" }) as HTMLButtonElement).disabled).toBe(true)
     expect(onEdit).toHaveBeenCalledTimes(0)
 
     await act(async () => {

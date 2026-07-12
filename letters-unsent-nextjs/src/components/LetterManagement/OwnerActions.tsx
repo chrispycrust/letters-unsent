@@ -2,14 +2,14 @@ interface OwnerActionsProps {
   isCheckingEdit?: boolean
   onEdit: () => void | Promise<void>
   onRemove: () => void
-  onDismiss: () => void
+  onMinimise: () => void
 }
 
 export default function OwnerActions({ 
   isCheckingEdit = false,
   onEdit,
   onRemove,
-  onDismiss,
+  onMinimise,
 }: OwnerActionsProps) {
   return (
     <>
@@ -34,8 +34,8 @@ export default function OwnerActions({
           Remove
         </button>
         <span className="owner-actions-separator-word">or</span>
-        <button type="button" className="owner-subtle-action" onClick={onDismiss} disabled={isCheckingEdit}>
-          Cancel
+        <button type="button" className="owner-subtle-action" onClick={onMinimise} disabled={isCheckingEdit}>
+          Hide controls
         </button>
       </div>
     </>

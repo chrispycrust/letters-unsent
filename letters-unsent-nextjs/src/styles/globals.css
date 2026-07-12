@@ -604,57 +604,102 @@ button.owner-question-trigger {
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  overflow: hidden;
 }
 
 .owner-bottom-sheet {
+  --owner-sheet-drag-offset: 0px;
+  --owner-sheet-peek-height: max(52px, calc(24px + env(safe-area-inset-bottom)));
+  --owner-sheet-resting-offset: 0px;
+
   width: min(100%, 680px);
   pointer-events: auto;
+  display: flex;
+  flex-direction: column;
   background: var(--background);
   border-top: 1px solid var(--release-border);
   border-radius: 5px 5px 0 0;
   box-shadow: 0 -8px 22px rgb(0 0 0 / 10%);
-  padding: 8px 16px calc(24px + env(safe-area-inset-bottom));
-  transition:
-    transform 180ms ease,
-    max-height 180ms ease;
-  max-height: 46dvh;
-  overflow-y: auto;
+  min-height: var(--owner-sheet-peek-height);
+  max-height: 82dvh;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  transform: translateY(calc(var(--owner-sheet-resting-offset) + var(--owner-sheet-drag-offset)));
+  transition: transform 180ms ease;
+  will-change: transform;
+}
+
+.owner-bottom-sheet.is-compact {
+  --owner-sheet-resting-offset: calc(100% - var(--owner-sheet-peek-height));
 }
 
 .owner-bottom-sheet.is-full {
-  max-height: 82dvh;
+  --owner-sheet-resting-offset: 0px;
 }
 
 .owner-sheet-overlay.is-dragging .owner-bottom-sheet {
+  cursor: grabbing;
   transition: none;
 }
 
 .owner-sheet-handle {
+  position: relative;
+  flex: 0 0 var(--owner-sheet-peek-height);
   display: block;
+  width: 100%;
+  height: var(--owner-sheet-peek-height);
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 5px 5px 0 0;
+  background: transparent;
+  touch-action: none;
+  cursor: inherit;
+}
+
+.owner-sheet-handle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 80px;
   height: 6px;
-  padding: 0;
-  margin: 0 auto 14px auto;
   border-radius: 999px;
   background: var(--background-desat-2);
   opacity: 0.35;
-  touch-action: none;
+  transform: translate(-50%, -50%);
 }
 
-.owner-sheet-handle:hover,
-.owner-sheet-handle:focus-visible {
+.owner-sheet-handle:hover::before,
+.owner-sheet-handle:focus-visible::before {
   background: var(--foreground);
   opacity: 0.55;
 }
 
+.owner-sheet-handle:focus-visible {
+  outline: 2px solid var(--accent-700);
+  outline-offset: -4px;
+}
+
 .owner-bottom-sheet-content {
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
   font-family: var(--geist);
   align-items: center;
-  margin-top: 36px;
-  margin-bottom: 12px;
+  margin: 0;
+  padding: 12px 16px calc(36px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  cursor: auto;
+}
+
+.owner-bottom-sheet.is-compact .owner-bottom-sheet-content {
+  pointer-events: none;
 }
 
 .owner-token-input {
@@ -1207,8 +1252,12 @@ section {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .toggle-panel {
+  .toggle-panel,
+  .owner-bottom-sheet {
     transition: none;
+  }
+
+  .toggle-panel {
     transform: none;
   }
 }

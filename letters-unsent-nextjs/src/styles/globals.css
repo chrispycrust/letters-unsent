@@ -945,29 +945,62 @@ p.timestamp {
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  position: relative; /* allows visitor panel to stick to the bottom of the viewport */
-  overflow: hidden;   /* prevents scrolling on container */
+  position: relative;
+  overflow: hidden;
   z-index: -1;        /* workaround for now to get navbar modal to appear over this */
 }
 
-.guardian-panel-container {
-  flex: 1;
+.submit-container.conversation-active {
+  justify-content: flex-start;
+}
+
+.conversation-shell {
+  flex: 1 1 auto;
+  min-width: 0;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
+  width: 100%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-content: stretch;
+  position: relative;
+  overflow: hidden;
+}
+
+.conversation-shell.is-composing {
+  flex: 0 0 var(--conversation-available-height, 100%);
+  height: var(--conversation-available-height, 100%);
+  max-height: var(--conversation-available-height, 100%);
+  transform: translateY(var(--conversation-visible-top-inset, 0px));
+}
+
+.conversation-footer {
+  min-width: 0;
+}
+
+.guardian-panel-container {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .guardian-panel {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  align-content: center;
-  justify-content: center;
-  min-height: 50px;
-  min-width: 50px;
-  overflow: auto;
-  margin-bottom: 20px;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: clamp(14px, 4vh, 36px) 12px;
+  margin: 0;
+}
+
+.guardian-panel > div {
+  flex: 0 0 auto;
+  width: 100%;
+  margin-block: auto;
 }
 
 form {
@@ -1042,39 +1075,58 @@ textarea {
 
 .visitor-input-container {
   width: 100%;
-  padding: 10px;
-  margin-top: auto;
-  position: sticky;
-  bottom: 0;
+  min-width: 0;
+  flex: 0 0 auto;
+  padding:
+    10px max(10px, env(safe-area-inset-right))
+    max(10px, env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left));
+  margin: 0;
+  position: relative;
   background: var(--background-desat-1);
-}
-
-.vistor-input-container-expanded {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-
-  height: auto;
-
-  z-index: 2;
 }
 
 .visitor-input-area {
   display: flex;
   flex: row;
+  align-items: flex-end;
+  gap: 8px;
   flex: 1;
   min-height: 0;
+  min-width: 0;
 }
 
 .visitor-textarea {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  max-height: calc(4lh + 20px);
+  overflow-y: auto;
+  resize: none;
   border: none;
 }
 
-.vistor-textarea-expanded {
-  flex: 1;
+.visitor-input-container .buttons-container {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 8px;
+  margin-left: 0;
+}
+
+.visitor-input-container .buttons-container button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px;
+  margin: 0;
+}
+
+.visitor-input-container .buttons-container .button-change-textarea {
+  display: none;
 }
 
 label {
@@ -1748,6 +1800,70 @@ button.release-link-button:disabled {
 , .release-confirm-checkbox
 , .release-link-button {
   font-size: var(--font-size-md);
+}
+
+@media (max-width: 650px), (pointer: coarse) and (max-height: 650px) {
+  .conversation-shell.is-composing .guardian-panel {
+    padding-block: 12px;
+  }
+}
+
+@media (min-width: 651px) and (min-height: 651px),
+  (min-width: 651px) and (pointer: fine) {
+  .visitor-input-container {
+    padding: 10px;
+  }
+
+  .visitor-input-area {
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .visitor-textarea {
+    min-height: var(--font-size);
+    max-height: none;
+    resize: vertical;
+  }
+
+  .visitor-input-container .buttons-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-left: 10px;
+  }
+
+  .visitor-input-container .buttons-container button {
+    display: block;
+    flex: 0 1 auto;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .visitor-input-container .buttons-container .button-change-textarea {
+    display: block;
+  }
+
+  .visitor-input-container .button-input-area {
+    margin-bottom: 10px;
+  }
+
+  .visitor-input-container .submit-button {
+    margin-top: auto;
+  }
+
+  .vistor-input-container-expanded {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    z-index: 2;
+  }
+
+  .vistor-textarea-expanded {
+    flex: 1;
+  }
 }
 
 /*

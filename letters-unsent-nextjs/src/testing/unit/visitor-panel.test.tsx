@@ -50,4 +50,24 @@ describe("VisitorPanel", () => {
     fireEvent.click(minimiseButton);
     expect(form?.className.includes("vistor-input-container-expanded")).toBe(false);
   });
+
+  it("reports when the visitor enters and leaves writing mode", () => {
+    const onFocusChange = jest.fn();
+
+    render(
+      <VisitorPanel
+        visitorInput=""
+        setVisitorInput={jest.fn()}
+        handleSubmit={jest.fn()}
+        onFocusChange={onFocusChange}
+      />,
+    );
+
+    const textarea = screen.getByPlaceholderText("Write something") as HTMLTextAreaElement;
+    textarea.focus();
+    textarea.blur();
+
+    expect(onFocusChange).toHaveBeenNthCalledWith(1, true);
+    expect(onFocusChange).toHaveBeenNthCalledWith(2, false);
+  });
 });

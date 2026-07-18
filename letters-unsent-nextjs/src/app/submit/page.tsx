@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 
 import ErrorDisplay from "@/components/ErrorDisplay";
 import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
+import useConversationViewport from "@/components/LetterSubmit/useConversationViewport";
 import ReleaseActionArea from "@/components/LetterSubmit/ReleaseFlow/ReleaseActionArea";
 import type {
   ReadyLetterPayload,
@@ -61,6 +62,7 @@ function normaliseReadyLetterPayload(payload: unknown): ReadyLetterPayload | nul
 
 export default function Submit() {
   const router = useRouter();
+  const conversationShellRef = useRef<HTMLDivElement>(null);
 
   const [coveMessage, setCoveMessage] = useState("");
   const [visitorInput, setVisitorInput] = useState("");
@@ -68,8 +70,12 @@ export default function Submit() {
   const [responseOk, setResponseOk] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [conversationStart, setConversationStart] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
   const [pendingReleasePayload, setPendingReleasePayload] = useState<ReadyLetterPayload | null>(null);
   const [releaseLocked, setReleaseLocked] = useState(false);
+
+  const hasActiveComposer = conversationStart && !pendingReleasePayload;
+  useConversationViewport(conversationShellRef, hasActiveComposer && isComposing);
 
   async function greetVisitor() {
     setConversationStart(true);
@@ -141,6 +147,7 @@ export default function Submit() {
         : null;
 
       if (releasePayload && !releaseLocked) {
+        setIsComposing(false);
         setPendingReleasePayload(releasePayload);
       }
     } catch (error) {
@@ -192,11 +199,13 @@ export default function Submit() {
   }
 
   function returnToConversation() {
+    setIsComposing(false);
     setPendingReleasePayload(null);
     setVisitorInput("");
   }
 
   function startNewLetterFlow() {
+    setIsComposing(false);
     setReleaseLocked(false);
     setPendingReleasePayload(null);
     setVisitorInput("");
@@ -207,11 +216,14 @@ export default function Submit() {
   }
 
   return (
-    <div className="submit-container">
+    <div className={`submit-container ${conversationStart ? "conversation-active" : ""}`}>
       {errorMessage ? <ErrorDisplay message={errorMessage} /> : null}
 
       {conversationStart ? (
-        <>
+        <div
+          ref={conversationShellRef}
+          className={`conversation-shell ${isComposing ? "is-composing" : ""}`}
+        >
           <div className="guardian-panel-container">
             <GuardianPanel message={coveMessage} responseStatus={responseOk} />
           </div>
@@ -224,7 +236,7 @@ export default function Submit() {
               onViewLetter={(letterId) => router.push(`/letters/${letterId}`)}
             />
           ) : (
-            <>
+            <div className="conversation-footer">
               {releaseLocked ? (
                 <div className="post-release-note">
                   <p>This letter is now closed. You can keep talking with Cove.</p>
@@ -242,10 +254,11 @@ export default function Submit() {
                 visitorInput={visitorInput}
                 setVisitorInput={setVisitorInput}
                 handleSubmit={handleSubmit}
+                onFocusChange={setIsComposing}
               />
-            </>
+            </div>
           )}
-        </>
+        </div>
       ) : (
         <div>
           <button

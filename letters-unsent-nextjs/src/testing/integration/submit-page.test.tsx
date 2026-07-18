@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Submit from "@/app/submit/page";
 
 jest.mock("next/navigation", () => ({
@@ -7,10 +7,37 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
+const originalFetch = global.fetch;
+const originalMatchMedia = window.matchMedia;
+
+function mockMobileConversationViewport(matches: boolean) {
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: jest.fn().mockImplementation((media: string) => ({
+      matches,
+      media,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+}
+
 describe("Submit page flow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     window.localStorage.clear();
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      value: originalMatchMedia,
+    });
   });
 
   it("starts the conversation and renders the first Cove message", async () => {
@@ -30,8 +57,114 @@ describe("Submit page flow", () => {
       expect(screen.getByText("Welcome. I'm Cove.")).not.toBeNull();
     });
 
+    const textarea = screen.getByPlaceholderText("Write something") as HTMLTextAreaElement;
+    const submitContainer = document.querySelector(".submit-container");
+    const conversationShell = document.querySelector(".conversation-shell");
+
     expect(window.localStorage.getItem("visitCount")).toBe("1");
-    expect(screen.getByPlaceholderText("Write something")).not.toBeNull();
+    expect(document.activeElement).not.toBe(textarea);
+    expect(submitContainer?.classList.contains("conversation-active")).toBe(true);
+    expect(conversationShell?.classList.contains("is-composing")).toBe(false);
+  });
+
+  it("enters writing mode only while the textarea is focused", async () => {
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ output: "What would you like to release?" }),
+    }) as unknown as typeof fetch;
+
+    render(<Submit />);
+    fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("What would you like to release?")).not.toBeNull();
+    });
+
+    const textarea = screen.getByPlaceholderText("Write something") as HTMLTextAreaElement;
+    const conversationShell = document.querySelector(".conversation-shell");
+
+    act(() => textarea.focus());
+    expect(conversationShell?.classList.contains("is-composing")).toBe(true);
+
+    act(() => textarea.blur());
+    expect(conversationShell?.classList.contains("is-composing")).toBe(false);
+  });
+
+  it("keeps mobile writing mode open when the response is empty", async () => {
+    mockMobileConversationViewport(true);
+    const fetchMock = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ output: "Take your time." }),
+    });
+    global.fetch = fetchMock as unknown as typeof fetch;
+
+    render(<Submit />);
+    fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Take your time.")).not.toBeNull();
+    });
+
+    const textarea = screen.getByPlaceholderText("Write something") as HTMLTextAreaElement;
+    const form = textarea.closest("form");
+    act(() => textarea.focus());
+    fireEvent.change(textarea, { target: { value: "   " } });
+    expect(form).not.toBeNull();
+    fireEvent.submit(form as HTMLFormElement);
+
+    expect(document.activeElement).toBe(textarea);
+    expect(document.querySelector(".conversation-shell")?.classList.contains("is-composing"))
+      .toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("dismisses mobile writing mode immediately after a valid response", async () => {
+    mockMobileConversationViewport(true);
+
+    let resolvePost: ((value: {
+      ok: boolean;
+      json: () => Promise<{ output: string }>;
+    }) => void) | undefined;
+    const postResponse = new Promise<{
+      ok: boolean;
+      json: () => Promise<{ output: string }>;
+    }>((resolve) => {
+      resolvePost = resolve;
+    });
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ output: "What happened?" }),
+      })
+      .mockReturnValueOnce(postResponse);
+    global.fetch = fetchMock as unknown as typeof fetch;
+
+    render(<Submit />);
+    fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("What happened?")).not.toBeNull();
+    });
+
+    const textarea = screen.getByPlaceholderText("Write something") as HTMLTextAreaElement;
+    const form = textarea.closest("form");
+    act(() => textarea.focus());
+    fireEvent.change(textarea, { target: { value: "I need to say goodbye." } });
+    expect(form).not.toBeNull();
+    fireEvent.submit(form as HTMLFormElement);
+
+    expect(document.activeElement).not.toBe(textarea);
+    expect(document.querySelector(".conversation-shell")?.classList.contains("is-composing"))
+      .toBe(false);
+
+    resolvePost?.({
+      ok: true,
+      json: async () => ({ output: "I hear you." }),
+    });
+    await waitFor(() => {
+      expect(screen.getByText("I hear you.")).not.toBeNull();
+    });
   });
 
   it("shows an error if the initial guardian request fails", async () => {

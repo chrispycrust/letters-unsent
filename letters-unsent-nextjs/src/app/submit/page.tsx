@@ -227,7 +227,7 @@ export default function Submit() {
 
   return (
     <div className={`submit-container ${conversationStart ? "conversation-active" : ""}`}>
-      {errorMessage ? <ErrorDisplay message={errorMessage} /> : null}
+      
 
       {conversationStart ? (
         <div
@@ -241,7 +241,11 @@ export default function Submit() {
             className="guardian-panel-container"
             aria-hidden={isComposerExpanded || undefined}
           >
-            {errorMessage ? null : (
+            {errorMessage ? (
+              <div className="guardian-error-container">
+                <ErrorDisplay message={errorMessage} />
+              </div>
+            ) : (
               <GuardianPanel message={coveMessage} responseStatus={responseOk} />
             )}
           </div>

@@ -980,6 +980,19 @@ p.timestamp {
   overflow: hidden;
 }
 
+.guardian-error-container {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.guardian-error-container .error {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+}
+
 .guardian-panel {
   width: 100%;
   height: 100%;

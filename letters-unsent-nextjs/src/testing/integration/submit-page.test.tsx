@@ -98,6 +98,39 @@ describe("Submit page flow", () => {
     expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(true);
   });
 
+  it("covers the Guardian in expanded writing mode and restores it on minimise", async () => {
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ output: "What would you like to say?" }),
+    }) as unknown as typeof fetch;
+
+    render(<Submit />);
+    fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("What would you like to say?")).not.toBeNull();
+    });
+
+    const textarea = screen.getByPlaceholderText("Write something") as HTMLTextAreaElement;
+    const guardianContainer = document.querySelector(".guardian-panel-container");
+    const conversationShell = document.querySelector(".conversation-shell");
+
+    fireEvent.change(textarea, { target: { value: "A draft I want to keep." } });
+    fireEvent.click(screen.getByRole("button", { name: "Expand writing area" }));
+
+    expect(conversationShell?.classList.contains("is-editor-expanded")).toBe(true);
+    expect(guardianContainer?.getAttribute("aria-hidden")).toBe("true");
+    expect(screen.getByText("What would you like to say?")).not.toBeNull();
+    expect(screen.getByPlaceholderText("Write something")).toBe(textarea);
+    expect(textarea.value).toBe("A draft I want to keep.");
+
+    fireEvent.click(screen.getByRole("button", { name: "Minimise writing area" }));
+
+    expect(conversationShell?.classList.contains("is-editor-expanded")).toBe(false);
+    expect(guardianContainer?.hasAttribute("aria-hidden")).toBe(false);
+    expect(screen.getByPlaceholderText("Write something")).toBe(textarea);
+  });
+
   it("keeps mobile writing mode open when the response is empty", async () => {
     mockMobileConversationViewport(true);
     const fetchMock = jest.fn().mockResolvedValueOnce({
@@ -117,11 +150,14 @@ describe("Submit page flow", () => {
     const form = textarea.closest("form");
     act(() => textarea.focus());
     fireEvent.change(textarea, { target: { value: "   " } });
+    fireEvent.click(screen.getByRole("button", { name: "Expand writing area" }));
     expect(form).not.toBeNull();
     fireEvent.submit(form as HTMLFormElement);
 
     expect(document.activeElement).toBe(textarea);
     expect(document.querySelector(".conversation-shell")?.classList.contains("is-composing"))
+      .toBe(true);
+    expect(document.querySelector(".conversation-shell")?.classList.contains("is-editor-expanded"))
       .toBe(true);
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
@@ -159,11 +195,16 @@ describe("Submit page flow", () => {
     const form = textarea.closest("form");
     act(() => textarea.focus());
     fireEvent.change(textarea, { target: { value: "I need to say goodbye." } });
+    fireEvent.click(screen.getByRole("button", { name: "Expand writing area" }));
+    expect(document.querySelector(".conversation-shell")?.classList.contains("is-editor-expanded"))
+      .toBe(true);
     expect(form).not.toBeNull();
     fireEvent.submit(form as HTMLFormElement);
 
     expect(document.activeElement).not.toBe(textarea);
     expect(document.querySelector(".conversation-shell")?.classList.contains("is-composing"))
+      .toBe(false);
+    expect(document.querySelector(".conversation-shell")?.classList.contains("is-editor-expanded"))
       .toBe(false);
     expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(true);
 

@@ -70,6 +70,7 @@ export default function Submit() {
   const [errorMessage, setErrorMessage] = useState("");
   const [conversationStart, setConversationStart] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
+  const [isComposerExpanded, setIsComposerExpanded] = useState(false);
   const [pendingReleasePayload, setPendingReleasePayload] = useState<ReadyLetterPayload | null>(null);
   const [releaseLocked, setReleaseLocked] = useState(false);
 
@@ -77,6 +78,7 @@ export default function Submit() {
   useConversationViewport(hasActiveComposer);
 
   async function greetVisitor() {
+    setIsComposerExpanded(false);
     setConversationStart(true);
 
     localStorage.setItem("visitCount", "1");
@@ -106,6 +108,7 @@ export default function Submit() {
       return;
     }
 
+    setIsComposerExpanded(false);
     setResponseOk(false);
 
     const updatedConversation = [
@@ -147,6 +150,7 @@ export default function Submit() {
 
       if (releasePayload && !releaseLocked) {
         setIsComposing(false);
+        setIsComposerExpanded(false);
         setPendingReleasePayload(releasePayload);
       }
     } catch (error) {
@@ -199,12 +203,14 @@ export default function Submit() {
 
   function returnToConversation() {
     setIsComposing(false);
+    setIsComposerExpanded(false);
     setPendingReleasePayload(null);
     setVisitorInput("");
   }
 
   function startNewLetterFlow() {
     setIsComposing(false);
+    setIsComposerExpanded(false);
     setReleaseLocked(false);
     setPendingReleasePayload(null);
     setVisitorInput("");
@@ -220,9 +226,16 @@ export default function Submit() {
 
       {conversationStart ? (
         <div
-          className={`conversation-shell ${isComposing ? "is-composing" : ""}`}
+          className={[
+            "conversation-shell",
+            isComposing ? "is-composing" : "",
+            isComposerExpanded ? "is-editor-expanded" : "",
+          ].filter(Boolean).join(" ")}
         >
-          <div className="guardian-panel-container">
+          <div
+            className="guardian-panel-container"
+            aria-hidden={isComposerExpanded || undefined}
+          >
             <GuardianPanel message={coveMessage} responseStatus={responseOk} />
           </div>
 
@@ -236,7 +249,10 @@ export default function Submit() {
           ) : (
             <div className="conversation-footer">
               {releaseLocked ? (
-                <div className="post-release-note">
+                <div
+                  className="post-release-note"
+                  aria-hidden={isComposerExpanded || undefined}
+                >
                   <p>This letter is now closed. You can keep talking with Cove.</p>
                   <button
                     type="button"
@@ -253,6 +269,8 @@ export default function Submit() {
                 setVisitorInput={setVisitorInput}
                 handleSubmit={handleSubmit}
                 onFocusChange={setIsComposing}
+                isExpanded={isComposerExpanded}
+                onExpandedChange={setIsComposerExpanded}
               />
             </div>
           )}

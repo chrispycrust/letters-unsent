@@ -78,6 +78,9 @@ describe("Submit page release flow", () => {
     fireEvent.change(screen.getByPlaceholderText("Write something"), {
       target: { value: "Please help me finish this letter." },
     });
+    fireEvent.click(screen.getByRole("button", { name: "Expand writing area" }));
+    expect(document.querySelector(".conversation-shell")?.classList.contains("is-editor-expanded"))
+      .toBe(true);
     fireEvent.click(screen.getByRole("button", { name: /submit a response/i }));
 
     await waitFor(() => {
@@ -91,6 +94,8 @@ describe("Submit page release flow", () => {
     expect(screen.getByRole("button", { name: "Protect this letter" })).not.toBeNull();
     expect(screen.getByRole("button", { name: "Release without protection" })).not.toBeNull();
     expect(screen.getByRole("button", { name: "Return to conversation" })).not.toBeNull();
+    expect(document.querySelector(".conversation-shell")?.classList.contains("is-editor-expanded"))
+      .toBe(false);
 
     const supabaseCalls = fetchMock.mock.calls.filter((call) => String(call[0]).includes("/api/supabase"));
     expect(supabaseCalls.length).toBe(0);

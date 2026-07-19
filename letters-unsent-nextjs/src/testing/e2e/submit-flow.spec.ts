@@ -93,6 +93,7 @@ test.describe('Submit page (mocked Guardian)', () => {
       const guardian = document.querySelector('.guardian-panel');
       const message = document.querySelector('.preserve-breaks');
       const composer = document.querySelector('.visitor-input-container');
+      const inputArea = document.querySelector('.visitor-input-area');
       const sendButton = document.querySelector('.submit-button');
       const expandButton = document.querySelector('.button-change-textarea');
 
@@ -103,6 +104,7 @@ test.describe('Submit page (mocked Guardian)', () => {
         !guardian ||
         !message ||
         !composer ||
+        !inputArea ||
         !sendButton ||
         !expandButton
       ) {
@@ -115,7 +117,9 @@ test.describe('Submit page (mocked Guardian)', () => {
       const guardianRect = guardian.getBoundingClientRect();
       const messageRect = message.getBoundingClientRect();
       const composerRect = composer.getBoundingClientRect();
+      const inputAreaRect = inputArea.getBoundingClientRect();
       const sendRect = sendButton.getBoundingClientRect();
+      const expandRect = expandButton.getBoundingClientRect();
       const visualViewport = window.visualViewport;
       const visibleTop = visualViewport?.offsetTop ?? 0;
       const visibleBottom = visualViewport
@@ -136,6 +140,11 @@ test.describe('Submit page (mocked Guardian)', () => {
         composerHeight: composerRect.height,
         sendWidth: sendRect.width,
         sendHeight: sendRect.height,
+        expandWidth: expandRect.width,
+        expandHeight: expandRect.height,
+        expandTopDelta: Math.abs(expandRect.top - inputAreaRect.top),
+        sendBottomDelta: Math.abs(sendRect.bottom - inputAreaRect.bottom),
+        controlGap: sendRect.top - expandRect.bottom,
         expandDisplay: getComputedStyle(expandButton).display,
       };
     });
@@ -153,10 +162,169 @@ test.describe('Submit page (mocked Guardian)', () => {
     expect(focusedMetrics?.shellTransform).toBe('none');
     expect(focusedMetrics?.messageComposerOverlap).toBe(0);
     expect(focusedMetrics?.messageCenterDelta).toBeLessThanOrEqual(4);
-    expect(focusedMetrics?.composerHeight).toBeLessThanOrEqual(90);
+    expect(focusedMetrics?.composerHeight).toBeLessThanOrEqual(130);
     expect(focusedMetrics?.sendWidth).toBeGreaterThanOrEqual(44);
     expect(focusedMetrics?.sendHeight).toBeGreaterThanOrEqual(44);
-    expect(focusedMetrics?.expandDisplay).toBe('none');
+    expect(focusedMetrics?.expandWidth).toBeGreaterThanOrEqual(44);
+    expect(focusedMetrics?.expandHeight).toBeGreaterThanOrEqual(44);
+    expect(focusedMetrics?.expandTopDelta).toBeLessThanOrEqual(1);
+    expect(focusedMetrics?.sendBottomDelta).toBeLessThanOrEqual(1);
+    expect(focusedMetrics?.controlGap).toBeGreaterThanOrEqual(8);
+    expect(focusedMetrics?.expandDisplay).not.toBe('none');
+
+    await textarea.fill(longReply);
+    const compactEditorState = await textarea.evaluate((element) => {
+      const textareaElement = element as HTMLTextAreaElement;
+      textareaElement.dataset.editorIdentity = 'preserved-textarea';
+      textareaElement.setSelectionRange(17, 17, 'none');
+      textareaElement.scrollTop = 100;
+
+      return {
+        selectionStart: textareaElement.selectionStart,
+        selectionEnd: textareaElement.selectionEnd,
+        scrollTop: textareaElement.scrollTop,
+        clientHeight: textareaElement.clientHeight,
+        scrollHeight: textareaElement.scrollHeight,
+        maximumHeight: Number.parseFloat(getComputedStyle(textareaElement).maxHeight),
+        overflowY: getComputedStyle(textareaElement).overflowY,
+      };
+    });
+
+    expect(compactEditorState.clientHeight)
+      .toBeLessThanOrEqual(compactEditorState.maximumHeight + 1);
+    expect(compactEditorState.scrollHeight).toBeGreaterThan(compactEditorState.clientHeight);
+    expect(compactEditorState.overflowY).toBe('auto');
+
+    await page.getByRole('button', { name: 'Expand writing area' }).click();
+    await expect(page.locator('.conversation-shell')).toHaveClass(/is-editor-expanded/);
+    await expect(page.locator('.guardian-panel-container')).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('.guardian-panel-container')).toHaveCSS('visibility', 'hidden');
+    await expect(page.getByRole('button', { name: 'Minimise writing area' }))
+      .toHaveAttribute('aria-expanded', 'true');
+
+    const expandedMetrics = await page.evaluate(() => {
+      const shell = document.querySelector('.conversation-shell');
+      const composer = document.querySelector('.visitor-input-container');
+      const inputArea = document.querySelector('.visitor-input-area');
+      const textareaElement = document.querySelector<HTMLTextAreaElement>('#VisitorInput');
+      const minimiseButton = document.querySelector('.button-change-textarea');
+      const sendButton = document.querySelector('.submit-button');
+
+      if (
+        !shell ||
+        !composer ||
+        !inputArea ||
+        !textareaElement ||
+        !minimiseButton ||
+        !sendButton
+      ) {
+        return null;
+      }
+
+      const shellRect = shell.getBoundingClientRect();
+      const composerRect = composer.getBoundingClientRect();
+      const inputAreaRect = inputArea.getBoundingClientRect();
+      const minimiseRect = minimiseButton.getBoundingClientRect();
+      const sendRect = sendButton.getBoundingClientRect();
+
+      return {
+        topDelta: Math.abs(composerRect.top - shellRect.top),
+        bottomDelta: Math.abs(composerRect.bottom - shellRect.bottom),
+        minimiseTopDelta: Math.abs(minimiseRect.top - inputAreaRect.top),
+        sendBottomDelta: Math.abs(sendRect.bottom - inputAreaRect.bottom),
+        controlGap: sendRect.top - minimiseRect.bottom,
+        activeTextarea: document.activeElement === textareaElement,
+        editorIdentity: textareaElement.dataset.editorIdentity,
+        selectionStart: textareaElement.selectionStart,
+        selectionEnd: textareaElement.selectionEnd,
+        scrollTop: textareaElement.scrollTop,
+      };
+    });
+
+    expect(expandedMetrics?.topDelta).toBeLessThanOrEqual(1);
+    expect(expandedMetrics?.bottomDelta).toBeLessThanOrEqual(1);
+    expect(expandedMetrics?.minimiseTopDelta).toBeLessThanOrEqual(1);
+    expect(expandedMetrics?.sendBottomDelta).toBeLessThanOrEqual(1);
+    expect(expandedMetrics?.controlGap).toBeGreaterThanOrEqual(8);
+    expect(expandedMetrics?.activeTextarea).toBe(true);
+    expect(expandedMetrics?.editorIdentity).toBe('preserved-textarea');
+    expect(expandedMetrics?.selectionStart).toBe(compactEditorState.selectionStart);
+    expect(expandedMetrics?.selectionEnd).toBe(compactEditorState.selectionEnd);
+    expect(expandedMetrics?.scrollTop).toBe(compactEditorState.scrollTop);
+
+    await page.getByRole('button', { name: 'Minimise writing area' }).click();
+    await expect(page.locator('.conversation-shell')).not.toHaveClass(/is-editor-expanded/);
+    await expect(page.locator('.guardian-panel-container')).not.toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('.guardian-panel-container')).toHaveCSS('visibility', 'visible');
+    await expect(page.getByRole('button', { name: 'Expand writing area' }))
+      .toHaveAttribute('aria-expanded', 'false');
+
+    const restoredEditorState = await textarea.evaluate((element) => {
+      const textareaElement = element as HTMLTextAreaElement;
+
+      return {
+        activeTextarea: document.activeElement === textareaElement,
+        editorIdentity: textareaElement.dataset.editorIdentity,
+        selectionStart: textareaElement.selectionStart,
+        selectionEnd: textareaElement.selectionEnd,
+        scrollTop: textareaElement.scrollTop,
+      };
+    });
+
+    expect(restoredEditorState.activeTextarea).toBe(true);
+    expect(restoredEditorState.editorIdentity).toBe('preserved-textarea');
+    expect(restoredEditorState.selectionStart).toBe(compactEditorState.selectionStart);
+    expect(restoredEditorState.selectionEnd).toBe(compactEditorState.selectionEnd);
+    expect(restoredEditorState.scrollTop).toBe(compactEditorState.scrollTop);
+
+    const draftThatFitsExpandedMode = Array.from(
+      { length: 6 },
+      (_, index) => `Short expanded line ${index + 1}.`,
+    ).join('\n');
+    await textarea.fill(draftThatFitsExpandedMode);
+    const compactScrollBeforeSecondExpansion = await textarea.evaluate((element) => {
+      const textareaElement = element as HTMLTextAreaElement;
+      textareaElement.setSelectionRange(textareaElement.value.length, textareaElement.value.length);
+      textareaElement.scrollTop = textareaElement.scrollHeight;
+      return textareaElement.scrollTop;
+    });
+    expect(compactScrollBeforeSecondExpansion).toBeGreaterThan(0);
+
+    await page.getByRole('button', { name: 'Expand writing area' }).click();
+    const fittedExpandedState = await textarea.evaluate((element) => {
+      const textareaElement = element as HTMLTextAreaElement;
+      return {
+        clientHeight: textareaElement.clientHeight,
+        scrollHeight: textareaElement.scrollHeight,
+        scrollTop: textareaElement.scrollTop,
+      };
+    });
+    expect(fittedExpandedState.scrollHeight).toBeLessThanOrEqual(fittedExpandedState.clientHeight);
+    expect(fittedExpandedState.scrollTop).toBe(0);
+
+    await page.getByRole('button', { name: 'Minimise writing area' }).click();
+    expect(await textarea.evaluate((element) => element.scrollTop))
+      .toBe(compactScrollBeforeSecondExpansion);
+
+    await page.getByRole('button', { name: 'Expand writing area' }).click();
+    await textarea.evaluate((element) => {
+      const textareaElement = element as HTMLTextAreaElement;
+      textareaElement.setSelectionRange(0, 0, 'none');
+      textareaElement.scrollTop = 0;
+    });
+    await page.getByRole('button', { name: 'Minimise writing area' }).click();
+
+    const movedCaretState = await textarea.evaluate((element) => {
+      const textareaElement = element as HTMLTextAreaElement;
+      return {
+        selectionStart: textareaElement.selectionStart,
+        selectionEnd: textareaElement.selectionEnd,
+        scrollTop: textareaElement.scrollTop,
+      };
+    });
+    expect(movedCaretState.selectionStart).toBe(0);
+    expect(movedCaretState.selectionEnd).toBe(0);
+    expect(movedCaretState.scrollTop).toBe(0);
 
     await textarea.fill('I am ready to continue.');
     await page.getByRole('button', { name: /submit a response/i }).click();
@@ -176,6 +344,114 @@ test.describe('Submit page (mocked Guardian)', () => {
         guardian.scrollTop === 0 &&
         message.getBoundingClientRect().top >= guardian.getBoundingClientRect().top - 1;
     })).toBe(true);
+  });
+
+  test('anchors the desktop editor controls and expands over the Guardian', async ({ page }) => {
+    const firstMessage = 'There is room for whatever you need to write.';
+    const draft = 'This draft should remain intact while I make more room to write.';
+
+    await page.setViewportSize({ width: 1024, height: 800 });
+    await page.route('**/api/guardian**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ output: firstMessage }),
+      });
+    });
+
+    await page.goto('/submit');
+    await page.getByRole('button', { name: 'Start conversation' }).click();
+    await expect(page.getByText(firstMessage)).toBeVisible();
+
+    const textarea = page.getByPlaceholder('Write something');
+    await textarea.fill(draft);
+    await textarea.evaluate((element) => {
+      const textareaElement = element as HTMLTextAreaElement;
+      textareaElement.dataset.editorIdentity = 'desktop-preserved-textarea';
+      textareaElement.setSelectionRange(12, 12, 'none');
+    });
+
+    const readControlMetrics = () => page.evaluate(() => {
+      const inputArea = document.querySelector('.visitor-input-area');
+      const resizeButton = document.querySelector('.button-change-textarea');
+      const sendButton = document.querySelector('.submit-button');
+      const textareaElement = document.querySelector<HTMLTextAreaElement>('#VisitorInput');
+
+      if (!inputArea || !resizeButton || !sendButton || !textareaElement) {
+        return null;
+      }
+
+      const inputAreaRect = inputArea.getBoundingClientRect();
+      const resizeRect = resizeButton.getBoundingClientRect();
+      const sendRect = sendButton.getBoundingClientRect();
+
+      return {
+        resizeWidth: resizeRect.width,
+        resizeHeight: resizeRect.height,
+        sendWidth: sendRect.width,
+        sendHeight: sendRect.height,
+        resizeTopDelta: Math.abs(resizeRect.top - inputAreaRect.top),
+        sendBottomDelta: Math.abs(sendRect.bottom - inputAreaRect.bottom),
+        controlGap: sendRect.top - resizeRect.bottom,
+        textareaResize: getComputedStyle(textareaElement).resize,
+      };
+    });
+
+    const compactMetrics = await readControlMetrics();
+    expect(compactMetrics?.resizeWidth).toBeGreaterThanOrEqual(44);
+    expect(compactMetrics?.resizeHeight).toBeGreaterThanOrEqual(44);
+    expect(compactMetrics?.sendWidth).toBeGreaterThanOrEqual(44);
+    expect(compactMetrics?.sendHeight).toBeGreaterThanOrEqual(44);
+    expect(compactMetrics?.resizeTopDelta).toBeLessThanOrEqual(1);
+    expect(compactMetrics?.sendBottomDelta).toBeLessThanOrEqual(1);
+    expect(compactMetrics?.controlGap).toBeGreaterThanOrEqual(8);
+    expect(compactMetrics?.textareaResize).toBe('vertical');
+
+    await page.getByRole('button', { name: 'Expand writing area' }).click();
+    await expect(page.locator('.conversation-shell')).toHaveClass(/is-editor-expanded/);
+    await expect(page.locator('.guardian-panel-container')).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('.guardian-panel-container')).toHaveCSS('visibility', 'hidden');
+
+    const expandedMetrics = await page.evaluate(() => {
+      const shell = document.querySelector('.conversation-shell');
+      const composer = document.querySelector('.visitor-input-container');
+      const textareaElement = document.querySelector<HTMLTextAreaElement>('#VisitorInput');
+
+      if (!shell || !composer || !textareaElement) {
+        return null;
+      }
+
+      const shellRect = shell.getBoundingClientRect();
+      const composerRect = composer.getBoundingClientRect();
+
+      return {
+        topDelta: Math.abs(composerRect.top - shellRect.top),
+        bottomDelta: Math.abs(composerRect.bottom - shellRect.bottom),
+        activeTextarea: document.activeElement === textareaElement,
+        value: textareaElement.value,
+        editorIdentity: textareaElement.dataset.editorIdentity,
+        selectionStart: textareaElement.selectionStart,
+        resize: getComputedStyle(textareaElement).resize,
+      };
+    });
+
+    expect(expandedMetrics?.topDelta).toBeLessThanOrEqual(1);
+    expect(expandedMetrics?.bottomDelta).toBeLessThanOrEqual(1);
+    expect(expandedMetrics?.activeTextarea).toBe(true);
+    expect(expandedMetrics?.value).toBe(draft);
+    expect(expandedMetrics?.editorIdentity).toBe('desktop-preserved-textarea');
+    expect(expandedMetrics?.selectionStart).toBe(12);
+    expect(expandedMetrics?.resize).toBe('none');
+
+    const expandedControlMetrics = await readControlMetrics();
+    expect(expandedControlMetrics?.resizeTopDelta).toBeLessThanOrEqual(1);
+    expect(expandedControlMetrics?.sendBottomDelta).toBeLessThanOrEqual(1);
+    expect(expandedControlMetrics?.controlGap).toBeGreaterThanOrEqual(8);
+
+    await page.getByRole('button', { name: 'Minimise writing area' }).click();
+    await expect(page.locator('.conversation-shell')).not.toHaveClass(/is-editor-expanded/);
+    await expect(page.locator('.guardian-panel-container')).toHaveCSS('visibility', 'visible');
+    await expect(textarea).toHaveValue(draft);
   });
 
   test('shows error banner when Guardian GET fails', async ({ page }) => {

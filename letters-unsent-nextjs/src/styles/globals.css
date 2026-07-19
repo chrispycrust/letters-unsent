@@ -1031,10 +1031,6 @@ textarea
   border: none;
 }
 
-.vistor-textarea-expanded {
-  flex: 1;
-}
-
 /* @keyframes expand {
   from {
     transform:
@@ -1066,6 +1062,14 @@ textarea {
 }
 
 .visitor-input-container {
+  --visitor-control-size: 44px;
+  --visitor-control-gap: 8px;
+  --visitor-control-rail-height:
+    calc(
+      var(--visitor-control-size)
+      + var(--visitor-control-size)
+      + var(--visitor-control-gap)
+    );
   width: 100%;
   min-width: 0;
   flex: 0 0 auto;
@@ -1081,8 +1085,8 @@ textarea {
 .visitor-input-area {
   display: flex;
   flex: row;
-  align-items: flex-end;
-  gap: 8px;
+  align-items: stretch;
+  gap: var(--visitor-control-gap);
   flex: 1;
   min-height: 0;
   min-width: 0;
@@ -1091,7 +1095,7 @@ textarea {
 .visitor-textarea {
   flex: 1 1 auto;
   min-width: 0;
-  min-height: 44px;
+  min-height: var(--visitor-control-rail-height);
   max-height: calc(4lh + 20px);
   overflow-y: auto;
   resize: none;
@@ -1099,26 +1103,61 @@ textarea {
 }
 
 .visitor-input-container .buttons-container {
-  flex-direction: row;
-  align-items: flex-end;
-  gap: 8px;
+  flex: 0 0 var(--visitor-control-size);
+  flex-direction: column;
+  align-items: stretch;
+  align-self: stretch;
+  justify-content: flex-start;
+  gap: var(--visitor-control-gap);
+  min-height: var(--visitor-control-rail-height);
   margin-left: 0;
 }
 
 .visitor-input-container .buttons-container button {
   display: grid;
   place-items: center;
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
+  flex: 0 0 var(--visitor-control-size);
+  width: var(--visitor-control-size);
+  height: var(--visitor-control-size);
+  min-width: var(--visitor-control-size);
+  min-height: var(--visitor-control-size);
   padding: 10px;
   margin: 0;
 }
 
 .visitor-input-container .buttons-container .button-change-textarea {
-  display: none;
+  display: grid;
+}
+
+.visitor-input-container .buttons-container .submit-button {
+  margin-top: auto;
+}
+
+.conversation-shell.is-editor-expanded .guardian-panel-container,
+.conversation-shell.is-editor-expanded .post-release-note {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.visitor-input-container.is-expanded {
+  position: absolute;
+  inset: 0;
+  height: auto;
+  min-height: 0;
+  z-index: 2;
+  border-radius: 0;
+}
+
+.visitor-input-container.is-expanded .visitor-input-area {
+  height: 100%;
+}
+
+.visitor-input-container.is-expanded .visitor-textarea {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  resize: none;
 }
 
 label {
@@ -1852,7 +1891,6 @@ button.release-link-button:disabled {
 
   .visitor-input-area {
     align-items: stretch;
-    gap: 0;
   }
 
   .visitor-textarea {
@@ -1862,43 +1900,7 @@ button.release-link-button:disabled {
   }
 
   .visitor-input-container .buttons-container {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    margin-left: 10px;
-  }
-
-  .visitor-input-container .buttons-container button {
-    display: block;
-    flex: 0 1 auto;
-    width: auto;
-    height: auto;
-    min-width: 0;
-    min-height: 0;
-    padding: 20px;
-  }
-
-  .visitor-input-container .buttons-container .button-change-textarea {
-    display: block;
-  }
-
-  .visitor-input-container .button-input-area {
-    margin-bottom: 10px;
-  }
-
-  .visitor-input-container .submit-button {
-    margin-top: auto;
-  }
-
-  .vistor-input-container-expanded {
-    position: absolute;
-    inset: 0;
-    height: auto;
-    z-index: 2;
-  }
-
-  .vistor-textarea-expanded {
-    flex: 1;
+    margin-left: 0;
   }
 }
 

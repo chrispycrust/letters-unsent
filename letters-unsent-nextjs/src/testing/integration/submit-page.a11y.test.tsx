@@ -41,11 +41,19 @@ describe("Submit page accessibility basics", () => {
       name: "click to submit a response to Cove (AI presence)",
     })
     const resizeButton = screen.getByRole("button", {
-      name: "click to maximise the text area",
+      name: "Expand writing area",
     })
 
     expect(textarea.required).toBe(true)
     expect(submitButton).not.toBeNull()
     expect(resizeButton).not.toBeNull()
+    expect(resizeButton.getAttribute("aria-controls")).toBe(textarea.id)
+    expect(resizeButton.getAttribute("aria-expanded")).toBe("false")
+
+    fireEvent.click(resizeButton)
+
+    expect(screen.getByRole("button", {
+      name: "Minimise writing area",
+    }).getAttribute("aria-expanded")).toBe("true")
   })
 })

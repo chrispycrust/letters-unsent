@@ -2,9 +2,7 @@ import { useLayoutEffect, useRef } from "react";
 import MaximiseIcon from "../../../public/icons/arrows-maximise";
 import RespondIcon from "../../../public/icons/RespondIcon";
 import MinimiseIcon from "../../../public/icons/arrows-minimise";
-
-export const MOBILE_CONVERSATION_QUERY =
-  "(max-width: 650px), (pointer: coarse) and (max-height: 650px)";
+import { MOBILE_CONVERSATION_QUERY } from "./useConversationViewport";
 
 interface VisitorInputProps {
   visitorInput: string;
@@ -245,6 +243,7 @@ export default function VisitorPanel({
           ref={textareaRef}
           id="VisitorInput"
           className="visitor-textarea"
+          data-conversation-scroll-region="visitor"
           name="input area"
           rows={1}
           required

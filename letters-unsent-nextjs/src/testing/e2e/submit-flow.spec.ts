@@ -1,10 +1,59 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 type GuardianPostPayload = {
   updatedConversation?: Array<{
     content?: string;
   }>;
 };
+
+async function dispatchSyntheticTouchGesture(
+  page: Page,
+  selector: string,
+  movement: { x: number; y: number },
+) {
+  return page.evaluate(({ selector, movement }) => {
+    const target = document.querySelector(selector);
+
+    if (!target) {
+      throw new Error(`Could not find touch target: ${selector}`);
+    }
+
+    const createTouch = (clientX: number, clientY: number) => ({
+      identifier: 1,
+      clientX,
+      clientY,
+    });
+    const dispatch = (
+      type: 'touchstart' | 'touchmove' | 'touchend',
+      touches: Array<ReturnType<typeof createTouch>>,
+      changedTouches = touches,
+    ) => {
+      const event = new Event(type, {
+        bubbles: true,
+        cancelable: true,
+      });
+
+      Object.defineProperties(event, {
+        touches: { value: touches },
+        targetTouches: { value: touches },
+        changedTouches: { value: changedTouches },
+      });
+
+      target.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+
+    const startTouch = createTouch(100, 100);
+    const startPrevented = dispatch('touchstart', [startTouch]);
+    const movePrevented = dispatch(
+      'touchmove',
+      [createTouch(100 + movement.x, 100 + movement.y)],
+    );
+    dispatch('touchend', [], [startTouch]);
+
+    return { startPrevented, movePrevented };
+  }, { selector, movement });
+}
 
 test.describe('Submit page (mocked Guardian)', () => {
   test('renders initial Guardian greeting and sends visitor reply', async ({ page }) => {
@@ -344,6 +393,216 @@ test.describe('Submit page (mocked Guardian)', () => {
         guardian.scrollTop === 0 &&
         message.getBoundingClientRect().top >= guardian.getBoundingClientRect().top - 1;
     })).toBe(true);
+  });
+
+  test('contains mobile dragging at Guardian and textarea scroll boundaries', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 664 });
+    await page.route('**/api/guardian**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ output: 'A scrollable conversation.' }),
+      });
+    });
+
+    await page.goto('/submit');
+    await page.getByRole('button', { name: 'Start conversation' }).click();
+    await expect(page.locator('html')).toHaveClass(/conversation-viewport-active/);
+
+    const scrollAreaStyles = await page.evaluate(() => {
+      const guardian = document.querySelector('.guardian-panel');
+      const textarea = document.querySelector('#VisitorInput');
+
+      if (!guardian || !textarea) {
+        return null;
+      }
+
+      const guardianStyle = getComputedStyle(guardian);
+      const textareaStyle = getComputedStyle(textarea);
+
+      return {
+        guardianOverscroll: guardianStyle.overscrollBehaviorY,
+        guardianTouchAction: guardianStyle.touchAction,
+        textareaOverscroll: textareaStyle.overscrollBehaviorY,
+        textareaTouchAction: textareaStyle.touchAction,
+      };
+    });
+
+    expect(scrollAreaStyles?.guardianOverscroll).toBe('contain');
+    expect(scrollAreaStyles?.guardianTouchAction).toContain('pan-y');
+    expect(scrollAreaStyles?.textareaOverscroll).toBe('contain');
+    expect(scrollAreaStyles?.textareaTouchAction).toContain('pan-y');
+
+    const backgroundVertical = await dispatchSyntheticTouchGesture(
+      page,
+      '.conversation-shell',
+      { x: 2, y: 40 },
+    );
+    const backgroundHorizontal = await dispatchSyntheticTouchGesture(
+      page,
+      '.conversation-shell',
+      { x: 40, y: 2 },
+    );
+    await expect.poll(() => page.locator('.guardian-panel').evaluate(
+      (element) => element.scrollHeight - element.clientHeight,
+    )).toBeLessThanOrEqual(1);
+    await expect.poll(() => page.locator('#VisitorInput').evaluate(
+      (element) => element.scrollHeight - element.clientHeight,
+    )).toBeLessThanOrEqual(1);
+
+    const fittedGuardianVertical = await dispatchSyntheticTouchGesture(
+      page,
+      '.guardian-panel',
+      { x: 2, y: 40 },
+    );
+    const fittedTextareaVertical = await dispatchSyntheticTouchGesture(
+      page,
+      '#VisitorInput',
+      { x: 2, y: 40 },
+    );
+
+    expect(backgroundVertical.startPrevented).toBe(false);
+    expect(backgroundVertical.movePrevented).toBe(true);
+    expect(backgroundHorizontal.movePrevented).toBe(false);
+    expect(fittedGuardianVertical.movePrevented).toBe(true);
+    expect(fittedTextareaVertical.movePrevented).toBe(true);
+
+    await page.locator('.guardian-panel').evaluate((element) => {
+      const guardian = element as HTMLElement;
+      const content = guardian.firstElementChild as HTMLElement | null;
+
+      if (!content) {
+        throw new Error('Guardian content was not available');
+      }
+
+      content.style.minHeight = `${guardian.clientHeight + 200}px`;
+      guardian.scrollTop = 0;
+    });
+    await expect.poll(() => page.locator('.guardian-panel').evaluate(
+      (element) => element.scrollHeight > element.clientHeight + 1,
+    )).toBe(true);
+
+    const guardianCanScrollDown = await dispatchSyntheticTouchGesture(
+      page,
+      '.guardian-panel',
+      { x: 2, y: -40 },
+    );
+    const guardianCannotScrollAboveTop = await dispatchSyntheticTouchGesture(
+      page,
+      '.guardian-panel',
+      { x: 2, y: 40 },
+    );
+
+    expect(guardianCanScrollDown.movePrevented).toBe(false);
+    expect(guardianCannotScrollAboveTop.movePrevented).toBe(true);
+
+    await page.locator('.guardian-panel').evaluate((element) => {
+      element.scrollTop = element.scrollHeight;
+    });
+    const guardianCannotScrollBelowBottom =
+      await dispatchSyntheticTouchGesture(
+        page,
+        '.guardian-panel',
+        { x: 2, y: -40 },
+      );
+    const guardianCanScrollUp = await dispatchSyntheticTouchGesture(
+      page,
+      '.guardian-panel',
+      { x: 2, y: 40 },
+    );
+
+    expect(guardianCannotScrollBelowBottom.movePrevented).toBe(true);
+    expect(guardianCanScrollUp.movePrevented).toBe(false);
+
+    const textarea = page.locator('#VisitorInput');
+    const longDraft = Array.from(
+      { length: 60 },
+      (_, index) => `Scrollable visitor line ${index + 1}.`,
+    ).join('\n');
+
+    await textarea.fill(longDraft);
+    await expect.poll(() => textarea.evaluate(
+      (element) => element.scrollHeight > element.clientHeight + 1,
+    )).toBe(true);
+    await textarea.evaluate((element) => {
+      element.scrollTop = 0;
+    });
+    expect(await textarea.evaluate(
+      (element) => document.activeElement === element,
+    )).toBe(true);
+
+    const textareaCanScrollDown = await dispatchSyntheticTouchGesture(
+      page,
+      '#VisitorInput',
+      { x: 2, y: -40 },
+    );
+    const textareaCannotScrollAboveTop = await dispatchSyntheticTouchGesture(
+      page,
+      '#VisitorInput',
+      { x: 2, y: 40 },
+    );
+
+    expect(textareaCanScrollDown.movePrevented).toBe(false);
+    expect(textareaCannotScrollAboveTop.movePrevented).toBe(true);
+
+    await textarea.evaluate((element) => {
+      element.scrollTop = element.scrollHeight;
+    });
+    const textareaCannotScrollBelowBottom =
+      await dispatchSyntheticTouchGesture(
+        page,
+        '#VisitorInput',
+        { x: 2, y: -40 },
+      );
+    const textareaCanScrollUp = await dispatchSyntheticTouchGesture(
+      page,
+      '#VisitorInput',
+      { x: 2, y: 40 },
+    );
+
+    expect(textareaCannotScrollBelowBottom.movePrevented).toBe(true);
+    expect(textareaCanScrollUp.movePrevented).toBe(false);
+
+    await page.getByRole('button', { name: 'Expand writing area' }).click();
+    await textarea.fill('A short expanded draft.');
+    await expect.poll(() => textarea.evaluate(
+      (element) => element.scrollHeight - element.clientHeight,
+    )).toBeLessThanOrEqual(1);
+
+    const expandedBackgroundVertical = await dispatchSyntheticTouchGesture(
+      page,
+      '.visitor-input-container.is-expanded',
+      { x: 2, y: 40 },
+    );
+    const expandedTextareaVertical = await dispatchSyntheticTouchGesture(
+      page,
+      '#VisitorInput',
+      { x: 2, y: 40 },
+    );
+
+    expect(expandedBackgroundVertical.movePrevented).toBe(true);
+    expect(expandedTextareaVertical.movePrevented).toBe(true);
+
+    await page.setViewportSize({ width: 1024, height: 800 });
+    const desktopViewportState = await page.evaluate(() => ({
+      innerWidth: window.innerWidth,
+      innerHeight: window.innerHeight,
+      matchesMobileConversation: window.matchMedia(
+        '(max-width: 650px), (pointer: coarse) and (max-height: 650px)',
+      ).matches,
+    }));
+    expect(desktopViewportState).toEqual({
+      innerWidth: 1024,
+      innerHeight: 800,
+      matchesMobileConversation: false,
+    });
+
+    const desktopBackgroundVertical = await dispatchSyntheticTouchGesture(
+      page,
+      '.conversation-shell',
+      { x: 2, y: 40 },
+    );
+    expect(desktopBackgroundVertical.movePrevented).toBe(false);
   });
 
   test('anchors the desktop editor controls and expands over the Guardian', async ({ page }) => {

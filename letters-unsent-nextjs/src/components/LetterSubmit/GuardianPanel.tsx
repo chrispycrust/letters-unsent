@@ -11,7 +11,10 @@ export default function GuardianPanel({
 }: GuardianPanelProps) {
 
     return (
-        <div className="guardian-panel">
+        <div
+            className="guardian-panel"
+            data-conversation-scroll-region="guardian"
+        >
 
             <div>
                 {

@@ -984,6 +984,8 @@ p.timestamp {
   flex-direction: column;
   overflow-y: auto;
   overscroll-behavior-y: contain;
+  touch-action: pan-y; /* Keep pan-y as a fallback if a browser rejects the pinch-zoom keyword. */
+  touch-action: pan-y pinch-zoom;
   -webkit-overflow-scrolling: touch;
   padding: clamp(14px, 4vh, 36px) 12px;
   margin: 0;
@@ -1098,6 +1100,9 @@ textarea {
   min-height: var(--visitor-control-rail-height);
   max-height: calc(4lh + 20px);
   overflow-y: auto;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y; /* Keep pan-y as a fallback if a browser rejects the pinch-zoom keyword. */
+  touch-action: pan-y pinch-zoom;
   resize: none;
   border: none;
 }

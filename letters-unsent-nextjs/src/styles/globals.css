@@ -216,7 +216,6 @@ a {
   text-decoration: none;
 }
 
-
 .buttons-container {
   display: flex;
   flex-direction: column;
@@ -964,13 +963,6 @@ p.timestamp {
   align-content: stretch;
   position: relative;
   overflow: hidden;
-}
-
-.conversation-shell.is-composing {
-  flex: 0 0 var(--conversation-available-height, 100%);
-  height: var(--conversation-available-height, 100%);
-  max-height: var(--conversation-available-height, 100%);
-  transform: translateY(var(--conversation-visible-top-inset, 0px));
 }
 
 .conversation-footer {
@@ -1803,6 +1795,50 @@ button.release-link-button:disabled {
 }
 
 @media (max-width: 650px), (pointer: coarse) and (max-height: 650px) {
+  html.conversation-viewport-active,
+  html.conversation-viewport-active body {
+    overflow: hidden;
+    overscroll-behavior: none;
+    scroll-behavior: auto;
+  }
+
+  html.conversation-viewport-active main {
+    position: absolute;
+    inset-inline: 0;
+    top: var(--conversation-viewport-page-top, 0px);
+    width: 100%;
+    height: var(--conversation-viewport-height, 100dvh);
+    min-height: 0;
+    overflow: hidden;
+    justify-content: flex-start;
+  }
+
+  html.conversation-viewport-active .navbar {
+    position: relative;
+    top: auto;
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  html.conversation-viewport-active .submit-container.conversation-active {
+    flex: 1 1 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  html.conversation-viewport-active .conversation-shell {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+  }
+
   .conversation-shell.is-composing .guardian-panel {
     padding-block: 12px;
   }

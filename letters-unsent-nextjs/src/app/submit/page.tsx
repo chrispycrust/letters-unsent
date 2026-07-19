@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { guardianSystemPrompt } from "@/utils/guardian/systemPrompt";
 
@@ -62,7 +62,6 @@ function normaliseReadyLetterPayload(payload: unknown): ReadyLetterPayload | nul
 
 export default function Submit() {
   const router = useRouter();
-  const conversationShellRef = useRef<HTMLDivElement>(null);
 
   const [coveMessage, setCoveMessage] = useState("");
   const [visitorInput, setVisitorInput] = useState("");
@@ -75,7 +74,7 @@ export default function Submit() {
   const [releaseLocked, setReleaseLocked] = useState(false);
 
   const hasActiveComposer = conversationStart && !pendingReleasePayload;
-  useConversationViewport(conversationShellRef, hasActiveComposer && isComposing);
+  useConversationViewport(hasActiveComposer);
 
   async function greetVisitor() {
     setConversationStart(true);
@@ -221,7 +220,6 @@ export default function Submit() {
 
       {conversationStart ? (
         <div
-          ref={conversationShellRef}
           className={`conversation-shell ${isComposing ? "is-composing" : ""}`}
         >
           <div className="guardian-panel-container">

@@ -65,9 +65,13 @@ describe("Submit page flow", () => {
     expect(document.activeElement).not.toBe(textarea);
     expect(submitContainer?.classList.contains("conversation-active")).toBe(true);
     expect(conversationShell?.classList.contains("is-composing")).toBe(false);
+    expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(true);
+    expect(
+      document.documentElement.style.getPropertyValue("--conversation-viewport-height"),
+    ).not.toBe("");
   });
 
-  it("enters writing mode only while the textarea is focused", async () => {
+  it("tracks textarea focus without closing the conversation viewport stage", async () => {
     global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ output: "What would you like to release?" }),
@@ -83,11 +87,15 @@ describe("Submit page flow", () => {
     const textarea = screen.getByPlaceholderText("Write something") as HTMLTextAreaElement;
     const conversationShell = document.querySelector(".conversation-shell");
 
+    expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(true);
+
     act(() => textarea.focus());
     expect(conversationShell?.classList.contains("is-composing")).toBe(true);
+    expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(true);
 
     act(() => textarea.blur());
     expect(conversationShell?.classList.contains("is-composing")).toBe(false);
+    expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(true);
   });
 
   it("keeps mobile writing mode open when the response is empty", async () => {
@@ -157,6 +165,7 @@ describe("Submit page flow", () => {
     expect(document.activeElement).not.toBe(textarea);
     expect(document.querySelector(".conversation-shell")?.classList.contains("is-composing"))
       .toBe(false);
+    expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(true);
 
     resolvePost?.({
       ok: true,
@@ -165,6 +174,29 @@ describe("Submit page flow", () => {
     await waitFor(() => {
       expect(screen.getByText("I hear you.")).not.toBeNull();
     });
+  });
+
+  it("restores the outer page state when the submit page unmounts", async () => {
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ output: "Take your time." }),
+    }) as unknown as typeof fetch;
+
+    const { unmount } = render(<Submit />);
+    fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Take your time.")).not.toBeNull();
+    });
+
+    expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(true);
+
+    unmount();
+
+    expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(false);
+    expect(
+      document.documentElement.style.getPropertyValue("--conversation-viewport-height"),
+    ).toBe("");
   });
 
   it("shows an error if the initial guardian request fails", async () => {

@@ -1,14 +1,13 @@
 "use client";
 
-import { type RefObject, useEffect } from "react";
+import { useEffect } from "react";
+
+const ROOT_ACTIVE_CLASS = "conversation-viewport-active";
 
 const VIEWPORT_PROPERTIES = [
   "--conversation-viewport-height",
-  "--conversation-viewport-offset-top",
+  "--conversation-viewport-page-top",
   "--conversation-viewport-bottom",
-  "--conversation-keyboard-inset",
-  "--conversation-visible-top-inset",
-  "--conversation-available-height",
 ] as const;
 
 type ViewportProperty = (typeof VIEWPORT_PROPERTIES)[number];
@@ -24,77 +23,61 @@ function toCssPixels(value: number): string {
 }
 
 /**
- * Publishes the visual viewport measurements used by the focused conversation
- * layout. `--conversation-visible-top-inset` describes how far the visual
- * viewport has panned below the shell's layout position, while
- * `--conversation-available-height` describes the remaining visible space from
- * the lower of those two top edges. Measurements are removed (or restored)
- * when the layout is inactive.
+ * Publishes the visible mobile viewport as document coordinates.
+ *
+ * The conversation stage consumes these raw measurements directly. The hook
+ * deliberately does not measure or move the conversation shell, so focusing
+ * the textarea cannot create a measure-transform-measure feedback loop.
  */
-export function useConversationViewport(
-  elementRef: RefObject<HTMLElement | null>,
-  active: boolean,
-): void {
+export function useConversationViewport(active: boolean): void {
   useEffect(() => {
-    const element = elementRef.current;
-
-    if (!active || !element) {
+    if (!active) {
       return;
     }
 
+    const root = document.documentElement;
     const previousValues = new Map<ViewportProperty, PreviousPropertyValue>(
       VIEWPORT_PROPERTIES.map((property) => [
         property,
         {
-          value: element.style.getPropertyValue(property),
-          priority: element.style.getPropertyPriority(property),
+          value: root.style.getPropertyValue(property),
+          priority: root.style.getPropertyPriority(property),
         },
       ]),
     );
+    const activeClassWasPresent = root.classList.contains(ROOT_ACTIVE_CLASS);
+    const initialScrollX = window.scrollX;
+    const initialScrollY = window.scrollY;
 
     let animationFrameId: number | null = null;
-    let appliedVisibleTopInset = 0;
 
     const updateProperties = () => {
       animationFrameId = null;
 
       const visualViewport = window.visualViewport;
       const viewportHeight = visualViewport?.height ?? window.innerHeight;
-      const viewportOffsetTop = visualViewport?.offsetTop ?? 0;
-      const viewportBottom = viewportOffsetTop + viewportHeight;
-      const keyboardInset = Math.max(0, window.innerHeight - viewportBottom);
-      const elementTop =
-        element.getBoundingClientRect().top - appliedVisibleTopInset;
-      const visibleTop = Math.max(elementTop, viewportOffsetTop);
-      const visibleTopInset = Math.max(0, viewportOffsetTop - elementTop);
-      const availableHeight = Math.max(0, viewportBottom - visibleTop);
 
-      element.style.setProperty(
+      // `pageTop` is the visible viewport's document position. Some Safari
+      // versions publish it after `scrollY`, so use whichever has advanced
+      // furthest during the keyboard animation.
+      const viewportPageTop = Math.max(
+        window.scrollY,
+        visualViewport?.pageTop ?? window.scrollY,
+      );
+      const viewportBottom = viewportPageTop + viewportHeight;
+
+      root.style.setProperty(
         "--conversation-viewport-height",
         toCssPixels(viewportHeight),
       );
-      element.style.setProperty(
-        "--conversation-viewport-offset-top",
-        toCssPixels(viewportOffsetTop),
+      root.style.setProperty(
+        "--conversation-viewport-page-top",
+        toCssPixels(viewportPageTop),
       );
-      element.style.setProperty(
+      root.style.setProperty(
         "--conversation-viewport-bottom",
         toCssPixels(viewportBottom),
       );
-      element.style.setProperty(
-        "--conversation-keyboard-inset",
-        toCssPixels(keyboardInset),
-      );
-      element.style.setProperty(
-        "--conversation-visible-top-inset",
-        toCssPixels(visibleTopInset),
-      );
-      element.style.setProperty(
-        "--conversation-available-height",
-        toCssPixels(availableHeight),
-      );
-
-      appliedVisibleTopInset = visibleTopInset;
     };
 
     const scheduleUpdate = () => {
@@ -105,14 +88,19 @@ export function useConversationViewport(
       animationFrameId = window.requestAnimationFrame(updateProperties);
     };
 
+    root.classList.add(ROOT_ACTIVE_CLASS);
     updateProperties();
 
     window.addEventListener("resize", scheduleUpdate);
+    window.addEventListener("scroll", scheduleUpdate);
+    window.addEventListener("orientationchange", scheduleUpdate);
     window.visualViewport?.addEventListener("resize", scheduleUpdate);
     window.visualViewport?.addEventListener("scroll", scheduleUpdate);
 
     return () => {
       window.removeEventListener("resize", scheduleUpdate);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("orientationchange", scheduleUpdate);
       window.visualViewport?.removeEventListener("resize", scheduleUpdate);
       window.visualViewport?.removeEventListener("scroll", scheduleUpdate);
 
@@ -120,21 +108,32 @@ export function useConversationViewport(
         window.cancelAnimationFrame(animationFrameId);
       }
 
+      if (
+        window.scrollX !== initialScrollX ||
+        window.scrollY !== initialScrollY
+      ) {
+        window.scrollTo(initialScrollX, initialScrollY);
+      }
+
       for (const property of VIEWPORT_PROPERTIES) {
         const previousValue = previousValues.get(property);
 
         if (previousValue?.value) {
-          element.style.setProperty(
+          root.style.setProperty(
             property,
             previousValue.value,
             previousValue.priority,
           );
         } else {
-          element.style.removeProperty(property);
+          root.style.removeProperty(property);
         }
       }
+
+      if (!activeClassWasPresent) {
+        root.classList.remove(ROOT_ACTIVE_CLASS);
+      }
     };
-  }, [active, elementRef]);
+  }, [active]);
 }
 
 export default useConversationViewport;

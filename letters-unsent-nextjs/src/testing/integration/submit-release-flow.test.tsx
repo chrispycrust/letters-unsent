@@ -73,6 +73,7 @@ describe("Submit page release flow", () => {
     await waitFor(() => {
       expect(screen.getByText("Welcome. I'm Cove.")).not.toBeNull();
     });
+    expect(document.documentElement.classList.contains("conversation-viewport-active")).toBe(true);
 
     fireEvent.change(screen.getByPlaceholderText("Write something"), {
       target: { value: "Please help me finish this letter." },
@@ -81,6 +82,10 @@ describe("Submit page release flow", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
+    });
+    await waitFor(() => {
+      expect(document.documentElement.classList.contains("conversation-viewport-active"))
+        .toBe(false);
     });
 
     expect(screen.getByRole("button", { name: "Protect this letter" })).not.toBeNull();
@@ -248,6 +253,10 @@ describe("Submit page release flow", () => {
 
     await waitFor(() => {
       expect(screen.getByPlaceholderText("Write something")).not.toBeNull();
+    });
+    await waitFor(() => {
+      expect(document.documentElement.classList.contains("conversation-viewport-active"))
+        .toBe(true);
     });
   });
 });

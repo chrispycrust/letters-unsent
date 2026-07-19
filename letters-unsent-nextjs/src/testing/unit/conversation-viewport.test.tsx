@@ -1,31 +1,37 @@
-import { act, render, screen } from "@testing-library/react";
-import { useRef } from "react";
+import { act, render } from "@testing-library/react";
 import useConversationViewport from "@/components/LetterSubmit/useConversationViewport";
 
 type MutableVisualViewport = EventTarget & {
   height: number;
   offsetTop: number;
+  pageTop: number;
 };
 
 function ViewportHarness({ active }: { active: boolean }) {
-  const elementRef = useRef<HTMLDivElement>(null);
-  useConversationViewport(elementRef, active);
+  useConversationViewport(active);
 
-  return <div ref={elementRef} data-testid="conversation-shell" />;
+  return <div data-testid="conversation-stage" />;
 }
 
 describe("useConversationViewport", () => {
   const originalVisualViewport = Object.getOwnPropertyDescriptor(window, "visualViewport");
   const originalInnerHeight = Object.getOwnPropertyDescriptor(window, "innerHeight");
+  const originalScrollX = Object.getOwnPropertyDescriptor(window, "scrollX");
+  const originalScrollY = Object.getOwnPropertyDescriptor(window, "scrollY");
+  const originalScrollTo = window.scrollTo;
   const originalRequestAnimationFrame = window.requestAnimationFrame;
   const originalCancelAnimationFrame = window.cancelAnimationFrame;
 
   let frameId = 0;
   let frameCallbacks = new Map<number, FrameRequestCallback>();
+  let scrollX = 0;
+  let scrollY = 0;
 
   beforeEach(() => {
     frameId = 0;
     frameCallbacks = new Map();
+    scrollX = 0;
+    scrollY = 0;
 
     window.requestAnimationFrame = jest.fn((callback: FrameRequestCallback) => {
       frameId += 1;
@@ -35,27 +41,35 @@ describe("useConversationViewport", () => {
     window.cancelAnimationFrame = jest.fn((id: number) => {
       frameCallbacks.delete(id);
     });
+    window.scrollTo = jest.fn((nextX: number, nextY: number) => {
+      scrollX = nextX;
+      scrollY = nextY;
+    }) as unknown as typeof window.scrollTo;
+
     Object.defineProperty(window, "innerHeight", {
       configurable: true,
-      value: 844,
+      value: 664,
     });
-    jest.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
-      x: 0,
-      y: 100,
-      top: 100,
-      right: 390,
-      bottom: 500,
-      left: 0,
-      width: 390,
-      height: 400,
-      toJSON: () => ({}),
+    Object.defineProperty(window, "scrollX", {
+      configurable: true,
+      get: () => scrollX,
     });
+    Object.defineProperty(window, "scrollY", {
+      configurable: true,
+      get: () => scrollY,
+    });
+
+    document.documentElement.classList.remove("conversation-viewport-active");
+    document.documentElement.style.removeProperty("--conversation-viewport-height");
+    document.documentElement.style.removeProperty("--conversation-viewport-page-top");
+    document.documentElement.style.removeProperty("--conversation-viewport-bottom");
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
     window.requestAnimationFrame = originalRequestAnimationFrame;
     window.cancelAnimationFrame = originalCancelAnimationFrame;
+    window.scrollTo = originalScrollTo;
 
     if (originalVisualViewport) {
       Object.defineProperty(window, "visualViewport", originalVisualViewport);
@@ -66,6 +80,19 @@ describe("useConversationViewport", () => {
     if (originalInnerHeight) {
       Object.defineProperty(window, "innerHeight", originalInnerHeight);
     }
+
+    if (originalScrollX) {
+      Object.defineProperty(window, "scrollX", originalScrollX);
+    }
+
+    if (originalScrollY) {
+      Object.defineProperty(window, "scrollY", originalScrollY);
+    }
+
+    document.documentElement.classList.remove("conversation-viewport-active");
+    document.documentElement.style.removeProperty("--conversation-viewport-height");
+    document.documentElement.style.removeProperty("--conversation-viewport-page-top");
+    document.documentElement.style.removeProperty("--conversation-viewport-bottom");
   });
 
   function flushAnimationFrames() {
@@ -74,51 +101,110 @@ describe("useConversationViewport", () => {
     callbacks.forEach((callback) => callback(performance.now()));
   }
 
-  it("publishes visual viewport measurements and restores them when inactive", () => {
+  it("keeps a stable document-coordinate stage through Safari's staged keyboard events", () => {
     const visualViewport = Object.assign(new EventTarget(), {
-      height: 500,
-      offsetTop: 10,
+      height: 664,
+      offsetTop: 0,
+      pageTop: 0,
     }) as MutableVisualViewport;
     Object.defineProperty(window, "visualViewport", {
       configurable: true,
       value: visualViewport,
     });
+    const geometrySpy = jest.spyOn(HTMLElement.prototype, "getBoundingClientRect");
 
     const { rerender } = render(<ViewportHarness active />);
-    const shell = screen.getByTestId("conversation-shell");
+    const root = document.documentElement;
 
-    expect(shell.style.getPropertyValue("--conversation-viewport-height")).toBe("500px");
-    expect(shell.style.getPropertyValue("--conversation-viewport-offset-top")).toBe("10px");
-    expect(shell.style.getPropertyValue("--conversation-viewport-bottom")).toBe("510px");
-    expect(shell.style.getPropertyValue("--conversation-keyboard-inset")).toBe("334px");
-    expect(shell.style.getPropertyValue("--conversation-visible-top-inset")).toBe("0px");
-    expect(shell.style.getPropertyValue("--conversation-available-height")).toBe("410px");
+    expect(root.classList.contains("conversation-viewport-active")).toBe(true);
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("664px");
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("0px");
+    expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("664px");
 
-    visualViewport.height = 400;
-    visualViewport.offsetTop = 120;
+    // Safari first shrinks the viewport and scrolls the document while its
+    // VisualViewport page position is still stale.
+    visualViewport.height = 345;
+    scrollY = 319;
     act(() => {
       visualViewport.dispatchEvent(new Event("resize"));
+      window.dispatchEvent(new Event("scroll"));
       flushAnimationFrames();
     });
 
-    expect(shell.style.getPropertyValue("--conversation-visible-top-inset")).toBe("20px");
-    expect(shell.style.getPropertyValue("--conversation-available-height")).toBe("400px");
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("345px");
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("319px");
+    expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("664px");
+
+    // Safari publishes the matching visual viewport position later. The stage
+    // should remain in the same document coordinates rather than move again.
+    visualViewport.offsetTop = 319;
+    visualViewport.pageTop = 319;
+    act(() => {
+      visualViewport.dispatchEvent(new Event("scroll"));
+      flushAnimationFrames();
+    });
+
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("319px");
+    expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("664px");
+    expect(root.style.getPropertyValue("--conversation-visible-top-inset")).toBe("");
+    expect(root.style.getPropertyValue("--conversation-available-height")).toBe("");
+    expect(geometrySpy).not.toHaveBeenCalled();
 
     rerender(<ViewportHarness active={false} />);
-    expect(shell.style.getPropertyValue("--conversation-viewport-height")).toBe("");
-    expect(shell.style.getPropertyValue("--conversation-available-height")).toBe("");
+
+    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+    expect(root.classList.contains("conversation-viewport-active")).toBe(false);
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("");
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("");
+    expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("");
   });
 
-  it("falls back to the window height when VisualViewport is unavailable", () => {
+  it("uses window measurements and observes ordinary page scrolling without VisualViewport", () => {
     Object.defineProperty(window, "visualViewport", {
       configurable: true,
       value: undefined,
     });
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: 844,
+    });
 
-    render(<ViewportHarness active />);
-    const shell = screen.getByTestId("conversation-shell");
+    const { rerender } = render(<ViewportHarness active />);
+    const root = document.documentElement;
 
-    expect(shell.style.getPropertyValue("--conversation-viewport-height")).toBe("844px");
-    expect(shell.style.getPropertyValue("--conversation-available-height")).toBe("744px");
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("844px");
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("0px");
+    expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("844px");
+
+    scrollY = 120;
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+      flushAnimationFrames();
+    });
+
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("120px");
+    expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("964px");
+
+    rerender(<ViewportHarness active={false} />);
+    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+
+    jest.mocked(window.requestAnimationFrame).mockClear();
+    window.dispatchEvent(new Event("scroll"));
+    expect(window.requestAnimationFrame).not.toHaveBeenCalled();
+  });
+
+  it("restores root values that existed before the stage was activated", () => {
+    const root = document.documentElement;
+    root.classList.add("conversation-viewport-active");
+    root.style.setProperty("--conversation-viewport-height", "777px", "important");
+
+    const { rerender } = render(<ViewportHarness active />);
+
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("664px");
+
+    rerender(<ViewportHarness active={false} />);
+
+    expect(root.classList.contains("conversation-viewport-active")).toBe(true);
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("777px");
   });
 });

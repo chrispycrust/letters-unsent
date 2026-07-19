@@ -51,9 +51,7 @@ export function useConversationViewport(active: boolean): void {
 
     let animationFrameId: number | null = null;
 
-    const updateProperties = () => {
-      animationFrameId = null;
-
+    const publishViewport = () => {
       const visualViewport = window.visualViewport;
       const viewportHeight = visualViewport?.height ?? window.innerHeight;
 
@@ -66,43 +64,66 @@ export function useConversationViewport(active: boolean): void {
       );
       const viewportBottom = viewportPageTop + viewportHeight;
 
-      root.style.setProperty(
-        "--conversation-viewport-height",
-        toCssPixels(viewportHeight),
-      );
-      root.style.setProperty(
-        "--conversation-viewport-page-top",
-        toCssPixels(viewportPageTop),
-      );
-      root.style.setProperty(
-        "--conversation-viewport-bottom",
-        toCssPixels(viewportBottom),
-      );
+      const nextValues: Record<ViewportProperty, string> = {
+        "--conversation-viewport-height": toCssPixels(viewportHeight),
+        "--conversation-viewport-page-top": toCssPixels(viewportPageTop),
+        "--conversation-viewport-bottom": toCssPixels(viewportBottom),
+      };
+
+      for (const property of VIEWPORT_PROPERTIES) {
+        const nextValue = nextValues[property];
+
+        if (root.style.getPropertyValue(property) !== nextValue) {
+          root.style.setProperty(property, nextValue);
+        }
+      }
     };
 
-    const scheduleUpdate = () => {
+    const runScheduledUpdate = () => {
+      animationFrameId = null;
+      publishViewport();
+    };
+
+    const scheduleFollowUp = () => {
       if (animationFrameId !== null) {
         return;
       }
 
-      animationFrameId = window.requestAnimationFrame(updateProperties);
+      animationFrameId = window.requestAnimationFrame(runScheduledUpdate);
+    };
+
+    const handleViewportChange = () => {
+      // Safari can paint its focus scroll before a queued animation-frame
+      // update. Publish the available measurements during the event so the
+      // stage follows that scroll without an intermediate off-screen frame.
+      publishViewport();
+
+      // Safari may refine VisualViewport values after the first event. Keep a
+      // single follow-up pass to reconcile those later measurements.
+      scheduleFollowUp();
     };
 
     root.classList.add(ROOT_ACTIVE_CLASS);
-    updateProperties();
+    publishViewport();
 
-    window.addEventListener("resize", scheduleUpdate);
-    window.addEventListener("scroll", scheduleUpdate);
-    window.addEventListener("orientationchange", scheduleUpdate);
-    window.visualViewport?.addEventListener("resize", scheduleUpdate);
-    window.visualViewport?.addEventListener("scroll", scheduleUpdate);
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange);
+    window.addEventListener("orientationchange", handleViewportChange);
+    window.visualViewport?.addEventListener("resize", handleViewportChange);
+    window.visualViewport?.addEventListener("scroll", handleViewportChange);
 
     return () => {
-      window.removeEventListener("resize", scheduleUpdate);
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("orientationchange", scheduleUpdate);
-      window.visualViewport?.removeEventListener("resize", scheduleUpdate);
-      window.visualViewport?.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange);
+      window.removeEventListener("orientationchange", handleViewportChange);
+      window.visualViewport?.removeEventListener(
+        "resize",
+        handleViewportChange,
+      );
+      window.visualViewport?.removeEventListener(
+        "scroll",
+        handleViewportChange,
+      );
 
       if (animationFrameId !== null) {
         window.cancelAnimationFrame(animationFrameId);

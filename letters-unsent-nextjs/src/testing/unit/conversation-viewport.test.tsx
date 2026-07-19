@@ -128,12 +128,20 @@ describe("useConversationViewport", () => {
     act(() => {
       visualViewport.dispatchEvent(new Event("resize"));
       window.dispatchEvent(new Event("scroll"));
-      flushAnimationFrames();
     });
 
+    // Publish during the viewport events so Safari cannot paint a frame with
+    // the stage still positioned at the pre-keyboard viewport.
     expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("345px");
     expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("319px");
     expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("664px");
+    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
+    expect(frameCallbacks.size).toBe(1);
+
+    act(() => {
+      flushAnimationFrames();
+    });
+    expect(frameCallbacks.size).toBe(0);
 
     // Safari publishes the matching visual viewport position later. The stage
     // should remain in the same document coordinates rather than move again.
@@ -141,11 +149,18 @@ describe("useConversationViewport", () => {
     visualViewport.pageTop = 319;
     act(() => {
       visualViewport.dispatchEvent(new Event("scroll"));
-      flushAnimationFrames();
     });
 
     expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("319px");
     expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("664px");
+    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(2);
+    expect(frameCallbacks.size).toBe(1);
+
+    act(() => {
+      flushAnimationFrames();
+    });
+    expect(frameCallbacks.size).toBe(0);
+
     expect(root.style.getPropertyValue("--conversation-visible-top-inset")).toBe("");
     expect(root.style.getPropertyValue("--conversation-available-height")).toBe("");
     expect(geometrySpy).not.toHaveBeenCalled();
@@ -179,11 +194,17 @@ describe("useConversationViewport", () => {
     scrollY = 120;
     act(() => {
       window.dispatchEvent(new Event("scroll"));
-      flushAnimationFrames();
     });
 
     expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("120px");
     expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("964px");
+    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
+    expect(frameCallbacks.size).toBe(1);
+
+    act(() => {
+      flushAnimationFrames();
+    });
+    expect(frameCallbacks.size).toBe(0);
 
     rerender(<ViewportHarness active={false} />);
     expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
@@ -191,6 +212,44 @@ describe("useConversationViewport", () => {
     jest.mocked(window.requestAnimationFrame).mockClear();
     window.dispatchEvent(new Event("scroll"));
     expect(window.requestAnimationFrame).not.toHaveBeenCalled();
+  });
+
+  it("reconciles measurements that Safari refines before the follow-up frame", () => {
+    const visualViewport = Object.assign(new EventTarget(), {
+      height: 664,
+      offsetTop: 0,
+      pageTop: 0,
+    }) as MutableVisualViewport;
+    Object.defineProperty(window, "visualViewport", {
+      configurable: true,
+      value: visualViewport,
+    });
+
+    const { unmount } = render(<ViewportHarness active />);
+    const root = document.documentElement;
+
+    visualViewport.height = 345;
+    scrollY = 319;
+    act(() => {
+      visualViewport.dispatchEvent(new Event("resize"));
+    });
+
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("345px");
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("319px");
+
+    // No second event is required: the queued pass picks up values Safari
+    // refines between the original event and the browser's next frame.
+    visualViewport.height = 344;
+    visualViewport.pageTop = 320;
+    act(() => {
+      flushAnimationFrames();
+    });
+
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("344px");
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("320px");
+    expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("664px");
+
+    unmount();
   });
 
   it("restores root values that existed before the stage was activated", () => {

@@ -16,7 +16,7 @@ interface VisitorInputProps {
 function isMobileConversationViewport(): boolean {
   if (typeof window === "undefined") {
     return false;
-  }"function"
+  }
 
   if (typeof window.matchMedia === "function") {
     return window.matchMedia(MOBILE_CONVERSATION_QUERY).matches;
@@ -67,6 +67,29 @@ export default function VisitorPanel({
     }
   }
 
+  function focusWithoutSafariScroll(
+    event: React.PointerEvent<HTMLTextAreaElement>,
+  ) {
+    const textarea = textareaRef.current;
+
+    if (
+      event.pointerType !== "touch"
+      || !event.isPrimary
+      || !textarea
+      || document.activeElement === textarea
+      || textarea.value.length > 0
+      || !isMobileConversationViewport()
+    ) {
+      return;
+    }
+
+    // Safari normally scrolls the page before revealing the software keyboard.
+    // Replace that first empty-composer touch only. A non-empty draft keeps
+    // native touch handling so Safari can place the caret where it was tapped.
+    event.preventDefault();
+    textarea.focus({ preventScroll: true });
+  }
+
   return (
     <form
       onSubmit={submitVisitorResponse}
@@ -85,6 +108,7 @@ export default function VisitorPanel({
           rows={1}
           required
           value={visitorInput}
+          onPointerDown={focusWithoutSafariScroll}
           onChange={(event) => setVisitorInput(event.target.value)}
           onFocus={() => onFocusChange?.(true)}
           onBlur={() => onFocusChange?.(false)}

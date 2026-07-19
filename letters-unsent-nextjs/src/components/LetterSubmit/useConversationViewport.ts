@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 const ROOT_ACTIVE_CLASS = "conversation-viewport-active";
+const VIEWPORT_DIRECTION_TOLERANCE = 1;
 
 const VIEWPORT_PROPERTIES = [
   "--conversation-viewport-height",
@@ -17,6 +18,8 @@ type PreviousPropertyValue = {
   priority: string;
 };
 
+type ViewportDirection = "opening" | "closing" | null;
+
 function toCssPixels(value: number): string {
   const roundedValue = Math.round(Math.max(0, value) * 100) / 100;
   return `${roundedValue}px`;
@@ -25,9 +28,9 @@ function toCssPixels(value: number): string {
 /**
  * Publishes the visible mobile viewport as document coordinates.
  *
- * The conversation stage consumes these raw measurements directly. The hook
- * deliberately does not measure or move the conversation shell, so focusing
- * the textarea cannot create a measure-transform-measure feedback loop.
+ * Safari remains responsible for keyboard dismissal. The conversation stage
+ * follows each viewport event directly instead of predicting or animating the
+ * browser's closing sequence.
  */
 export function useConversationViewport(active: boolean): void {
   useEffect(() => {
@@ -50,19 +53,54 @@ export function useConversationViewport(active: boolean): void {
     const initialScrollY = window.scrollY;
 
     let animationFrameId: number | null = null;
+    let previousViewportHeight =
+      window.visualViewport?.height ?? window.innerHeight;
+    let previousWindowPageTop = window.scrollY;
+    let previousVisualPageTop =
+      window.visualViewport?.pageTop ?? previousWindowPageTop;
+    let viewportDirection: ViewportDirection = null;
 
     const publishViewport = () => {
       const visualViewport = window.visualViewport;
       const viewportHeight = visualViewport?.height ?? window.innerHeight;
+      const windowPageTop = window.scrollY;
+      const visualPageTop = visualViewport?.pageTop ?? windowPageTop;
+      const earlierPageTop = Math.min(windowPageTop, visualPageTop);
+      const laterPageTop = Math.max(windowPageTop, visualPageTop);
+      const sourceMovedForward =
+        windowPageTop > previousWindowPageTop
+        || visualPageTop > previousVisualPageTop;
+      const sourceMovedBack =
+        windowPageTop < previousWindowPageTop
+        || visualPageTop < previousVisualPageTop;
 
-      // `pageTop` is the visible viewport's document position. Some Safari
-      // versions publish it after `scrollY`, so use whichever has advanced
-      // furthest during the keyboard animation.
-      const viewportPageTop = Math.max(
-        window.scrollY,
-        visualViewport?.pageTop ?? window.scrollY,
-      );
+      if (
+        viewportHeight
+        < previousViewportHeight - VIEWPORT_DIRECTION_TOLERANCE
+      ) {
+        viewportDirection = "opening";
+      } else if (
+        viewportHeight
+        > previousViewportHeight + VIEWPORT_DIRECTION_TOLERANCE
+      ) {
+        viewportDirection = "closing";
+      } else if (sourceMovedForward && !sourceMovedBack) {
+        viewportDirection = "opening";
+      } else if (sourceMovedBack && !sourceMovedForward) {
+        viewportDirection = "closing";
+      }
+
+      // Safari can publish scrollY and VisualViewport.pageTop separately.
+      // Follow the source moving forward while opening and the source moving
+      // back while closing.
+      const viewportPageTop = viewportDirection === "closing"
+        ? earlierPageTop
+        : laterPageTop;
       const viewportBottom = viewportPageTop + viewportHeight;
+
+      previousViewportHeight = viewportHeight;
+      previousWindowPageTop = windowPageTop;
+      previousVisualPageTop = visualPageTop;
 
       const nextValues: Record<ViewportProperty, string> = {
         "--conversation-viewport-height": toCssPixels(viewportHeight),
@@ -93,13 +131,9 @@ export function useConversationViewport(active: boolean): void {
     };
 
     const handleViewportChange = () => {
-      // Safari can paint its focus scroll before a queued animation-frame
-      // update. Publish the available measurements during the event so the
-      // stage follows that scroll without an intermediate off-screen frame.
+      // Apply values available in this event immediately, then reconcile once
+      // more in case Safari publishes its paired viewport value later.
       publishViewport();
-
-      // Safari may refine VisualViewport values after the first event. Keep a
-      // single follow-up pass to reconcile those later measurements.
       scheduleFollowUp();
     };
 

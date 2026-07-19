@@ -101,7 +101,7 @@ describe("useConversationViewport", () => {
     callbacks.forEach((callback) => callback(performance.now()));
   }
 
-  it("keeps a stable document-coordinate stage through Safari's staged keyboard events", () => {
+  it("follows Safari's staged keyboard opening and dismissal measurements directly", () => {
     const visualViewport = Object.assign(new EventTarget(), {
       height: 664,
       offsetTop: 0,
@@ -130,8 +130,6 @@ describe("useConversationViewport", () => {
       window.dispatchEvent(new Event("scroll"));
     });
 
-    // Publish during the viewport events so Safari cannot paint a frame with
-    // the stage still positioned at the pre-keyboard viewport.
     expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("345px");
     expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("319px");
     expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("664px");
@@ -141,10 +139,7 @@ describe("useConversationViewport", () => {
     act(() => {
       flushAnimationFrames();
     });
-    expect(frameCallbacks.size).toBe(0);
 
-    // Safari publishes the matching visual viewport position later. The stage
-    // should remain in the same document coordinates rather than move again.
     visualViewport.offsetTop = 319;
     visualViewport.pageTop = 319;
     act(() => {
@@ -153,13 +148,43 @@ describe("useConversationViewport", () => {
 
     expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("319px");
     expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("664px");
-    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(2);
-    expect(frameCallbacks.size).toBe(1);
 
     act(() => {
       flushAnimationFrames();
     });
-    expect(frameCallbacks.size).toBe(0);
+
+    // Safari can restore the layout scroll before VisualViewport.pageTop.
+    // Dismissal follows the source moving back instead of retaining the stale
+    // larger value.
+    scrollY = 0;
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("345px");
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("0px");
+    expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("345px");
+
+    // There is no app-controlled target or timer. Each restored measurement is
+    // used as soon as Safari publishes it.
+    visualViewport.height = 664;
+    visualViewport.offsetTop = 0;
+    act(() => {
+      visualViewport.dispatchEvent(new Event("resize"));
+    });
+
+    expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("664px");
+    expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("0px");
+    expect(root.style.getPropertyValue("--conversation-viewport-bottom")).toBe("664px");
+
+    visualViewport.pageTop = 0;
+    act(() => {
+      visualViewport.dispatchEvent(new Event("scroll"));
+    });
+
+    act(() => {
+      flushAnimationFrames();
+    });
 
     expect(root.style.getPropertyValue("--conversation-visible-top-inset")).toBe("");
     expect(root.style.getPropertyValue("--conversation-available-height")).toBe("");
@@ -167,7 +192,6 @@ describe("useConversationViewport", () => {
 
     rerender(<ViewportHarness active={false} />);
 
-    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
     expect(root.classList.contains("conversation-viewport-active")).toBe(false);
     expect(root.style.getPropertyValue("--conversation-viewport-height")).toBe("");
     expect(root.style.getPropertyValue("--conversation-viewport-page-top")).toBe("");

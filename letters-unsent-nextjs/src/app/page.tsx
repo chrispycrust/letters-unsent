@@ -146,11 +146,11 @@ export default function Home() {
       {
         ErrorMessage ? (
           <ErrorDisplay message={ErrorMessage} />
-        ) : null
+        ) : 
+        <div className="letter-display">
+          { determineLetterDisplay() }
+        </div>
       }
-      <div className="letter-display">
-        { determineLetterDisplay() }
-      </div>
       <Footer />
     </>
   );

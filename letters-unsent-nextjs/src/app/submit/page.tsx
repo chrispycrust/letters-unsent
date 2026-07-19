@@ -80,6 +80,8 @@ export default function Submit() {
   async function greetVisitor() {
     setIsComposerExpanded(false);
     setConversationStart(true);
+    setResponseOk(false);
+    setErrorMessage("");
 
     localStorage.setItem("visitCount", "1");
     localStorage.setItem("letterDraft", "hey you");
@@ -92,6 +94,7 @@ export default function Submit() {
 
       if (res.ok) {
         setResponseOk(true);
+        setErrorMessage("");
         setCoveMessage(data.output);
       } else {
         setErrorMessage(`Server error: ${data.error}`);
@@ -110,6 +113,7 @@ export default function Submit() {
 
     setIsComposerExpanded(false);
     setResponseOk(false);
+    setErrorMessage("");
 
     const updatedConversation = [
       ...conversation,
@@ -140,6 +144,7 @@ export default function Submit() {
       ];
 
       setResponseOk(true);
+      setErrorMessage("");
       setConversation(nextConversation);
       setCoveMessage(assistantMessage);
       setVisitorInput("");
@@ -236,7 +241,9 @@ export default function Submit() {
             className="guardian-panel-container"
             aria-hidden={isComposerExpanded || undefined}
           >
-            <GuardianPanel message={coveMessage} responseStatus={responseOk} />
+            {errorMessage ? null : (
+              <GuardianPanel message={coveMessage} responseStatus={responseOk} />
+            )}
           </div>
 
           {pendingReleasePayload ? (

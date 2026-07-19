@@ -740,5 +740,6 @@ test.describe('Submit page (mocked Guardian)', () => {
     await page.getByRole('button', { name: 'Start conversation' }).click();
 
     await expect(page.getByText(`Server error: ${errorMessage}`)).toBeVisible();
+    await expect(page.locator('.spinner')).toHaveCount(0);
   });
 });

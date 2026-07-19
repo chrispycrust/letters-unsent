@@ -868,6 +868,11 @@ input.letter-edit-author-input::placeholder {
   line-height: 2em;
 }
 
+.single-letter-content-container-with-recipient,
+.letter-recipient-heading {
+  margin-top: 1.5rem;
+}
+
 .single-letter {
   text-align: center;
   width: 100%;
@@ -1364,9 +1369,10 @@ section {
 }
 
 .meta-data-container {
-  float: right;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 16px;
 }
 
 .tag

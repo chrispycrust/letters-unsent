@@ -103,12 +103,8 @@ export default function Home() {
               
               ( !letter.intended_recipient )? (
                 <>
-                  {
-                    (letter.relationship_type && letter.emotional_tone) &&
-                      <br/>
-                  }
                   <div className="
-                    single-letter-content-no-recipient-on-display-page 
+                    single-letter-content-container-with-recipient
                     preserve-breaks
                     single-letter-on-display-page-margin-bottom
                   ">
@@ -117,11 +113,7 @@ export default function Home() {
                 </>
               ) : (
                 <>
-                  {
-                    (letter.relationship_type && letter.emotional_tone) &&
-                      <br/>
-                  }
-                  <h2>
+                  <h2 className="letter-recipient-heading">
                     {letter.intended_recipient}
                   </h2>
                   <div className="

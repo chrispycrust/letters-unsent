@@ -63,7 +63,7 @@
     --background-desat-1: #3f3e39;
     --background-error-message: HSL(0, 100%, 20%);
     --button-text-color: var(--foreground); 
-    --button-with-background-text-color: #3e3d38;
+    --button-with-background-text-color: var(--background);
     --letter-colour: #514e42;
     --ai-gen-tag-colour: #676353;
     --accent: #6aa07a;       /* muted mint (same family as your light accent) */

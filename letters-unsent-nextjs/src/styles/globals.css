@@ -1374,11 +1374,11 @@ section {
   background: var(--background-desat-1);
   padding: 5px 10px;
   border-radius: var(--borderRadius);
-  font-size: var(--font-size-tiny);
 }
 
 .changelog-date {
   margin-left: 10px;
+  font-size: var(--font-size-tiny);
 }
 
 .meta-data-container {
@@ -1391,8 +1391,7 @@ section {
 .tag
 , .contextual-tags-container {
   font-family: var(--geist);
-  opacity: 72%;
-  font-size: var(--font-size-tiny);
+  font-size: var(--font-size-xs);
 }
 
 .tag {

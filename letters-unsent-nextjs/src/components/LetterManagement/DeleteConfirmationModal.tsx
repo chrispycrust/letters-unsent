@@ -46,7 +46,7 @@ export default function DeleteConfirmationModal({
                 onClick={onClose}
                 disabled={isDeleting}
               >
-                No, I'll go back
+                No, I&apos;ll go back
               </button>
 
               <button

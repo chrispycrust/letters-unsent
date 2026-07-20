@@ -1,5 +1,3 @@
-import { useRouter } from "next/navigation"
-
 interface OwnerEditActionsProps {
   editFormId: string
   onCancel: () => void
@@ -16,7 +14,6 @@ export default function OwnerEditActions({
   onDismissEditFeedback,
 }: OwnerEditActionsProps) {
   
-  const router = useRouter()
   const hasEditFeedback = Boolean(editFeedback && editFeedback.trim() !== "")
 
   const stopEditingButton = (
@@ -29,8 +26,6 @@ export default function OwnerEditActions({
             onCancel()
             return
           }
-
-          // router.push(`/letters/${letterId}`)
         }}
       disabled={isSaving}
     >

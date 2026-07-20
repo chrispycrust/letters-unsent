@@ -910,7 +910,7 @@ input.letter-edit-author-input::placeholder {
 
 p.timestamp {
   font-family: var(--geist);
-  color: rgb(136, 136, 136);
+  color: var(--release-muted);
   margin-top: 20px;
   font-size: var(--font-size-tiny);
 }

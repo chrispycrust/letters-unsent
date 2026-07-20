@@ -21,6 +21,7 @@
   --release-panel-bg: #faf8f2;
   --release-border: #d6d2c5;
   --release-border-darker: #9f9b8c;
+  --control-border: #817d70;
   --release-muted: #5f5b50;
   --font-size-2xs: 0.80em;
   --font-size-xs: 0.85em;
@@ -67,6 +68,7 @@
     --accent-subtle: #3d5044;
     --release-panel-bg: #3a3933;
     --release-border: #575248;
+    --control-border: #aaa695;
     --placeholder-text-color: #9e9584;
     --release-muted: #cfc7b2;
     --danger: #e8a27d;
@@ -697,7 +699,7 @@ button.owner-question-trigger {
 
 .owner-token-input {
   min-height: 42px;
-  border: 1px solid var(--release-border);
+  border: 1px solid var(--control-border);
   border-radius: 8px;
   padding: 8px 10px;
   background: var(--background);
@@ -771,7 +773,7 @@ button.owner-question-trigger {
   padding: 0;
   margin: 0;
   border: 0;
-  outline: 1px solid var(--release-border-darker);
+  outline: 1px solid var(--control-border);
   outline-offset: 10px;
   border-radius: 1px;
   background: transparent;
@@ -809,7 +811,7 @@ button.owner-question-trigger {
   display: flex;
   align-items: baseline;
   gap: 0.25em;
-  outline: 1px solid var(--release-border-darker);
+  outline: 1px solid var(--control-border);
   outline-offset: 10px;
   border-radius: 1px;
 }
@@ -827,7 +829,7 @@ input.letter-edit-author-input::placeholder {
 .letter-edit-recipient-input:focus-visible,
 .letter-edit-content-input:focus-visible,
 .letter-edit-sign-off:focus-within {
-  outline: 1px solid var(--accent-strong);
+  outline: 2px solid var(--accent-strong);
 }
 
 .letter-edit-success {
@@ -1669,7 +1671,7 @@ button.release-link-button:not(:disabled):hover {
 .release-token-input,
 .release-generated-token,
 .release-selected-token {
-  border: 1px solid var(--release-border);
+  border: 1px solid var(--control-border);
   border-radius: 8px;
   color: var(--foreground);
   background: var(--background);
@@ -1681,7 +1683,12 @@ button.release-link-button:not(:disabled):hover {
 } 
 
 .release-token-input {
-  font-size: var(--font-size-base)
+  font-size: var(--font-size-base);
+}
+
+.release-token-input:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
 }
 
 .release-store-options-container {

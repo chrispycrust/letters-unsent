@@ -11,15 +11,13 @@
   --background-desat-1: #e5e3d4;
   --background-desat-2: #58503c;
   --background-error-message: hsl(0, 100%, 89%);
-  --button-text-color: #3e3d38;
-  --button-text-color-hover: var(--background);
-  --button-with-background-text-color: var(--button-text-color);
-  --button-with-background-text-color-hover: var(--background);
   --letter-colour: #fffff4;
   --ai-gen-tag-colour: #d2d2bf;
-  --accent-700: #2f5b4b;
-  --accent: hsl(106, 46%, 62%);
-  --accent-100: #e4eee8;
+  /* Accent roles: strong for fills/text/borders, hover for filled controls, subtle for tinted surfaces. */
+  --accent-strong: #4e684c;
+  --accent-hover: #2e492e;
+  --accent-subtle: #e4eee8;
+  --on-accent: var(--background);
   --release-panel-bg: #faf8f2;
   --release-border: #d6d2c5;
   --release-border-darker: #9f9b8c;
@@ -62,14 +60,11 @@
     --foreground: #e5e3d4;   /* warm parchment-white */
     --background-desat-1: #3f3e39;
     --background-error-message: HSL(0, 100%, 20%);
-    --button-text-color: var(--foreground); 
-    --button-with-background-text-color: var(--background);
     --letter-colour: #514e42;
     --ai-gen-tag-colour: #676353;
-    --accent: #6aa07a;       /* muted mint (same family as your light accent) */
-    --accent-700: #a8d3bc;
-    --accent-700: #91c8ad;
-    --accent-100: #3d5044;
+    --accent-strong: #a8b99a;
+    --accent-hover: #dbe7c9;
+    --accent-subtle: #3d5044;
     --release-panel-bg: #3a3933;
     --release-border: #575248;
     --placeholder-text-color: #9e9584;
@@ -228,14 +223,10 @@ button {
   border: none;
   padding: 20px 20px;
   cursor: pointer;
-  background-color: var(--accent);
-  transition-property: background-color color;
+  background-color: transparent;
+  transition-property: background-color, color;
   transition-duration: 0.5s;
-  color: var(--foreground);
-}
-
-button:not(:disabled):hover {
-  color: var(--button-text-color);
+  color: inherit;
 }
 
 button:disabled {
@@ -256,25 +247,28 @@ button.is-busy:disabled {
 }
 
 .button-change-textarea:not(:disabled):hover {
-  background: var(--accent-700);
-  color: var(--button-text-color-hover);
+  background: var(--accent-strong);
+  color: var(--background);
 }
 
 .submit-button {
   margin-top: auto;
 }
 
-.submit-button
-, .start-conversation-button
-, .release-primary-button  {
-  color: var(--button-with-background-text-color);
+.contact-form button[type="submit"],
+.submit-button,
+.start-conversation-button,
+.release-primary-button {
+  background: var(--accent-strong);
+  color: var(--on-accent);
 }
 
-.submit-button:not(:disabled):hover
-, .start-conversation-button:not(:disabled):hover
-, .release-primary-button:not(:disabled):hover  {
-  color: var(--button-with-background-text-color-hover);
-  background: var(--accent-700);
+.contact-form button[type="submit"]:not(:disabled):hover,
+.submit-button:not(:disabled):hover,
+.start-conversation-button:not(:disabled):hover,
+.release-primary-button:not(:disabled):hover {
+  background: var(--accent-hover);
+  color: var(--on-accent);
 }
 
 .sr-only {
@@ -400,7 +394,7 @@ footer a:hover {
 }
 
 /* .navbar a[aria-current] {
-  background-color: var(--accent);
+  background-color: var(--accent-subtle);
 } */
 
 .letter
@@ -567,7 +561,7 @@ button.owner-subtle-action:not(:disabled):hover {
 }
 
 button.owner-subtle-action:focus-visible {
-  outline: 2px solid var(--accent-700);
+  outline: 2px solid var(--accent-strong);
   outline-offset: 3px;
   border-radius: 3px;
 }
@@ -677,7 +671,7 @@ button.owner-question-trigger {
 }
 
 .owner-sheet-handle:focus-visible {
-  outline: 2px solid var(--accent-700);
+  outline: 2px solid var(--accent-strong);
   outline-offset: -4px;
 }
 
@@ -714,7 +708,7 @@ button.owner-question-trigger {
 }
 
 .owner-token-input:focus-visible {
-  outline: 2px solid var(--accent-700);
+  outline: 2px solid var(--accent-strong);
   outline-offset: 2px;
 }
 
@@ -833,13 +827,13 @@ input.letter-edit-author-input::placeholder {
 .letter-edit-recipient-input:focus-visible,
 .letter-edit-content-input:focus-visible,
 .letter-edit-sign-off:focus-within {
-  outline: 1px solid var(--accent-700);
+  outline: 1px solid var(--accent-strong);
 }
 
 .letter-edit-success {
   margin: 0;
   font-family: var(--geist);
-  color: var(--accent-700);
+  color: var(--foreground);
 }
 
 .letter-edit-error-block {
@@ -1041,7 +1035,7 @@ textarea
 ,select {
   background: none;
   padding: 10px;
-  border: solid 2px var(--accent);
+  border: solid 2px var(--accent-strong);
   border-radius: var(--borderRadius);
   color: var(--foreground);
 }
@@ -1199,7 +1193,7 @@ label {
 }
 
 .spinner {
-  background: var(--accent);
+  background: var(--accent-strong);
   border-radius: 50%;
   width: 0.8em;
   height: 0.8em;
@@ -1366,6 +1360,10 @@ section {
   .toggle-panel {
     transform: none;
   }
+
+  .spinner {
+    animation: none;
+  }
 }
 
 .changelog-date
@@ -1499,19 +1497,6 @@ section {
   padding: 10px 16px;
 }
 
-.release-primary-button {
-  background: var(--accent);
-}
-
-.release-primary-button:hover {
-  background: var(--accent-700);
-}
-
-.release-primary-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .release-secondary-button
 ,.delete-confirmation-button {
   background: transparent;
@@ -1519,43 +1504,30 @@ section {
   color: var(--foreground);
 }
 
-.release-secondary-button:hover
-,.delete-confirmation-button:hover {
-  background: var(--accent-100);
+.release-secondary-button:not(:disabled):hover
+,.delete-confirmation-button:not(:disabled):hover {
+  background: var(--accent-subtle);
   color: var(--foreground);
 }
 
-.owner-destructive-action:hover {
+.owner-destructive-action:not(:disabled):hover {
   background: var(--danger-background);
-}
-
-.release-secondary-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 button.release-link-button {
   background: transparent;
   border: none;
   padding: 0;
-  color: var(--accent-700);
+  color: var(--accent-strong);
   text-decoration: underline;
   text-underline-offset: 3px;
   font-family: var(--geist);
-}
-
-button.release-link-button {
   transition: none;
 }
 
 button.release-link-button:not(:disabled):hover {
-  color: var(--accent-700);
+  color: var(--accent-strong);
   text-decoration: none;
-}
-
-button.release-link-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .release-options-fieldset {
@@ -1597,7 +1569,7 @@ button.release-link-button:disabled {
 }
 
 .release-option-card.is-selected {
-  border-color: var(--accent-700);
+  border-color: var(--accent-strong);
   background: var(--background-desat-1);
 }
 
@@ -1624,9 +1596,9 @@ button.release-link-button:disabled {
 
 .release-option-card input[type="radio"]:checked,
 .release-option-card input[type="checkbox"]:checked {
-  background-color: var(--accent-700);
+  background-color: var(--accent-strong);
   padding: 2px;
-  border: 1px solid var(--accent-700);
+  border: 1px solid var(--accent-strong);
 }
 
 .release-option-content {
@@ -1658,10 +1630,10 @@ button.release-link-button:disabled {
   display: inline-flex;
   align-items: center;
   padding: 2px 10px;
-  border: 1px solid rgba(67, 112, 87, 0.28);
+  border: 1px solid var(--accent-strong);
   border-radius: 999px;
-  background: rgba(67, 112, 87, 0.1);
-  color: var(--accent-700);
+  background: var(--accent-subtle);
+  color: var(--foreground);
   font-family: var(--geist);
   font-weight: 600;
   line-height: 1.2;
@@ -1768,7 +1740,7 @@ button.release-link-button:disabled {
 
 .release-copy-confirmation {
   font-family: var(--geist);
-  color: var(--accent-700);
+  color: var(--accent-strong);
 }
 
 /* .release-confirm-checkbox
@@ -1828,7 +1800,7 @@ button.release-link-button:disabled {
 
 .release-confirmation-item::before {
   content: "✓";
-  color: var(--accent-700);
+  color: var(--accent-strong);
   margin-right: 8px;
 }
 

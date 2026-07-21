@@ -1179,8 +1179,16 @@ textarea {
   resize: none;
 }
 
-label {
-  padding-bottom: 20px;
+.control-label {
+  display: block;
+  margin: 0 0 6px;
+  padding: 0;
+  color: var(--release-muted);
+  font-family: var(--geist);
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
 }
 
 @keyframes spin {
@@ -1536,6 +1544,8 @@ button.release-link-button:not(:disabled):hover {
   border: 0;
   padding: 0;
   margin: 0;
+  min-inline-size: 0;
+  width: 100%;
 }
 
 .release-action-options-container {
@@ -1568,6 +1578,19 @@ button.release-link-button:not(:disabled):hover {
   flex-direction: column;
   gap: 16px;
   background: transparent;
+  cursor: pointer;
+}
+
+.release-option-card :is(input, button, label) {
+  cursor: auto;
+}
+
+.release-option-card :is(input[type="radio"], input[type="checkbox"], button:not(:disabled), label) {
+  cursor: pointer;
+}
+
+.release-option-card input[type="text"] {
+  cursor: text;
 }
 
 .release-option-card.is-selected {
@@ -1610,8 +1633,12 @@ button.release-link-button:not(:disabled):hover {
 }
 
 .release-option-title {
+  display: block;
+  margin: 0;
+  padding: 0;
   font-weight: 600;
   text-align: center;
+  cursor: pointer;
 }
 
 .release-option-title-container {
@@ -1698,18 +1725,12 @@ button.release-link-button:not(:disabled):hover {
   gap: 28px;
 }
 
-.release-store-token-label {
-  font-family: var(--geist);
-  font-size: var(--font-size-small);
-  font-weight: 500;
-  color: var(--release-muted);
-}
-
 .release-store-token-row {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  width: 100%;
 }
 
 .release-store-option-row {
@@ -1970,6 +1991,18 @@ button.release-link-button:not(:disabled):hover {
   , .release-selected-token {
     font-family: var(--cormorant);
     font-size: 1.2em;
+  }
+
+  .release-store-token-row {
+    width: fit-content;
+    max-width: 100%;
+    align-self: center;
+    align-items: flex-start;
+  }
+
+  .release-store-token-row .release-selected-token {
+    width: fit-content;
+    max-width: 100%;
   }
 
   .release-store-option-detail {

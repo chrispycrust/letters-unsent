@@ -16,6 +16,15 @@ interface StorePassphraseStepProps {
   canContinue: boolean
 }
 
+function isInteractiveCardTarget(target: EventTarget) {
+  return (
+    target instanceof Element && 
+    Boolean(
+      target.closest("button, input, textarea, select, a, label")
+    )
+  )
+}
+
 export default function StorePassphraseStep({
   passphrase,
   saveOnDevice,
@@ -56,12 +65,16 @@ export default function StorePassphraseStep({
         </>
       }
     >
-      <div className="release-store-options-container">
+      <fieldset className="release-store-options-container release-options-fieldset">
+        <legend className="sr-only">Choose how to store your token</legend>
+
         <div className="release-store-token-row">
-          {/* <p className="release-store-token-label">Your token</p> */}
-          <p className="release-selected-token" aria-label="Selected token">
+          <label htmlFor="selected-passphrase-output" className="control-label">
+            Your token
+          </label>
+          <output id="selected-passphrase-output" className="release-selected-token">
             {passphrase}
-          </p>
+          </output>
         </div>
 
         {/* --------- options for storing the token --------- */}
@@ -71,74 +84,92 @@ export default function StorePassphraseStep({
         </p>
 
         <div className="release-store-option-row">
-          <label className={`release-option-card ${saveOnDevice ? "is-selected" : ""}`}>
+          <div
+            className={`release-option-card ${saveOnDevice ? "is-selected" : ""}`}
+            onClick={(event) => {
+              if (!isInteractiveCardTarget(event.target)) {
+                onToggleSaveOnDevice()
+              }
+            }}
+          >
             <input
+              id="save-token-on-device"
               type="checkbox"
-              aria-label="Save it on this device"
+              aria-describedby="save-token-on-device-description"
               checked={saveOnDevice}
               onChange={onToggleSaveOnDevice}
             />
             <div className="release-option-content">
-              <p className="release-option-title">Store it on this device</p>
-              <span className="release-option-helper">
+              <label htmlFor="save-token-on-device" className="release-option-title">
+                Save it on this device
+              </label>
+              <span id="save-token-on-device-description" className="release-option-helper">
                 Saves the token only in this browser profile on this device. If you use another device or browser,
                 or clear browser storage, you&apos;ll need to enter the token manually. We recommend saving your own copy
                 somewhere safe too.
               </span>
             </div>
-          </label>
+          </div>
 
           <div className="release-store-option-detail" aria-hidden="true" />
         </div>
 
         <div className="release-store-option-row">
-          <div className={`release-option-card ${manualSaveSelected ? "is-selected" : ""}`}>
+          <div
+            className={`release-option-card ${manualSaveSelected ? "is-selected" : ""}`}
+            onClick={(event) => {
+              if (!isInteractiveCardTarget(event.target)) {
+                onToggleManualSave()
+              }
+            }}
+          >
             <input
               id="manual-save-option"
               type="checkbox"
-              aria-label="Copy it yourself"
+              aria-describedby="manual-save-option-description manual-save-option-recommended"
               checked={manualSaveSelected}
               onChange={onToggleManualSave}
             />
-            <div>
-              <label htmlFor="manual-save-option" className="release-option-content">
-                <div className="release-option-title-container">
-                  <p className="release-option-title">Copy it yourself</p> 
-                  <span className="release-recommended-badge">Recommended</span>
-                </div>
-
-                <span className="release-option-helper">
-                  Save the token somewhere safe like your notes or password manager. To continue with this option,
-                  copy the token and confirm you saved it somewhere safe.
+            <div className="release-option-content">
+              <div className="release-option-title-container">
+                <label htmlFor="manual-save-option" className="release-option-title">
+                  Copy it yourself
+                </label>
+                <span id="manual-save-option-recommended" className="release-recommended-badge">
+                  Recommended
                 </span>
+              </div>
 
-                <div className="release-store-option-detail-container">
-                  <div className="release-store-option-detail">
-                    <button
-                      type="button"
-                      className="release-secondary-button"
-                      onClick={onCopyToken}
+              <span id="manual-save-option-description" className="release-option-helper">
+                Save the token somewhere safe like your notes or password manager. To continue with this option,
+                copy the token and confirm you saved it somewhere safe.
+              </span>
+
+              <div className="release-store-option-detail-container">
+                <div className="release-store-option-detail">
+                  <button
+                    type="button"
+                    className="release-secondary-button"
+                    onClick={onCopyToken}
+                    disabled={!manualSaveSelected}
+                  >
+                    {tokenCopied ? <span className="release-copy-confirmation">Token copied to clipboard</span> : 'Copy token'}
+                  </button>
+                  <label className="release-confirm-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={savedElsewhereConfirmed}
                       disabled={!manualSaveSelected}
-                    >
-                      {tokenCopied ? <span className="release-copy-confirmation">Token copied to clipboard</span> : 'Copy token'}
-                    </button>
-                    <label className="release-confirm-checkbox">
-                      <input
-                        type="checkbox"
-                        aria-label="I have saved it somewhere safe"
-                        checked={savedElsewhereConfirmed}
-                        disabled={!manualSaveSelected}
-                        onChange={onToggleSavedElsewhereConfirmed}
-                      />
-                      <span>I have saved it somewhere safe</span>
-                    </label>
-                  </div>
+                      onChange={onToggleSavedElsewhereConfirmed}
+                    />
+                    <span>I have saved it somewhere safe</span>
+                  </label>
                 </div>
-              </label>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </fieldset>
     </ProtectionStepShell>
   )
 }

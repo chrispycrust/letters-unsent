@@ -63,11 +63,45 @@ describe("ReleaseActionArea", () => {
     fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
 
     expect(screen.getByText("Protect your letter")).not.toBeNull();
+    expect(screen.getByLabelText("Write my own")).not.toBeNull();
+    expect(screen.getByLabelText("Create one for me")).not.toBeNull();
+    expect(screen.getByLabelText("Your token")).not.toBeNull();
+    expect(document.querySelector("label button")).toBeNull();
+    expect(document.querySelector("label label")).toBeNull();
     const continueButton = screen.getByRole("button", { name: "Continue" }) as HTMLButtonElement;
     expect(continueButton.disabled).toBe(true);
     expect(screen.getByLabelText("Generated token").textContent?.trim()).toMatch(
       /^[a-z]+-[a-z]+-[a-z]+-[a-z]+$/,
     );
+  });
+
+  it("keeps the non-interactive area of each option card clickable", () => {
+    renderReleaseActionArea();
+
+    fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
+
+    const customOption = screen.getByLabelText("Write my own") as HTMLInputElement;
+    const generatedOption = screen.getByLabelText("Create one for me") as HTMLInputElement;
+
+    fireEvent.click(screen.getByText("Create a stronger phrase automatically."));
+    expect(generatedOption.checked).toBe(true);
+
+    fireEvent.click(screen.getByText(/Choose a phrase you’ll remember/));
+    expect(customOption.checked).toBe(true);
+
+    fireEvent.change(screen.getByLabelText("Your token"), {
+      target: { value: "quiet-sage-morning" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+
+    const deviceOption = screen.getByLabelText("Save it on this device") as HTMLInputElement;
+    const manualOption = screen.getByLabelText("Copy it yourself") as HTMLInputElement;
+
+    fireEvent.click(screen.getByText(/Saves the token only in this browser profile/));
+    expect(deviceOption.checked).toBe(true);
+
+    fireEvent.click(screen.getByText(/Save the token somewhere safe like your notes/));
+    expect(manualOption.checked).toBe(true);
   });
 
   it("can return from the protection flow to release options", () => {
@@ -90,6 +124,8 @@ describe("ReleaseActionArea", () => {
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
 
     expect(screen.getByText("Keep your token somewhere safe")).not.toBeNull();
+    expect(document.querySelector("label button")).toBeNull();
+    expect(document.querySelector("label label")).toBeNull();
 
     const reviewButton = screen.getByRole("button", { name: "Review release" }) as HTMLButtonElement;
     expect(reviewButton.disabled).toBe(true);
@@ -249,7 +285,7 @@ describe("ReleaseActionArea", () => {
     fireEvent.click(screen.getByLabelText("Create one for me"));
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
 
-    const selectedToken = screen.getByLabelText("Selected token").textContent?.trim();
+    const selectedToken = screen.getByLabelText("Your token").textContent?.trim();
     fireEvent.click(screen.getByLabelText("Save it on this device"));
     fireEvent.click(screen.getByRole("button", { name: "Review release" }));
 

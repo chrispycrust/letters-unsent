@@ -5,20 +5,22 @@ export default function ContactForm() {
             method = "post"
             className="contact-form"
         >   
-            <label>
-                <strong>Name (optional)</strong>
+            <label htmlFor="contact-name" className="control-label">
+                Name (optional)
             </label>
             <textarea
+                id="contact-name"
                 rows={1}
             >
             </textarea>
 
             <br />
 
-            <label>
-                <strong>What is your message about?</strong>
+            <label htmlFor="contact-category" className="control-label">
+                What is your message about?
             </label>
             <select
+                id="contact-category"
                 required
             >
                 <option value="">
@@ -37,27 +39,20 @@ export default function ContactForm() {
             
             <br/>
 
-            <label>
-                <strong>What did you want to send?</strong>
+            <label htmlFor="contact-message" className="control-label">
+                What did you want to send?
             </label>
             <textarea
+                id="contact-message"
                 required
                 className="textarea-contact-form"
             >
             </textarea>
 
-             <>
-                <label>Attach a screenshot of the error or bug if needed</label>
-                <input type="file" accept="image/png, image/jpeg" />
-            </>
-
-            {
-                // if the option value is "error" or "bug" activate a section to attach a file of the error/bug
-                <>
-                    <label>Attach a screenshot of the error or bug if needed</label>
-                    <input type="file" accept="image/png, image/jpeg" />
-                </>
-            }
+            <label htmlFor="contact-screenshot" className="control-label">
+                Attach a screenshot of the error or bug if needed
+            </label>
+            <input id="contact-screenshot" type="file" accept="image/png, image/jpeg" />
 
             <div>
                 <button

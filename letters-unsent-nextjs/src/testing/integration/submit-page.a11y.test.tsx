@@ -36,7 +36,7 @@ describe("Submit page accessibility basics", () => {
       expect(screen.getByText("Welcome. I'm Cove.")).not.toBeNull()
     })
 
-    const textarea = screen.getByPlaceholderText("Write something") as HTMLTextAreaElement
+    const textarea = screen.getByLabelText("Message to Cove") as HTMLTextAreaElement
     const submitButton = screen.getByRole("button", {
       name: "click to submit a response to Cove (AI presence)",
     })
@@ -45,6 +45,7 @@ describe("Submit page accessibility basics", () => {
     })
 
     expect(textarea.required).toBe(true)
+    expect(textarea.placeholder).toBe("Write something")
     expect(submitButton).not.toBeNull()
     expect(resizeButton).not.toBeNull()
     expect(resizeButton.getAttribute("aria-controls")).toBe(textarea.id)

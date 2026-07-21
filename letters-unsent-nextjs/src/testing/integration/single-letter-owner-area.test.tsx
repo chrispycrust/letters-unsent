@@ -189,11 +189,12 @@ describe("Single letter owner area", () => {
     fireEvent.change(input, { target: { value: "wrong-token" } })
     fireEvent.click(screen.getByRole("button", { name: "Confirm" }))
 
-    await waitFor(() => {
-      expect(screen.getByText("The token doesn’t match this letter. Please try again.")).not.toBeNull()
-    })
+    const error = await screen.findByRole("alert")
 
     expect(input.value).toBe("")
+    expect(input.getAttribute("aria-invalid")).toBe("true")
+    expect(input.getAttribute("aria-describedby")).toBe(error.id)
+    expect(error.textContent).toBe("The token doesn’t match this letter. Please try again.")
   })
 
   it("shows immediate feedback when confirming an empty token", () => {
@@ -201,7 +202,12 @@ describe("Single letter owner area", () => {
     fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
     fireEvent.click(screen.getByRole("button", { name: "Confirm" }))
 
-    expect(screen.getByText("Enter your token first.")).not.toBeNull()
+    const input = screen.getByLabelText("Token")
+    const error = screen.getByRole("alert")
+
+    expect(input.getAttribute("aria-invalid")).toBe("true")
+    expect(input.getAttribute("aria-describedby")).toBe(error.id)
+    expect(error.textContent).toBe("Enter your token first.")
   })
 
   it("shows temporary lockout message after repeated invalid attempts", async () => {

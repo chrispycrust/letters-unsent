@@ -19,17 +19,19 @@ export default function OwnerVerificationPanel({
     <div className="owner-verification-panel">
 
       <div className="owner-actions">
-        <label htmlFor="owner-token-input">
+        <label htmlFor="owner-token-input" className="control-label">
+          Token
         </label>
         <input
           id="owner-token-input"
           className="owner-token-input"
-          aria-label="Token"
           value={token}
           onChange={(event) => onTokenChange(event.target.value)}
           autoComplete="off"
           spellCheck={false}
           placeholder="Enter your token here"
+          aria-invalid={errorMessage ? true : undefined}
+          aria-describedby={errorMessage ? "owner-token-error" : undefined}
         />
 
         <button
@@ -53,7 +55,11 @@ export default function OwnerVerificationPanel({
         </button>
       </div>
 
-      {errorMessage ? <p className="owner-area-error">{errorMessage}</p> : null}
+      {errorMessage ? (
+        <p id="owner-token-error" className="owner-area-error" role="alert">
+          {errorMessage}
+        </p>
+      ) : null}
     
     </div>
   )

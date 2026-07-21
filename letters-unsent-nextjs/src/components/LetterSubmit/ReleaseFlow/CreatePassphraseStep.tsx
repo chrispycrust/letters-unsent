@@ -13,6 +13,15 @@ interface CreatePassphraseStepProps {
   canContinue: boolean
 }
 
+function isInteractiveCardTarget(target: EventTarget) {
+  return (
+    target instanceof Element && 
+    Boolean(
+      target.closest("button, input, textarea, select, a, label")
+    )
+  )
+}
+
 export default function CreatePassphraseStep({
   passphraseMode,
   customPassphrase,
@@ -67,69 +76,96 @@ export default function CreatePassphraseStep({
         <legend className="sr-only">Choose token method</legend>
 
         <div className="release-action-options-container">
-          <div>
-            <label className={`release-option-card ${passphraseMode === "custom" ? "is-selected" : ""}`}>
-              <input
-                type="radio"
-                name="passphrase-option"
-                aria-label="Write my own"
-                checked={passphraseMode === "custom"}
-                onChange={onSelectCustom}
-              />
-              <div className="release-option-content">
-                <p className="release-option-title">Write my own</p>
-                <p className="release-option-helper">
-                  Choose a phrase you’ll remember. You can reuse one you already use for another letter, if you
-                  prefer.
-                </p>
-              
-                <div className="release-token-input-wrap">
-                {/* <label htmlFor="custom-passphrase-input">Token</label> */}
-                  <input
-                    id="custom-passphrase-input"
-                    type="text"
-                    value={customPassphrase}
-                    onFocus={handleCustomPassphraseFocus}
-                    placeholder="Enter your token here"
-                    onChange={(event) => handleCustomPassphraseChange(event.target.value)}
-                    className="release-token-input"
-                    autoComplete="off"
-                  />
+          <div
+            className={`release-option-card ${passphraseMode === "custom" ? "is-selected" : ""}`}
+            onClick={(event) => {
+              if (!isInteractiveCardTarget(event.target)) {
+                onSelectCustom()
+              }
+            }}
+          >
+            <input
+              id="passphrase-option-custom"
+              type="radio"
+              name="passphrase-option"
+              aria-describedby="passphrase-option-custom-description"
+              checked={passphraseMode === "custom"}
+              onChange={onSelectCustom}
+            />
+            <div className="release-option-content">
+              <label htmlFor="passphrase-option-custom" className="release-option-title">
+                Write my own
+              </label>
+              <p id="passphrase-option-custom-description" className="release-option-helper">
+                Choose a phrase you’ll remember. You can reuse one you already use for another letter, if you
+                prefer.
+              </p>
+
+              <div className="release-token-input-wrap">
+                <label htmlFor="custom-passphrase-input" className="control-label">
+                  Your token
+                </label>
+                <input
+                  id="custom-passphrase-input"
+                  type="text"
+                  value={customPassphrase}
+                  onFocus={handleCustomPassphraseFocus}
+                  placeholder="Enter your token here"
+                  onChange={(event) => handleCustomPassphraseChange(event.target.value)}
+                  className="release-token-input"
+                  autoComplete="off"
+                  aria-describedby="custom-passphrase-guidance"
+                />
               </div>
-                <span className="release-option-helper release-token-guidance">
-                  Longer phrases are harder to guess. Avoid names, birthdays, or very short tokens.
-                </span>
+              <span
+                id="custom-passphrase-guidance"
+                className="release-option-helper release-token-guidance"
+              >
+                Longer phrases are harder to guess. Avoid names, birthdays, or very short tokens.
+              </span>
             </div>
-            </label>
           </div>
 
-          <div>
-            <label className={`release-option-card ${passphraseMode === "generated" ? "is-selected" : ""}`}>
-              <input
-                type="radio"
-                name="passphrase-option"
-                aria-label="Create one for me"
-                checked={passphraseMode === "generated"}
-                onChange={onSelectGenerated}
-              />
+          <div
+            className={`release-option-card ${passphraseMode === "generated" ? "is-selected" : ""}`}
+            onClick={(event) => {
+              if (!isInteractiveCardTarget(event.target)) {
+                onSelectGenerated()
+              }
+            }}
+          >
+            <input
+              id="passphrase-option-generated"
+              type="radio"
+              name="passphrase-option"
+              aria-describedby="passphrase-option-generated-description"
+              checked={passphraseMode === "generated"}
+              onChange={onSelectGenerated}
+            />
 
-              <div className="release-option-content">
-                <p className="release-option-title">Create one for me</p>
-                <p className="release-option-helper">Create a stronger phrase automatically.</p>
-                <div className="release-generated-wrap">
-                  <p className="release-generated-token" aria-label="Generated token">
-                    {generatedPassphrase}
-                  </p>
-                  <button
-                    type="button"
-                    className="release-link-button release-inline-link"
-                    onClick={handleGenerateAnother}
-                  >
-                    Regenerate
-                  </button>
-                </div>
+            <div className="release-option-content">
+              <label htmlFor="passphrase-option-generated" className="release-option-title">
+                Create one for me
+              </label>
+              <p id="passphrase-option-generated-description" className="release-option-helper">
+                Create a stronger phrase automatically.
+              </p>
+              <div className="release-generated-wrap">
+                <label htmlFor="generated-passphrase-output" className="sr-only">
+                  Generated token
+                </label>
+                <output id="generated-passphrase-output" className="release-generated-token">
+                  {generatedPassphrase}
+                </output>
+                <button
+                  type="button"
+                  className="release-link-button release-inline-link"
+                  onClick={handleGenerateAnother}
+                >
+                  Regenerate
+                </button>
               </div>
-            </label>
+            </div>
           </div>
         </div>
       </fieldset>

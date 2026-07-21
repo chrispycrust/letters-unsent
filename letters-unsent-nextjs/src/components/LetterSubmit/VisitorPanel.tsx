@@ -239,6 +239,9 @@ export default function VisitorPanel({
       className={`visitor-input-container${isExpanded ? " is-expanded" : ""}`}
     >
       <div className="visitor-input-area">
+        <label htmlFor="VisitorInput" className="sr-only">
+          Message to Cove
+        </label>
         <textarea
           ref={textareaRef}
           id="VisitorInput"

@@ -11,7 +11,7 @@ export default function NoProtectionWarningStep({
 }: NoProtectionWarningStepProps) {
   return (
     <section className="release-panel release-no-protection-warning" aria-live="polite">
-      <h4>Release without protection?</h4>
+      <h2 className="release-panel-title">Release without protection?</h2>
       <p>
         You can still release this letter now. But without a token, you will not be able to edit or remove it
         later.

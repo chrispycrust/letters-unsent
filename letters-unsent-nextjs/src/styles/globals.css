@@ -109,7 +109,6 @@ html {
 }
 
 body {
-  font-family: var(--lora);
   font-size: var(--font-size);
   color: var(--foreground);
   background: var(--background);
@@ -141,14 +140,30 @@ main {
   /* overflow: auto; */
 }
 
-h1, h2, h3, h4, h5, h6 {
+body
+, textarea {
+  font-family: var(--lora);
+}
+
+h1, h2, h3, h4, h5, h6
+, .about-section-tagline
+, .letter-edit-recipient-heading
+, .navbar a
+, .sign-off
+, .release-token-input
+, .release-generated-token
+, .release-selected-token {
   font-family: var(--cormorant);
+}
+
+h1, h2, h3, h4, h5, h6 {
   margin-top: 1.5em;
   margin-bottom: 1em;
   line-height: 1.5em;
 }
 
-h1, h2 {
+h1, h2,
+.letter-edit-recipient-heading {
   font-weight: 600;
 }
 
@@ -170,13 +185,16 @@ h1 {
   margin-top: 1.5em;
 }
 
-.about-section-h3 {
+.about-section-tagline {
   padding: 0;
-  margin-top: 0;
-  margin-bottom: 1.5em;
+  margin: 0 0 1.5em;
+  font-size: 1.6em;
+  font-weight: 500;
+  line-height: 1.5em;
 }
 
-h2 {
+h2,
+.letter-edit-recipient-heading {
   font-size: 1.8em;
 }
 
@@ -338,7 +356,6 @@ footer {
   /* padding: 20px 20px 10px 20px; */
   transition-property: border-style;
   transition-duration: 0.5s;
-  font-family: var(--cormorant);
 }
 
 .navbar a
@@ -876,8 +893,13 @@ input.letter-edit-author-input::placeholder {
   box-shadow: var(--shadow-elevation-medium);
 }
 
-.single-letter h2 {
+.single-letter h2,
+.letter-edit-recipient-heading {
   margin: 80px 0 60px 0;
+}
+
+.letter-edit-recipient-heading {
+  line-height: var(--line-height-base);
 }
 
 .single-letter-date {
@@ -927,7 +949,6 @@ p.timestamp {
 
 .sign-off {
   margin-top: 1.5em;
-  font-family: var(--cormorant);
   font-size: 1.3em;
   font-weight: 500;
 }
@@ -1028,7 +1049,6 @@ form {
 
 textarea {
   text-align: left;
-  font-family: var(--lora);
   min-height: var(--font-size);
   resize: vertical;
 }
@@ -1310,7 +1330,12 @@ textarea {
   color: var(--foreground);
 }
 
-.button-toggle h2 {
+.toggle-heading {
+  padding: 0;
+  margin: 0;
+}
+
+.button-toggle-label {
   padding: 0;
   margin: 0;
   margin-left: 20px;
@@ -1323,7 +1348,7 @@ textarea {
   hyphens: auto;            /* hyphenation */
 }
 
-.button-toggle:hover h2 {
+.button-toggle:hover .button-toggle-label {
   margin-left: 10px; 
 }
 
@@ -1389,6 +1414,12 @@ section {
   font-size: var(--font-size-tiny);
 }
 
+.changelog-version-heading {
+  display: inline-block;
+  font-size: 1.4em;
+  font-weight: 500;
+}
+
 .meta-data-container {
   display: flex;
   align-items: center;
@@ -1446,10 +1477,15 @@ section {
   gap: 24px;
 }
 
-.release-panel h4
+.release-panel-title
 ,.delete-confirmation-modal h2 {
   margin: 0;
   line-height: 1.2;
+}
+
+.release-panel-title {
+  font-size: 1.4em;
+  font-weight: 500;
 }
 
 .release-panel p,
@@ -1989,7 +2025,6 @@ button.release-link-button:not(:disabled):hover {
   .release-token-input
   , .release-generated-token
   , .release-selected-token {
-    font-family: var(--cormorant);
     font-size: 1.2em;
   }
 
@@ -2061,15 +2096,19 @@ button.release-link-button:not(:disabled):hover {
     font-size: 2.5em;
   }
 
-  h2 {
+  h2
+  , .letter-edit-recipient-heading {
     font-size: 2em;
   }
 
-  h3 {
+  h3
+  , .about-section-tagline {
     font-size: 1.8em;
   }
 
-  h4 {
+  h4
+  ,.changelog-version-heading,
+  .release-panel-title {
     font-size: 1.5em;
   }
 
@@ -2160,7 +2199,7 @@ button.release-link-button:not(:disabled):hover {
     width: 100%;
   }
 
-  .release-panel h2
+  .release-success-panel h2
   ,.delete-confirmation-modal h2 {
     font-size: 1.8em;
   }

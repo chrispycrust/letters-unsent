@@ -25,24 +25,26 @@ export default function Toggle({
 }:ToggleProps ) {
 
     return (
-        <button
-            type="button"
-            onClick={onToggle}
-            aria-pressed={toggleState}
-            aria-expanded={toggleState}
-            aria-controls={controlsId}
-            className="button-toggle"
-        >
-            { 
-                toggleState === true ? (
-                    <ArrowBadgeDown />
-                ) : (
-                    <ArrowBadgeRight />
-                )
-            }
-            <h2>
-                {heading}
-            </h2>
-        </button>
+        <h2 className="toggle-heading">
+            <button
+                type="button"
+                onClick={onToggle}
+                aria-pressed={toggleState}
+                aria-expanded={toggleState}
+                aria-controls={controlsId}
+                className="button-toggle"
+            >
+                {
+                    toggleState === true ? (
+                        <ArrowBadgeDown />
+                    ) : (
+                        <ArrowBadgeRight />
+                    )
+                }
+                <span className="button-toggle-label">
+                    {heading}
+                </span>
+            </button>
+        </h2>
     )
 }

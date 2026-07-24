@@ -32,6 +32,7 @@ export default function SingleLetterLayout({
   return (
     <>
       <div className="single-letter-display-area">
+        <h1 className="sr-only">Letter</h1>
         {children}
       </div>
       <Footer />

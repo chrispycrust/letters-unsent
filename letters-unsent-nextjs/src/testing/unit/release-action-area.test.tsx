@@ -51,7 +51,8 @@ describe("ReleaseActionArea", () => {
   it("shows the release choice panel with three expected actions", () => {
     renderReleaseActionArea();
 
-    expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
+    expect(screen.getByRole("heading", { level: 2, name: "Keep a way back to your letter" })).not.toBeNull();
+    expect(document.querySelector("h4")).toBeNull();
     expect(screen.getByRole("button", { name: "Protect this letter" })).not.toBeNull();
     expect(screen.getByRole("button", { name: "Release without protection" })).not.toBeNull();
     expect(screen.getByRole("button", { name: "Return to conversation" })).not.toBeNull();
@@ -62,7 +63,7 @@ describe("ReleaseActionArea", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
 
-    expect(screen.getByText("Protect your letter")).not.toBeNull();
+    expect(screen.getByRole("heading", { level: 2, name: "Protect your letter" })).not.toBeNull();
     expect(screen.getByLabelText("Write my own")).not.toBeNull();
     expect(screen.getByLabelText("Create one for me")).not.toBeNull();
     expect(screen.getByLabelText("Your token")).not.toBeNull();
@@ -123,7 +124,7 @@ describe("ReleaseActionArea", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
 
-    expect(screen.getByText("Keep your token somewhere safe")).not.toBeNull();
+    expect(screen.getByRole("heading", { level: 2, name: "Keep your token somewhere safe" })).not.toBeNull();
     expect(document.querySelector("label button")).toBeNull();
     expect(document.querySelector("label label")).toBeNull();
 
@@ -308,7 +309,7 @@ describe("ReleaseActionArea", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Release without protection" }));
 
-    expect(screen.getByText("Release without protection?")).not.toBeNull();
+    expect(screen.getByRole("heading", { level: 2, name: "Release without protection?" })).not.toBeNull();
     fireEvent.click(
       screen.getByRole("button", {
         name: "I understand, release the letter without protection",

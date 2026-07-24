@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import SubmitLayout from "@/app/submit/layout"
 import Submit from "@/app/submit/page"
 
 jest.mock("next/navigation", () => ({
@@ -13,8 +14,19 @@ describe("Submit page accessibility basics", () => {
     window.localStorage.clear()
   })
 
+  function renderSubmitRoute() {
+    return render(
+      <SubmitLayout>
+        <Submit />
+      </SubmitLayout>,
+    )
+  }
+
   it("renders a keyboard-focusable start button", () => {
-    render(<Submit />)
+    renderSubmitRoute()
+
+    expect(screen.getByRole("heading", { level: 1, name: "Release a letter" })).not.toBeNull()
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
 
     const startButton = screen.getByRole("button", { name: "Start conversation" })
     startButton.focus()
@@ -29,7 +41,7 @@ describe("Submit page accessibility basics", () => {
     })
     global.fetch = fetchMock as unknown as typeof fetch
 
-    render(<Submit />)
+    renderSubmitRoute()
     fireEvent.click(screen.getByRole("button", { name: "Start conversation" }))
 
     await waitFor(() => {

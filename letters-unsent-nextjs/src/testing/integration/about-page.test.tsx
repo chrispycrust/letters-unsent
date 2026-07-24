@@ -9,7 +9,22 @@ describe("About page", () => {
   it("renders section headings and toggles", () => {
     render(<About />)
 
-    expect(screen.getByText("About Letters Unsent")).not.toBeNull()
+    expect(screen.getByRole("heading", { level: 1, name: "About Letters Unsent" })).not.toBeNull()
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
+    expect(screen.queryByRole("heading", { name: "A quiet home for words never sent" })).toBeNull()
+    expect(screen.getByText("A quiet home for words never sent").tagName).toBe("P")
+    expect(screen.getByRole("heading", { level: 2, name: "Background" })).not.toBeNull()
+    expect(screen.getByRole("heading", { level: 2, name: "Submission Guidelines" })).not.toBeNull()
+    expect(screen.getByRole("heading", { level: 2, name: "Privacy & Use" })).not.toBeNull()
+    expect(screen.getByRole("heading", { level: 2, name: "Roadmap & Features" })).not.toBeNull()
+    expect(screen.getByRole("heading", { level: 2, name: "Contact" })).not.toBeNull()
+    expect(document.querySelector("button h2")).toBeNull()
+
+    const headingLevels = Array.from(document.querySelectorAll("h1, h2, h3, h4, h5, h6"))
+      .map((heading) => Number(heading.tagName.slice(1)))
+    expect(headingLevels.every((level, index) => index === 0 || level <= headingLevels[index - 1] + 1))
+      .toBe(true)
+
     expect(document.querySelector('button[aria-controls="background-panel"]')).not.toBeNull()
     expect(document.querySelector('button[aria-controls="guidelines-panel"]')).not.toBeNull()
     expect(document.querySelector('button[aria-controls="privacy-panel"]')).not.toBeNull()

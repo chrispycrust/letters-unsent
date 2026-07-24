@@ -143,6 +143,7 @@ export default function Home() {
 
   return (
     <>
+      <h1 className="sr-only">Letters archive</h1>
       {
         ErrorMessage ? (
           <ErrorDisplay message={ErrorMessage} />

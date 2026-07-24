@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "@jest/globals"
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import SubmitLayout from "@/app/submit/layout";
 import Submit from "@/app/submit/page";
 
 const mockPush = jest.fn();
@@ -67,7 +68,11 @@ describe("Submit page release flow", () => {
 
     global.fetch = fetchMock as unknown as typeof fetch;
 
-    render(<Submit />);
+    render(
+      <SubmitLayout>
+        <Submit />
+      </SubmitLayout>,
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
     await waitFor(() => {
@@ -84,7 +89,7 @@ describe("Submit page release flow", () => {
     fireEvent.click(screen.getByRole("button", { name: /submit a response/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
+      expect(screen.getByRole("heading", { level: 2, name: "Keep a way back to your letter" })).not.toBeNull();
     });
     await waitFor(() => {
       expect(document.documentElement.classList.contains("conversation-viewport-active"))
@@ -92,6 +97,8 @@ describe("Submit page release flow", () => {
     });
 
     expect(screen.getByRole("button", { name: "Protect this letter" })).not.toBeNull();
+    expect(screen.getByRole("heading", { level: 1, name: "Release a letter" })).not.toBeNull();
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getByRole("button", { name: "Release without protection" })).not.toBeNull();
     expect(screen.getByRole("button", { name: "Return to conversation" })).not.toBeNull();
     expect(document.querySelector(".conversation-shell")?.classList.contains("is-editor-expanded"))

@@ -226,7 +226,7 @@ export default function LetterEditForm({
       <label htmlFor="edit-intended-recipient" className="sr-only">
         Intended recipient
       </label>
-      <h2>
+      <div className="letter-edit-recipient-heading">
         <input
           id="edit-intended-recipient"
           className="letter-edit-recipient-input"
@@ -234,7 +234,7 @@ export default function LetterEditForm({
           onChange={(event) => setIntendedRecipient(event.target.value)}
           placeholder="Intended recipient (optional)"
         />
-      </h2>
+      </div>
 
       <label htmlFor="edit-letter-content" className="sr-only">
         Letter content

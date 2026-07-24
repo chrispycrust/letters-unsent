@@ -15,7 +15,7 @@ export default function Changelog() {
             </p>
 
             <section>
-                <h4 style={{display: "inline-block"}}>v1.0 - opening the cove to visitors</h4>
+                <h2 className="changelog-version-heading">v1.0 - opening the cove to visitors</h2>
                 <p className="changelog-date">Jan 5th 2026</p>
                 <ul>
                     <li>
@@ -46,7 +46,7 @@ export default function Changelog() {
             </section>
 
             <section>
-                <h4 style={{display: "inline-block"}}>v1.1 - helping visitors settle better</h4>
+                <h2 className="changelog-version-heading">v1.1 - helping visitors settle better</h2>
                 <p className="changelog-date">Jan 19th 2026</p>
                 <ul>
                     <li>

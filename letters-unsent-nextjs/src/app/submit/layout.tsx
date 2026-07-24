@@ -35,6 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <>
+      <h1 className="sr-only">Release a letter</h1>
       {children}
     </>
   );

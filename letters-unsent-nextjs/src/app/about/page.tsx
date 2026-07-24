@@ -69,9 +69,9 @@ export default function About() {
                 >
                     About Letters Unsent
                 </h1>
-                <h3 className="about-section-h3">
+                <p className="about-section-tagline">
                     A quiet home for words never sent
-                </h3>
+                </p>
                 <p>
                     No accounts, no tracking, no metrics.
                     <br/>

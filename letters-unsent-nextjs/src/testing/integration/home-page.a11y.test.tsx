@@ -26,9 +26,14 @@ describe("Home page accessibility basics", () => {
 
     render(<Home />)
 
+    expect(screen.getByRole("heading", { level: 1, name: "Letters archive" })).not.toBeNull()
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
+
     await waitFor(() => {
       expect(screen.getByRole("link", { name: /Sam/i })).not.toBeNull()
     })
+
+    expect(screen.getByRole("heading", { level: 2, name: "Sam" })).not.toBeNull()
 
     expect(screen.getByRole("contentinfo")).not.toBeNull()
 
@@ -52,6 +57,8 @@ describe("Home page accessibility basics", () => {
     global.fetch = fetchMock as unknown as typeof fetch
 
     render(<Home />)
+
+    expect(screen.getByRole("heading", { level: 1, name: "Letters archive" })).not.toBeNull()
 
     await waitFor(() => {
       expect(screen.getByText("No letters")).not.toBeNull()

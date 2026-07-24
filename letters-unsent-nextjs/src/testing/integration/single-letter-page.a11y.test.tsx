@@ -1,6 +1,8 @@
 import { beforeEach, afterEach, afterAll, describe, expect, it, jest } from "@jest/globals"
 import { render, screen } from "@testing-library/react"
+import SingleLetterLayout from "@/app/letters/[letterId]/layout"
 import LetterPage from "@/app/letters/[letterId]/page"
+import LetterEditForm from "@/components/LetterManagement/LetterEditForm"
 
 type MockFetchResponse = {
   ok: boolean
@@ -50,8 +52,10 @@ describe("Single letter page accessibility basics", () => {
     const page = await LetterPage({
       params: Promise.resolve({ letterId: "10" }),
     })
-    render(page)
+    render(<SingleLetterLayout>{page}</SingleLetterLayout>)
 
+    expect(screen.getByRole("heading", { level: 1, name: "Letter" })).not.toBeNull()
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
     expect(screen.getByRole("heading", { level: 2, name: "Sam" })).not.toBeNull()
     expect(screen.getByText("AI generated")).not.toBeNull()
     expect(screen.getByText("This is a single letter body.")).not.toBeNull()
@@ -82,9 +86,33 @@ describe("Single letter page accessibility basics", () => {
     const page = await LetterPage({
       params: Promise.resolve({ letterId: "30" }),
     })
-    render(page)
+    render(<SingleLetterLayout>{page}</SingleLetterLayout>)
 
+    expect(screen.getByRole("heading", { level: 1, name: "Letter" })).not.toBeNull()
     expect(screen.queryByRole("heading", { level: 2 })).toBeNull()
     expect(screen.getByText("No recipient letter content.")).not.toBeNull()
+  })
+
+  it("keeps the editable recipient field out of the heading structure", () => {
+    render(
+      <LetterEditForm
+        letterId="10"
+        formId="letter-edit-form-10"
+        ownerPassphrase="saved-token"
+        initialLetter={{
+          content: "This is a single letter body.",
+          intended_recipient: "Sam",
+          author_name: "Casey",
+        }}
+        initialScrollPosition={null}
+        isSaving={false}
+        onSavingChange={jest.fn()}
+        onSendingFeedback={jest.fn()}
+      />,
+    )
+
+    const recipientInput = screen.getByLabelText("Intended recipient")
+    expect(recipientInput.closest("h1, h2, h3, h4, h5, h6")).toBeNull()
+    expect(recipientInput.parentElement?.className).toContain("letter-edit-recipient-heading")
   })
 })

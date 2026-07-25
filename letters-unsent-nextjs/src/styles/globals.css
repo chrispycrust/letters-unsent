@@ -145,6 +145,13 @@ body
   font-family: var(--lora);
 }
 
+.page-container
+, .letter-display
+, footer {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
 h1, h2, h3, h4, h5, h6
 , .about-section-tagline
 , .letter-edit-recipient-heading
@@ -366,7 +373,8 @@ footer {
 footer {
   /* margin-top: 80px;  for some reason margins aren't applying*/
   font-family: var(--geist);
-  padding: 40px 0px 20px 0px;
+  padding-top: 40px;
+  padding-bottom: 20px;
   font-size: var(--font-size-tiny);
   font-weight: 300;
 }

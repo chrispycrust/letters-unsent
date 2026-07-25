@@ -74,5 +74,9 @@ export default async function LetterPage({
 
   /* -------------------------------------------------------------------------------- */
 
-  return <LetterViewWrapper letter={letter} />
+  return (
+    <div className="page-container">
+      <LetterViewWrapper letter={letter} />
+    </div>
+  )
 }

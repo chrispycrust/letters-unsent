@@ -156,10 +156,7 @@ h1, h2, h3, h4, h5, h6
 , .about-section-tagline
 , .letter-edit-recipient-heading
 , .navbar a
-, .sign-off
-, .release-token-input
-, .release-generated-token
-, .release-selected-token {
+, .sign-off {
   font-family: var(--cormorant);
 }
 
@@ -2134,6 +2131,13 @@ button.release-link-button:not(:disabled):hover {
   ,.changelog-version-heading,
   .release-panel-title {
     font-size: 1.5em;
+  }
+
+  .release-token-input-wrap input
+  , .release-generated-token
+  , .release-selected-token {
+    font-family: var(--cormorant);
+    font-weight: 600;
   }
 
   .about-section

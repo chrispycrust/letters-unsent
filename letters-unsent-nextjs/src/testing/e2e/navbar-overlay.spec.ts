@@ -54,4 +54,37 @@ test.describe('Navbar modal overlay on mobile', () => {
       await expect(modal).toBeHidden();
     });
   }
+
+  test('contains keyboard focus and restores it after Escape', async ({ page }) => {
+    await page.goto('/about');
+
+    const openButton = page.locator('nav.navbar .button-change-modal').first();
+    await openButton.focus();
+    await openButton.press('Enter');
+
+    const modal = page.getByRole('dialog', { name: 'Navigation menu' });
+    const closeButton = modal.locator('button.button-change-modal');
+    const lastLink = modal.locator('a[href]').last();
+    const backgroundLink = page.locator('nav.navbar > a').first();
+
+    await expect(modal).toBeVisible();
+    await expect(closeButton).toBeFocused();
+
+    await lastLink.focus();
+    await page.keyboard.press('Tab');
+    await expect(closeButton).toBeFocused();
+
+    await closeButton.focus();
+    await page.keyboard.press('Shift+Tab');
+    await expect(lastLink).toBeFocused();
+
+    await backgroundLink.evaluate((element) => {
+      (element as HTMLElement).focus();
+    });
+    await expect(backgroundLink).not.toBeFocused();
+
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden();
+    await expect(openButton).toBeFocused();
+  });
 });

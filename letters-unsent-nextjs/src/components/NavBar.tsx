@@ -11,10 +11,9 @@
 // COMPONENTS
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import NavigationModal from "./NavigationModal";
 import EnvelopeClosedIcon from "../../public/icons/envelope-closed";
-import { useEffect } from "react";
 import FeatherIcon from "../../public/icons/feather-icon";
 
 /* 
@@ -29,6 +28,12 @@ import FeatherIcon from "../../public/icons/feather-icon";
 export default function NavBar() {
 
   const [ showModal, setShowModal ] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+
+  const handleModalClose = useCallback(() => {
+    setShowModal(false)
+    menuButtonRef.current?.focus({ preventScroll: true })
+  }, [])
 
   // initial null state for inner width of a window set to null to account for scenario where: 
   // window hasn't been measured yet
@@ -61,6 +66,7 @@ export default function NavBar() {
 
             <>
               <button
+                ref={menuButtonRef}
                 type="button"
                 onClick={() => setShowModal(true)}
                 className="button-change-modal"
@@ -71,7 +77,7 @@ export default function NavBar() {
               {
                 showModal &&
                   <NavigationModal 
-                    onClose={() => setShowModal(false)} 
+                    onClose={handleModalClose}
                   />
               }
             </>

@@ -26,6 +26,7 @@ describe("Home page accessibility basics", () => {
 
     render(<Home />)
 
+    expect(screen.getByRole("status").textContent).toBe("Loading letters.")
     expect(screen.getByRole("heading", { level: 1, name: "Letters archive" })).not.toBeNull()
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
 
@@ -46,7 +47,7 @@ describe("Home page accessibility basics", () => {
     expect(letterLink.getAttribute("href")).toBe("/letters/10")
   })
 
-  it("keeps empty state text visible to users and screen readers", async () => {
+  it("removes loading feedback after an empty successful response", async () => {
     const fetchMock = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -59,9 +60,10 @@ describe("Home page accessibility basics", () => {
     render(<Home />)
 
     expect(screen.getByRole("heading", { level: 1, name: "Letters archive" })).not.toBeNull()
+    expect(screen.getByRole("status").textContent).toBe("Loading letters.")
 
     await waitFor(() => {
-      expect(screen.getByText("No letters")).not.toBeNull()
+      expect(screen.queryByRole("status")).toBeNull()
     })
   })
 })

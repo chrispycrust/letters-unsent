@@ -42,11 +42,19 @@ describe("Submit page accessibility basics", () => {
     global.fetch = fetchMock as unknown as typeof fetch
 
     renderSubmitRoute()
+    const coveStatus = screen.getByRole("status")
+    expect(screen.getAllByRole("status")).toHaveLength(1)
+    expect(coveStatus.textContent).toBe("")
+
     fireEvent.click(screen.getByRole("button", { name: "Start conversation" }))
+    expect(coveStatus.textContent).toBe("Preparing a response.")
 
     await waitFor(() => {
-      expect(screen.getByText("Welcome. I'm Cove.")).not.toBeNull()
+      expect(coveStatus.textContent).toBe("Response ready.")
     })
+    expect(
+      document.querySelector(".guardian-panel .preserve-breaks")?.textContent
+    ).toBe("Welcome. I'm Cove.")
 
     const textarea = screen.getByLabelText("Message to Cove") as HTMLTextAreaElement
     const submitButton = screen.getByRole("button", {

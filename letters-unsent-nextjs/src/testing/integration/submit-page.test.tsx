@@ -250,9 +250,10 @@ describe("Submit page flow", () => {
     render(<Submit />);
     fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
 
-    await waitFor(() => {
-      expect(screen.getByText("Server error: Guardian is unavailable")).not.toBeNull();
-    });
+    const alert = await screen.findByRole("alert");
+    expect(alert.textContent).toBe("Server error: Guardian is unavailable");
+    expect(screen.getAllByRole("alert")).toHaveLength(1);
+    expect(screen.getByRole("status").textContent).toBe("");
   });
 
   it("submits visitor input and renders the assistant response", async () => {

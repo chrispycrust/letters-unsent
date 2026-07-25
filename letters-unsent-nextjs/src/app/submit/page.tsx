@@ -227,8 +227,11 @@ export default function Submit() {
 
   return (
     <div className={`submit-container ${conversationStart ? "conversation-active" : ""}`}>
-      
-
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {conversationStart && !errorMessage
+          ? (responseOk ? "Response ready." : "Preparing a response.")
+          : ""}
+      </div>
       {conversationStart ? (
         <div
           className={[
@@ -243,7 +246,7 @@ export default function Submit() {
           >
             {errorMessage ? (
               <div className="guardian-error-container">
-                <ErrorDisplay message={errorMessage} />
+                <ErrorDisplay message={errorMessage} role="alert" />
               </div>
             ) : (
               <GuardianPanel message={coveMessage} responseStatus={responseOk} />

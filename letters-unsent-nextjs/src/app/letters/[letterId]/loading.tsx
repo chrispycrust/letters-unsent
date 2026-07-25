@@ -1,1 +1,5 @@
-export { default } from "@/components/RouteLoading";
+import RouteLoading from "@/components/RouteLoading";
+
+export default function Loading() {
+  return <RouteLoading message="Loading letter." />;
+}

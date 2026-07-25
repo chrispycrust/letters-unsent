@@ -65,7 +65,7 @@ export default function Home() {
   function determineLetterDisplay() {
 
     if (responseOk === false) {
-      return <RouteLoading />
+      return <RouteLoading message="Loading letters." />
 
     } else {
       return letters.map((letter) => (

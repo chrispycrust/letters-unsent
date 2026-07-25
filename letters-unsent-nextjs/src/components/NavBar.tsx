@@ -11,6 +11,7 @@
 // COMPONENTS
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import NavigationModal from "./NavigationModal";
 import EnvelopeClosedIcon from "../../public/icons/envelope-closed";
@@ -27,6 +28,7 @@ import FeatherIcon from "../../public/icons/feather-icon";
 
 export default function NavBar() {
 
+  const pathname = usePathname()
   const [ showModal, setShowModal ] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -58,7 +60,12 @@ export default function NavBar() {
     
   return (
     <nav className="navbar">
-      <Link href="/">Letters Unsent</Link>
+      <Link
+        href="/"
+        aria-current={pathname === "/" ? "page" : undefined}
+      >
+        Letters Unsent
+      </Link>
 
       {
          windowInnerWidth === null ? null : ( // avoid flicker / wrong initial layout
@@ -78,6 +85,7 @@ export default function NavBar() {
                 showModal &&
                   <NavigationModal 
                     onClose={handleModalClose}
+                    currentPath={pathname}
                   />
               }
             </>
@@ -86,13 +94,15 @@ export default function NavBar() {
 
             <div className="nav-links">
               <Link 
-                href="/submit" 
+                href="/submit"
+                aria-current={pathname === "/submit" ? "page" : undefined}
               >
                 Release A Letter
               </Link>
               <FeatherIcon />
               <Link 
-                href="/about" 
+                href="/about"
+                aria-current={pathname === "/about" ? "page" : undefined}
               >
                 About & Contact
               </Link>

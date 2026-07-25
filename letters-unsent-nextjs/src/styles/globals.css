@@ -416,13 +416,15 @@ footer a:hover {
   margin-right: 20px;
 } */
 
-.navbar a:hover {
+.navbar a:not([aria-current="page"]):hover {
   border-bottom: solid 1px;
 }
 
-/* .navbar a[aria-current] {
-  background-color: var(--accent-subtle);
-} */
+.navbar a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
 
 .letter
 , .single-letter {

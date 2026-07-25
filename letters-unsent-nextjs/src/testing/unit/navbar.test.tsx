@@ -1,5 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { usePathname } from "next/navigation";
 import NavBar from "@/components/NavBar";
+
+jest.mock("next/navigation", () => ({
+  usePathname: jest.fn(),
+}));
+
+const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>;
 
 const originalShowModal = Object.getOwnPropertyDescriptor(
   HTMLDialogElement.prototype,
@@ -20,6 +27,10 @@ function setViewportWidth(width: number) {
 }
 
 describe("NavBar", () => {
+  beforeEach(() => {
+    mockUsePathname.mockReturnValue("/");
+  });
+
   beforeAll(() => {
     Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
       configurable: true,
@@ -59,38 +70,50 @@ describe("NavBar", () => {
   });
 
   it("shows desktop navigation links on wide screens", async () => {
+    mockUsePathname.mockReturnValue("/about");
     setViewportWidth(900);
     render(<NavBar />);
 
     await waitFor(() => {
       expect(screen.getByRole("link", { name: "Release A Letter" })).not.toBeNull();
     });
-    expect(screen.getByRole("link", { name: "About & Contact" })).not.toBeNull();
+    const releaseLink = screen.getByRole("link", { name: "Release A Letter" });
+    const aboutLink = screen.getByRole("link", { name: "About & Contact" });
+
+    expect(releaseLink.hasAttribute("aria-current")).toBe(false);
+    expect(aboutLink.getAttribute("aria-current")).toBe("page");
   });
 
   it("uses modal navigation on mobile and closes after selection", async () => {
+    mockUsePathname.mockReturnValue("/submit");
     setViewportWidth(400);
-    const { container } = render(<NavBar />);
+    render(<NavBar />);
 
-    let openButton: HTMLButtonElement | null = null;
-    await waitFor(() => {
-      openButton = container.querySelector<HTMLButtonElement>(".button-change-modal");
-      expect(openButton).not.toBeNull();
-    });
+    const openButton = await screen.findByRole("button", { name: "Open menu" });
+    const openIcon = openButton.querySelector("svg");
 
-    if (openButton) {
-      openButton.focus();
-      fireEvent.click(openButton);
-    }
+    expect(openButton.getAttribute("aria-expanded")).toBe("false");
+    expect(openIcon?.getAttribute("aria-hidden")).toBe("true");
+    expect(openIcon?.getAttribute("focusable")).toBe("false");
+
+    openButton.focus();
+    fireEvent.click(openButton);
 
     const dialog = await screen.findByRole("dialog", { name: "Navigation menu" });
-    const closeButton = dialog.querySelector<HTMLButtonElement>(
-      "button.button-change-modal",
-    );
+    const closeButton = screen.getByRole("button", { name: "Close menu" });
+    const closeIcon = closeButton.querySelector("svg");
 
+    expect(openButton.getAttribute("aria-expanded")).toBe("true");
     expect(dialog.hasAttribute("open")).toBe(true);
     expect(document.activeElement).toBe(closeButton);
+    expect(closeIcon?.getAttribute("aria-hidden")).toBe("true");
+    expect(closeIcon?.getAttribute("focusable")).toBe("false");
+    expect(screen.queryByRole("img")).toBeNull();
     expect(screen.getByRole("link", { name: "Home" })).not.toBeNull();
+    expect(
+      screen.getByRole("link", { name: "Release A Letter" }).getAttribute("aria-current"),
+    ).toBe("page");
+    expect(screen.getByRole("link", { name: "Home" }).hasAttribute("aria-current")).toBe(false);
     expect(screen.getByText(/Built with Next\.js/i)).not.toBeNull();
 
     const aboutLink = screen.getByRole("link", { name: "About & Contact" });
@@ -102,6 +125,7 @@ describe("NavBar", () => {
     await waitFor(() => {
       expect(screen.queryByRole("dialog", { name: "Navigation menu" })).toBeNull();
     });
+    expect(openButton.getAttribute("aria-expanded")).toBe("false");
     expect(document.activeElement).toBe(openButton);
   });
 });

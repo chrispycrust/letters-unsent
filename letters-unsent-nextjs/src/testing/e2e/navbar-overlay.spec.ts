@@ -1,6 +1,12 @@
 import { test, expect } from '@playwright/test';
 
 const routes = ['/', '/submit', '/about', '/changelog'];
+const currentLinkNames: Record<string, string> = {
+  '/': 'Home',
+  '/submit': 'Release A Letter',
+  '/about': 'About & Contact',
+  '/changelog': 'v1.1',
+};
 
 test.describe('Navbar modal overlay on mobile', () => {
   test.beforeEach(async ({ page }) => {
@@ -38,19 +44,34 @@ test.describe('Navbar modal overlay on mobile', () => {
     test(`opens modal and keeps it on top at ${path}`, async ({ page }) => {
       await page.goto(path);
 
-      const openButton = page.locator('nav.navbar .button-change-modal').first();
+      const openButton = page.getByRole('button', { name: 'Open menu' });
       await expect(openButton).toBeVisible();
       await openButton.click();
 
-      const modal = page.locator('.modal');
+      const modal = page.getByRole('dialog', { name: 'Navigation menu' });
       await expect(modal).toBeVisible();
       await expect(modal.locator('a', { hasText: 'Home' })).toBeVisible();
+
+      const currentLink = modal.getByRole('link', {
+        name: currentLinkNames[path],
+      });
+      await expect(currentLink).toHaveAttribute('aria-current', 'page');
+      await expect(modal.locator('a[aria-current="page"]')).toHaveCount(1);
+      await expect(currentLink).toHaveCSS('text-decoration-line', 'underline');
 
       const zIndex = await modal.evaluate((el) => Number(getComputedStyle(el).zIndex));
       expect(zIndex).toBeGreaterThanOrEqual(999);
 
+      const modalBounds = await modal.boundingBox();
+      expect(modalBounds).toEqual({
+        x: 0,
+        y: 0,
+        width: 400,
+        height: 900,
+      });
+
       // closing works (ensures overlay receives clicks, not background)
-      await modal.locator('button.button-change-modal').click();
+      await modal.getByRole('button', { name: 'Close menu' }).click();
       await expect(modal).toBeHidden();
     });
   }
@@ -58,12 +79,12 @@ test.describe('Navbar modal overlay on mobile', () => {
   test('contains keyboard focus and restores it after Escape', async ({ page }) => {
     await page.goto('/about');
 
-    const openButton = page.locator('nav.navbar .button-change-modal').first();
+    const openButton = page.getByRole('button', { name: 'Open menu' });
     await openButton.focus();
     await openButton.press('Enter');
 
     const modal = page.getByRole('dialog', { name: 'Navigation menu' });
-    const closeButton = modal.locator('button.button-change-modal');
+    const closeButton = modal.getByRole('button', { name: 'Close menu' });
     const lastLink = modal.locator('a[href]').last();
     const backgroundLink = page.locator('nav.navbar > a').first();
 

@@ -13,6 +13,7 @@ const focusableElementSelector = [
 
 type NavigationModalProps = {
   onClose: () => void
+  currentPath: string
 }
 
 /* 
@@ -25,7 +26,8 @@ type NavigationModalProps = {
 */
 
 export default function NavigationModal({ 
-  onClose 
+  onClose,
+  currentPath,
 }: NavigationModalProps ) {
     const dialogRef = useRef<HTMLDialogElement>(null)
     const closeButtonRef = useRef<HTMLButtonElement>(null)
@@ -84,6 +86,7 @@ export default function NavigationModal({
 
     return (
       <dialog
+        id="navigation-menu"
         ref={dialogRef}
         className="modal"
         aria-label="Navigation menu"
@@ -106,6 +109,7 @@ export default function NavigationModal({
             <Link 
               href="/" 
               onClick={closeDialog}
+              aria-current={currentPath === "/" ? "page" : undefined}
             >
               Home
             </Link>
@@ -114,6 +118,7 @@ export default function NavigationModal({
             <Link 
               href="/submit" 
               onClick={closeDialog}
+              aria-current={currentPath === "/submit" ? "page" : undefined}
             >
               Release A Letter
             </Link>
@@ -122,6 +127,7 @@ export default function NavigationModal({
             <Link 
               href="/about" 
               onClick={closeDialog}
+              aria-current={currentPath === "/about" ? "page" : undefined}
             >
               About & Contact
             </Link>
@@ -137,7 +143,17 @@ export default function NavigationModal({
         </div>
           
         <div className="modal-footer">
-          <p>Letters Unsent (<Link href="/changelog" onClick={closeDialog}>v1.1</Link>). Released 2026</p>
+          <p>
+            Letters Unsent (
+            <Link
+              href="/changelog"
+              onClick={closeDialog}
+              aria-current={currentPath === "/changelog" ? "page" : undefined}
+            >
+              v1.1
+            </Link>
+            ). Released 2026
+          </p>
           <p>Built with Next.js, React (with TypeScript), OpenAI&apos;s API, Supabase, Tabler</p>
         </div>
         

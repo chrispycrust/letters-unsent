@@ -240,7 +240,7 @@ export default function VisitorPanel({
     >
       <div className="visitor-input-area">
         <label htmlFor="VisitorInput" className="sr-only">
-          Message to Cove
+          Your message
         </label>
         <textarea
           ref={textareaRef}
@@ -278,8 +278,8 @@ export default function VisitorPanel({
             type="submit"
             value="submit a response"
             className="submit-button"
-            title="click to submit a response to Cove (AI presence)"
-            aria-label="click to submit a response to Cove (AI presence)"
+            title="Send message"
+            aria-label="Send message"
           >
             <RespondIcon />
           </button>

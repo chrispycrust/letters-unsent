@@ -91,7 +91,7 @@ test.describe('Submit page (mocked Guardian)', () => {
     const textarea = page.getByPlaceholder('Write something');
     await textarea.fill('I need to say goodbye.');
 
-    await page.getByRole('button', { name: /submit a response/i }).click();
+    await page.getByRole('button', { name: 'Send message' }).click();
 
     await expect(page.getByText(followupMessage)).toBeVisible();
 
@@ -101,6 +101,73 @@ test.describe('Submit page (mocked Guardian)', () => {
 
     expect(await page.evaluate(() => localStorage.getItem('visitCount'))).toBe('1');
     expect(await page.evaluate(() => localStorage.getItem('letterDraft'))).toBe('hey you');
+  });
+
+  test('supports keyboard selection and visible focus in protected release choices', async ({ page }) => {
+    await page.route('**/api/guardian**', async (route) => {
+      const isInitialGreeting = route.request().method() === 'GET';
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(
+          isInitialGreeting
+            ? { output: 'Welcome.' }
+            : {
+                output: 'Your letter is ready.',
+                releaseReady: true,
+                letterPayload: {
+                  content: 'A letter body',
+                  intended_recipient: 'Sam',
+                  author_name: 'Casey',
+                  relationship_type: 'friend',
+                  emotional_tone: 'reflective',
+                },
+              },
+        ),
+      });
+    });
+
+    await page.goto('/submit');
+    await page.getByRole('button', { name: 'Start conversation' }).click();
+    await page.getByPlaceholder('Write something').fill('Please prepare my letter.');
+    await page.getByRole('button', { name: 'Send message' }).click();
+    await page.getByRole('button', { name: 'Protect this letter' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Protect your letter' })).toBeFocused();
+    await page.keyboard.press('Tab');
+
+    const customRadio = page.getByRole('radio', { name: 'Write my own' });
+    const generatedRadio = page.getByRole('radio', { name: 'Create one for me' });
+
+    await expect(customRadio).toBeFocused();
+    await expect(customRadio).toBeChecked();
+    await expect(customRadio).toHaveCSS('outline-style', 'solid');
+    await expect(customRadio).toHaveCSS('outline-width', '2px');
+    await expect(customRadio).toHaveCSS('outline-offset', '2px');
+
+    await page.keyboard.press('ArrowDown');
+    await expect(generatedRadio).toBeFocused();
+    await expect(generatedRadio).toBeChecked();
+    await expect(generatedRadio).toHaveCSS('outline-style', 'solid');
+
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page.getByRole('heading', { name: 'Keep your token somewhere safe' })).toBeFocused();
+    await page.keyboard.press('Tab');
+
+    const deviceCheckbox = page.getByRole('checkbox', { name: 'Save it on this device' });
+    const manualCheckbox = page.getByRole('checkbox', { name: 'Copy it yourself' });
+
+    await expect(deviceCheckbox).toBeFocused();
+    await expect(deviceCheckbox).toHaveCSS('outline-style', 'solid');
+    await expect(deviceCheckbox).toHaveCSS('outline-width', '2px');
+    await expect(deviceCheckbox).toHaveCSS('outline-offset', '2px');
+
+    await page.keyboard.press('Space');
+    await expect(deviceCheckbox).toBeChecked();
+    await page.keyboard.press('Tab');
+    await expect(manualCheckbox).toBeFocused();
+    await expect(manualCheckbox).toHaveCSS('outline-style', 'solid');
   });
 
   test('lays out the mobile conversation in a reduced viewport', async ({ page }) => {
@@ -376,7 +443,7 @@ test.describe('Submit page (mocked Guardian)', () => {
     expect(movedCaretState.scrollTop).toBe(0);
 
     await textarea.fill('I am ready to continue.');
-    await page.getByRole('button', { name: /submit a response/i }).click();
+    await page.getByRole('button', { name: 'Send message' }).click();
     await expect(page.locator('.preserve-breaks')).toContainText('Line 30:');
     expect(await textarea.evaluate((element) => document.activeElement === element)).toBe(false);
     await expect(page.locator('.conversation-shell')).not.toHaveClass(/is-composing/);

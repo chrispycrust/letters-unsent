@@ -280,7 +280,7 @@ describe("Submit page flow", () => {
     fireEvent.change(textarea, { target: { value: "I need to say goodbye." } });
 
     const submitButton = screen.getByRole("button", {
-      name: "click to submit a response to Cove (AI presence)",
+      name: "Send message",
     });
     fireEvent.click(submitButton);
 

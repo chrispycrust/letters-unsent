@@ -86,7 +86,7 @@ describe("Submit page release flow", () => {
     fireEvent.click(screen.getByRole("button", { name: "Expand writing area" }));
     expect(document.querySelector(".conversation-shell")?.classList.contains("is-editor-expanded"))
       .toBe(true);
-    fireEvent.click(screen.getByRole("button", { name: /submit a response/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Send message" }));
 
     await waitFor(() => {
       expect(screen.getByRole("heading", { level: 2, name: "Keep a way back to your letter" })).not.toBeNull();
@@ -144,7 +144,7 @@ describe("Submit page release flow", () => {
     fireEvent.change(screen.getByPlaceholderText("Write something"), {
       target: { value: "Please help me finish this letter." },
     });
-    fireEvent.click(screen.getByRole("button", { name: /submit a response/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Send message" }));
 
     await waitFor(() => {
       expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
@@ -235,7 +235,7 @@ describe("Submit page release flow", () => {
     fireEvent.change(screen.getByPlaceholderText("Write something"), {
       target: { value: "Please help me finish this letter." },
     });
-    fireEvent.click(screen.getByRole("button", { name: /submit a response/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Send message" }));
 
     await waitFor(() => {
       expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();

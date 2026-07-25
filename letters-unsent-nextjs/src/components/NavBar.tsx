@@ -77,6 +77,10 @@ export default function NavBar() {
                 type="button"
                 onClick={() => setShowModal(true)}
                 className="button-change-modal"
+                aria-label="Open menu"
+                aria-haspopup="dialog"
+                aria-expanded={showModal}
+                aria-controls="navigation-menu"
               >
                 <EnvelopeClosedIcon />
               </button>

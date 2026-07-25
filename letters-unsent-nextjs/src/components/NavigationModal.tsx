@@ -99,6 +99,7 @@ export default function NavigationModal({
             type="button"
             onClick={closeDialog}
             className="button-change-modal"
+            aria-label="Close menu"
           >
             <EnvelopeOpenIcon />
           </button>

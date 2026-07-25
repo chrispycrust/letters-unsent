@@ -1244,11 +1244,11 @@ textarea {
 
 .modal {
   position: fixed;
-  inset: 0 0 0 70px;
+  inset: 0;
   background-color: var(--background-desat-1);
   color: var(--foreground);
-  height: auto;
-  width: auto;
+  height: 100dvh;
+  width: 100%;
   max-width: none;
   max-height: none;
   margin: 0;
@@ -1258,7 +1258,7 @@ textarea {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px 0 40px;
+  padding: 0 10px;
   box-shadow: var(--shadow-elevation-medium);
 }
 

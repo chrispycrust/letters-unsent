@@ -28,7 +28,7 @@ export default function ReleaseActionArea({
     return (
       <div className="release-action-area">
         <section className="release-panel">
-          <p className="release-error">This letter is missing content and cannot be released yet.</p>
+          <p className="release-error" role="alert">This letter is missing content and cannot be released yet.</p>
           <div className="release-panel-actions">
             <button type="button" className="release-secondary-button" onClick={onReturnToConversation}>
               Return to conversation
@@ -86,7 +86,11 @@ export default function ReleaseActionArea({
           onConfirm={handleSubmitUnprotected}
           isSubmitting={isSubmitting}
         />
-        {errorMessage ? <p className="release-error release-error-standalone">{errorMessage}</p> : null}
+        {errorMessage ? (
+          <p className="release-error release-error-standalone" role="alert">
+            {errorMessage}
+          </p>
+        ) : null}
       </div>
     )
   }

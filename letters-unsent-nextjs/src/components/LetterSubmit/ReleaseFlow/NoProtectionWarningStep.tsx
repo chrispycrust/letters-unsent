@@ -1,3 +1,7 @@
+import { useId } from "react"
+
+import ReleaseStepHeading from "@/components/LetterSubmit/ReleaseFlow/ReleaseStepHeading"
+
 interface NoProtectionWarningStepProps {
   onBack: () => void
   onConfirm: () => void
@@ -9,14 +13,24 @@ export default function NoProtectionWarningStep({
   onConfirm,
   isSubmitting,
 }: NoProtectionWarningStepProps) {
+  const descriptionId = useId()
+  const noteId = useId()
+
   return (
-    <section className="release-panel release-no-protection-warning" aria-live="polite">
-      <h2 className="release-panel-title">Release without protection?</h2>
-      <p>
+    <section className="release-panel release-no-protection-warning">
+      <ReleaseStepHeading
+        className="release-panel-title"
+        ariaDescribedBy={`${descriptionId} ${noteId}`}
+      >
+        Release without protection?
+      </ReleaseStepHeading>
+      <p id={descriptionId}>
         You can still release this letter now. But without a token, you will not be able to edit or remove it
         later.
       </p>
-      <p className="release-small-copy"><strong>Note: </strong>This choice cannot be added afterwards.</p>
+      <p id={noteId} className="release-small-copy">
+        <strong>Note: </strong>This choice cannot be added afterwards.
+      </p>
 
       <div className="release-choice-actions">
         <button type="button" className="release-primary-button" onClick={onBack} disabled={isSubmitting}>

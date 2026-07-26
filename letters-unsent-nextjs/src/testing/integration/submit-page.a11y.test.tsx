@@ -56,9 +56,9 @@ describe("Submit page accessibility basics", () => {
       document.querySelector(".guardian-panel .preserve-breaks")?.textContent
     ).toBe("Welcome. I'm Cove.")
 
-    const textarea = screen.getByLabelText("Message to Cove") as HTMLTextAreaElement
+    const textarea = screen.getByLabelText("Your message") as HTMLTextAreaElement
     const submitButton = screen.getByRole("button", {
-      name: "click to submit a response to Cove (AI presence)",
+      name: "Send message",
     })
     const resizeButton = screen.getByRole("button", {
       name: "Expand writing area",

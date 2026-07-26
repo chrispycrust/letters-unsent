@@ -1,3 +1,5 @@
+import { useId } from "react"
+
 import ProtectionStepShell from "@/components/LetterSubmit/ReleaseFlow/ProtectionStepShell"
 
 interface ConfirmProtectedReleaseStepProps {
@@ -24,6 +26,7 @@ export default function ConfirmProtectedReleaseStep({
     savedOnDevice ? "Stored on this device" : null,
     tokenCopied ? "Copied to your clipboard" : null,
   ].filter(Boolean)
+  const confirmationListId = useId()
 
   return (
     <ProtectionStepShell
@@ -31,6 +34,8 @@ export default function ConfirmProtectedReleaseStep({
       stepLabel="Step 3 of 4"
       description="Your token is set. When you release this letter, it will be published to the archive."
       warning="Make sure your token is stored somewhere safe before releasing."
+      additionalHeadingDescriptionIds={[confirmationListId]}
+      includeWarningInHeadingDescription
       errorMessage={errorMessage}
       actions={
         <>
@@ -52,7 +57,7 @@ export default function ConfirmProtectedReleaseStep({
         </>
       }
     >
-      <ul className="release-confirmation-list">
+      <ul id={confirmationListId} className="release-confirmation-list">
         {confirmations.map((item) => (
           <li key={item} className="release-confirmation-item">
             {item}

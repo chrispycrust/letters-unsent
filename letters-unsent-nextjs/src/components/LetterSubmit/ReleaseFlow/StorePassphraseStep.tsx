@@ -1,3 +1,5 @@
+import { useId } from "react"
+
 import ProtectionStepShell from "@/components/LetterSubmit/ReleaseFlow/ProtectionStepShell"
 
 interface StorePassphraseStepProps {
@@ -40,12 +42,18 @@ export default function StorePassphraseStep({
   onContinue,
   canContinue,
 }: StorePassphraseStepProps) {
+  const tokenLabelId = useId()
+  const tokenOutputId = useId()
+  const tokenValueId = useId()
+  const storageGuidanceId = useId()
+
   return (
     <ProtectionStepShell
       title="Keep your token somewhere safe"
       stepLabel="Step 2 of 4"
       description="This is your token - a private key to edit or remove your letter later:"
       warning="Remember: Anyone with this token can edit or remove your letter."
+      additionalHeadingDescriptionIds={[tokenLabelId, tokenValueId, storageGuidanceId]}
       actions={
         <>
           <button type="button" className="release-secondary-button" onClick={onBack}>
@@ -69,17 +77,17 @@ export default function StorePassphraseStep({
         <legend className="sr-only">Choose how to store your token</legend>
 
         <div className="release-store-token-row">
-          <label htmlFor="selected-passphrase-output" className="control-label">
+          <label id={tokenLabelId} htmlFor={tokenOutputId} className="control-label">
             Your token
           </label>
-          <output id="selected-passphrase-output" className="release-selected-token">
-            {passphrase}
+          <output id={tokenOutputId} className="release-selected-token">
+            <span id={tokenValueId}>{passphrase}</span>
           </output>
         </div>
 
         {/* --------- options for storing the token --------- */}
 
-        <p>We won&apos;t show this token again.
+        <p id={storageGuidanceId}>We won&apos;t show this token again.
           To store it, choose at least one storage option below and complete its required steps to continue.
         </p>
 

@@ -4,6 +4,18 @@ const mockRouterPush = jest.fn()
 
 ;(globalThis as { __mockRouterPush?: typeof mockRouterPush }).__mockRouterPush = mockRouterPush
 
+if (typeof Element !== "undefined") {
+  Object.defineProperty(Element.prototype, "scrollIntoView", {
+    configurable: true,
+    value: jest.fn(),
+  })
+
+  Object.defineProperty(Element.prototype, "scrollTo", {
+    configurable: true,
+    value: jest.fn(),
+  })
+}
+
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: mockRouterPush,

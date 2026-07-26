@@ -1,3 +1,5 @@
+import { useId } from "react"
+
 import ProtectionStepShell from "@/components/LetterSubmit/ReleaseFlow/ProtectionStepShell"
 
 interface ProtectionConfirmedStepProps {
@@ -17,12 +19,14 @@ export default function ProtectionConfirmedStep({
     savedOnDevice ? "Saved on this device" : null,
     tokenCopied ? "Token copied" : null,
   ].filter(Boolean)
+  const confirmationListId = useId()
 
   return (
     <ProtectionStepShell
       title="Your letter is protected"
       stepLabel="Step 4 of 4"
       description="Keep your token safe. You’ll need it later to edit or remove this letter."
+      additionalHeadingDescriptionIds={[confirmationListId]}
       actions={
         <>
           <button type="button" className="release-primary-button" onClick={onViewLetter}>
@@ -34,7 +38,7 @@ export default function ProtectionConfirmedStep({
         </>
       }
     >
-      <ul className="release-confirmation-list">
+      <ul id={confirmationListId} className="release-confirmation-list">
         {confirmations.length > 0 ? (
           confirmations.map((item) => (
             <li key={item} className="release-confirmation-item">

@@ -1509,6 +1509,10 @@ section {
   font-weight: 500;
 }
 
+.release-step-heading:focus {
+  outline: none;
+}
+
 .release-panel p,
 .delete-confirmation-modal p {
   line-height: 1.5;
@@ -1681,6 +1685,12 @@ button.release-link-button:not(:disabled):hover {
   background-color: var(--accent-strong);
   padding: 2px;
   border: 1px solid var(--accent-strong);
+}
+
+.release-option-card input[type="radio"]:focus-visible,
+.release-option-card input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
 }
 
 .release-option-content {

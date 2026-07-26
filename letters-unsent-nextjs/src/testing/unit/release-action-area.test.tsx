@@ -15,8 +15,9 @@ const baseLetterPayload = {
   emotional_tone: "reflective",
 };
 
-function renderReleaseActionArea() {
-  const onSubmitLetter = jest.fn().mockResolvedValue({ id: "new-1" });
+function renderReleaseActionArea(
+  onSubmitLetter = jest.fn().mockResolvedValue({ id: "new-1" }),
+) {
   const onReturnToConversation = jest.fn();
   const onViewLetter = jest.fn();
 
@@ -36,6 +37,46 @@ function renderReleaseActionArea() {
   };
 }
 
+function expectFocusedStepHeading(name: string) {
+  const heading = screen.getByRole("heading", { level: 2, name });
+
+  expect(heading.getAttribute("tabindex")).toBe("-1");
+  expect(document.activeElement).toBe(heading);
+  expect(heading.closest(".release-panel")?.hasAttribute("aria-live")).toBe(false);
+
+  return heading;
+}
+
+function expectFocusedHeadingContext(
+  name: string,
+  description: string,
+  expectedDescriptionCount: number,
+) {
+  const heading = expectFocusedStepHeading(name);
+  const descriptionIds = heading.getAttribute("aria-describedby")?.split(/\s+/) ?? [];
+  const headingWithContext = screen.getByRole("heading", {
+    level: 2,
+    name,
+    description,
+  });
+
+  expect(descriptionIds).toHaveLength(expectedDescriptionCount);
+  expect(headingWithContext).toBe(heading);
+}
+
+function expectProtectedStepContext(
+  name: string,
+  stepLabel: string,
+  description: string,
+  expectedDescriptionCount = 2,
+) {
+  expectFocusedHeadingContext(
+    name,
+    `${stepLabel} ${description}`,
+    expectedDescriptionCount,
+  );
+}
+
 describe("ReleaseActionArea", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -51,11 +92,109 @@ describe("ReleaseActionArea", () => {
   it("shows the release choice panel with three expected actions", () => {
     renderReleaseActionArea();
 
-    expect(screen.getByRole("heading", { level: 2, name: "Keep a way back to your letter" })).not.toBeNull();
+    expectFocusedHeadingContext(
+      "Keep a way back to your letter",
+      "Before it is published to the archive, choose how you’d like to continue.",
+      1,
+    );
     expect(document.querySelector("h4")).toBeNull();
     expect(screen.getByRole("button", { name: "Protect this letter" })).not.toBeNull();
     expect(screen.getByRole("button", { name: "Release without protection" })).not.toBeNull();
     expect(screen.getByRole("button", { name: "Return to conversation" })).not.toBeNull();
+  });
+
+  it("moves focus to each protected-release step heading", async () => {
+    const { onSubmitLetter } = renderReleaseActionArea();
+
+    expectFocusedStepHeading("Keep a way back to your letter");
+
+    fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
+    expectProtectedStepContext(
+      "Protect your letter",
+      "Step 1 of 4",
+      "Choose a private token. You’ll need it later to edit or remove this letter.",
+    );
+
+    fireEvent.click(screen.getByLabelText("Create one for me"));
+    const regenerateButton = screen.getByRole("button", { name: "Regenerate" });
+    regenerateButton.focus();
+    fireEvent.click(regenerateButton);
+    expect(document.activeElement).toBe(regenerateButton);
+    const selectedToken = screen.getByLabelText("Generated token").textContent?.trim() ?? "";
+
+    expect(selectedToken).toMatch(/^[a-z]+-[a-z]+-[a-z]+-[a-z]+$/);
+
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    expectProtectedStepContext(
+      "Keep your token somewhere safe",
+      "Step 2 of 4",
+      `This is your token - a private key to edit or remove your letter later: Your token ${selectedToken} We won't show this token again. To store it, choose at least one storage option below and complete its required steps to continue.`,
+      5,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    expectFocusedStepHeading("Protect your letter");
+
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    expectFocusedStepHeading("Keep your token somewhere safe");
+
+    fireEvent.click(screen.getByLabelText("Save it on this device"));
+    fireEvent.click(screen.getByRole("button", { name: "Review release" }));
+    expectProtectedStepContext(
+      "Ready to release your letter?",
+      "Step 3 of 4",
+      "Your token is set. When you release this letter, it will be published to the archive. Protected with a token Stored on this device Make sure your token is stored somewhere safe before releasing.",
+      4,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    expectFocusedStepHeading("Keep your token somewhere safe");
+
+    fireEvent.click(screen.getByRole("button", { name: "Review release" }));
+    expectFocusedStepHeading("Ready to release your letter?");
+
+    fireEvent.click(screen.getByRole("button", { name: "Release letter" }));
+
+    await waitFor(() => {
+      expect(onSubmitLetter).toHaveBeenCalledTimes(1);
+      expectProtectedStepContext(
+        "Your letter is protected",
+        "Step 4 of 4",
+        "Keep your token safe. You’ll need it later to edit or remove this letter. Saved on this device",
+        3,
+      );
+    });
+  });
+
+  it("moves focus through the unprotected warning and success steps", async () => {
+    renderReleaseActionArea();
+
+    fireEvent.click(screen.getByRole("button", { name: "Release without protection" }));
+    expectFocusedHeadingContext(
+      "Release without protection?",
+      "You can still release this letter now. But without a token, you will not be able to edit or remove it later. Note: This choice cannot be added afterwards.",
+      2,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Go back" }));
+    expectFocusedStepHeading("Keep a way back to your letter");
+
+    fireEvent.click(screen.getByRole("button", { name: "Release without protection" }));
+    expectFocusedHeadingContext(
+      "Release without protection?",
+      "You can still release this letter now. But without a token, you will not be able to edit or remove it later. Note: This choice cannot be added afterwards.",
+      2,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "I understand, release the letter without protection",
+      }),
+    );
+
+    await waitFor(() => {
+      expectFocusedStepHeading("Your letter has been released");
+    });
   });
 
   it("enters protection flow and blocks empty custom passphrase", () => {
@@ -302,6 +441,42 @@ describe("ReleaseActionArea", () => {
     await waitFor(() => {
       expect(setItemSpy).toHaveBeenCalledWith(expect.any(String), selectedToken);
     });
+  });
+
+  it("announces protected-release errors through one scoped alert", async () => {
+    const onSubmitLetter = jest.fn().mockRejectedValue(new Error("Protected release failed."));
+
+    renderReleaseActionArea(onSubmitLetter);
+    fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
+    fireEvent.click(screen.getByLabelText("Create one for me"));
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    fireEvent.click(screen.getByLabelText("Save it on this device"));
+    fireEvent.click(screen.getByRole("button", { name: "Review release" }));
+    fireEvent.click(screen.getByRole("button", { name: "Release letter" }));
+
+    const alert = await screen.findByRole("alert");
+
+    expect(alert.textContent).toBe("Protected release failed.");
+    expect(screen.getAllByRole("alert")).toHaveLength(1);
+    expect(document.querySelector(".release-panel[aria-live]")).toBeNull();
+  });
+
+  it("announces unprotected-release errors through one scoped alert", async () => {
+    const onSubmitLetter = jest.fn().mockRejectedValue(new Error("Unprotected release failed."));
+
+    renderReleaseActionArea(onSubmitLetter);
+    fireEvent.click(screen.getByRole("button", { name: "Release without protection" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "I understand, release the letter without protection",
+      }),
+    );
+
+    const alert = await screen.findByRole("alert");
+
+    expect(alert.textContent).toBe("Unprotected release failed.");
+    expect(screen.getAllByRole("alert")).toHaveLength(1);
+    expect(document.querySelector(".release-panel[aria-live]")).toBeNull();
   });
 
   it("shows unprotected warning and submits with null passphrase after confirmation", async () => {

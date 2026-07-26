@@ -1,3 +1,5 @@
+import ReleaseStepHeading from "@/components/LetterSubmit/ReleaseFlow/ReleaseStepHeading"
+
 interface ReleaseSuccessPanelProps {
   onViewLetter: () => void
   onReturnToConversation: () => void
@@ -8,8 +10,8 @@ export default function ReleaseSuccessPanel({
   onReturnToConversation,
 }: ReleaseSuccessPanelProps) {
   return (
-    <section className="release-panel release-success-panel" aria-live="polite">
-      <h2>Your letter has been released</h2>
+    <section className="release-panel release-success-panel">
+      <ReleaseStepHeading>Your letter has been released</ReleaseStepHeading>
       <div className="release-choice-actions">
         <button type="button" className="release-primary-button" onClick={onViewLetter}>
           View your letter

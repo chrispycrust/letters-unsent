@@ -132,6 +132,14 @@ test.describe('Submit page (mocked Guardian)', () => {
     await page.getByRole('button', { name: 'Start conversation' }).click();
     await page.getByPlaceholder('Write something').fill('Please prepare my letter.');
     await page.getByRole('button', { name: 'Send message' }).click();
+
+    const releaseChoiceHeading = page.getByRole('heading', {
+      name: 'Keep a way back to your letter',
+    });
+
+    await expect(releaseChoiceHeading).toBeFocused();
+    await expect(releaseChoiceHeading).toHaveCSS('outline-style', 'none');
+
     await page.getByRole('button', { name: 'Protect this letter' }).click();
 
     await expect(page.getByRole('heading', { name: 'Protect your letter' })).toBeFocused();

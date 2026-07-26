@@ -1,3 +1,7 @@
+import { useId } from "react"
+
+import ReleaseStepHeading from "@/components/LetterSubmit/ReleaseFlow/ReleaseStepHeading"
+
 interface ReleaseChoicePanelProps {
   onProtect: () => void
   onReleaseWithoutProtection: () => void
@@ -9,10 +13,17 @@ export default function ReleaseChoicePanel({
   onReleaseWithoutProtection,
   onReturnToConversation,
 }: ReleaseChoicePanelProps) {
+  const descriptionId = useId()
+
   return (
-    <section className="release-panel release-choice-panel" aria-live="polite">
-      <h2 className="release-panel-title">Keep a way back to your letter</h2>
-      <p>Before it is published to the archive, choose how you’d like to continue.</p>
+    <section className="release-panel release-choice-panel">
+      <ReleaseStepHeading
+        className="release-panel-title"
+        ariaDescribedBy={descriptionId}
+      >
+        Keep a way back to your letter
+      </ReleaseStepHeading>
+      <p id={descriptionId}>Before it is published to the archive, choose how you’d like to continue.</p>
 
       <div className="release-choice-actions">
         <button type="button" className="release-primary-button" onClick={onProtect}>

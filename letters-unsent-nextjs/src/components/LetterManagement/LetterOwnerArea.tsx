@@ -414,7 +414,7 @@ export default function LetterOwnerArea({
 
   return (
     <>
-      <aside className="letter-owner-area" aria-live="polite">
+      <aside className="letter-owner-area">
         {isMobile ? (
           renderMobileTrigger()
         ) : isEditing ? (

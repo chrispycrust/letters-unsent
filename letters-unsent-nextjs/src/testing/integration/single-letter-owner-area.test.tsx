@@ -71,6 +71,7 @@ describe("Single letter owner area", () => {
   it("renders subtle prompt when unverified", () => {
     renderOwnerArea()
     expect(screen.getByRole("button", { name: "Is this letter yours?" })).not.toBeNull()
+    expect(document.querySelector(".letter-owner-area")?.hasAttribute("aria-live")).toBe(false)
   })
 
   it("renders editing status when parent edit state is active", () => {
@@ -158,7 +159,7 @@ describe("Single letter owner area", () => {
     expect(screen.getByText(/For this letter/)).not.toBeNull()
     expect((screen.getByRole("button", { name: "Checking your token..." }) as HTMLButtonElement).disabled).toBe(true)
     expect((screen.getByRole("button", { name: "Remove" }) as HTMLButtonElement).disabled).toBe(true)
-    expect((screen.getByRole("button", { name: "Minimise controls" }) as HTMLButtonElement).disabled).toBe(true)
+    expect((screen.getByRole("button", { name: "Hide controls" }) as HTMLButtonElement).disabled).toBe(true)
     expect(onEdit).toHaveBeenCalledTimes(0)
 
     await act(async () => {
@@ -195,6 +196,7 @@ describe("Single letter owner area", () => {
     expect(input.getAttribute("aria-invalid")).toBe("true")
     expect(input.getAttribute("aria-describedby")).toBe(error.id)
     expect(error.textContent).toBe("The token doesn’t match this letter. Please try again.")
+    expect(error.closest(".letter-owner-area")?.hasAttribute("aria-live")).toBe(false)
   })
 
   it("shows immediate feedback when confirming an empty token", () => {
@@ -273,10 +275,10 @@ describe("Single letter owner area", () => {
     fireEvent.click(manageButton)
 
     fireEvent.click(screen.getByRole("button", { name: "Remove" }))
-    expect(screen.getByRole("heading", { name: "Remove my letter from the archive" })).not.toBeNull()
+    expect(screen.getByRole("heading", { name: "Remove this letter?" })).not.toBeNull()
 
     fireEvent.click(screen.getByTestId("delete-confirmation-overlay"))
-    expect(screen.getByRole("heading", { name: "Remove my letter from the archive" })).not.toBeNull()
+    expect(screen.getByRole("heading", { name: "Remove this letter?" })).not.toBeNull()
   })
 
   it("shows loading and unauthorized delete message when server rejects proof", async () => {

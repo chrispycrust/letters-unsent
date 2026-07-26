@@ -661,6 +661,12 @@ button.owner-question-trigger i {
   text-align: left;
 }
 
+.desktop-owner-rail-edit {
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
 @keyframes owner-control-enter {
   from {
     opacity: 0;
@@ -1515,6 +1521,12 @@ section {
   .desktop-owner-rail-content > *,
   .owner-bottom-sheet-content > * {
     animation: none;
+  }
+
+  .desktop-owner-rail-edit,
+  button.is-busy {
+    animation: none;
+    transition: none;
   }
 }
 
@@ -2484,9 +2496,6 @@ button.release-link-button:not(:disabled):hover {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
-    transition:
-      opacity 180ms ease,
-      transform 180ms ease;
   }
 
 }

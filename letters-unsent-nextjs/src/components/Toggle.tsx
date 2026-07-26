@@ -7,7 +7,6 @@
 */
 
 
-import ArrowBadgeDown from "../../public/icons/ArrowBadgeDown"
 import ArrowBadgeRight from "../../public/icons/ArrowBadgeRight"
 
 interface ToggleProps {
@@ -34,13 +33,9 @@ export default function Toggle({
                 aria-controls={controlsId}
                 className="button-toggle"
             >
-                {
-                    toggleState === true ? (
-                        <ArrowBadgeDown />
-                    ) : (
-                        <ArrowBadgeRight />
-                    )
-                }
+                <span className="button-toggle-arrow" aria-hidden="true">
+                    <ArrowBadgeRight />
+                </span>
                 <span className="button-toggle-label">
                     {heading}
                 </span>

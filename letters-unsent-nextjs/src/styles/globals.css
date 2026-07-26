@@ -1400,6 +1400,17 @@ textarea {
   margin: 0;
 }
 
+.button-toggle-arrow {
+  display: inline-flex;
+  flex: 0 0 auto;
+  transform: rotate(0deg);
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.button-toggle[aria-expanded="true"] .button-toggle-arrow {
+  transform: rotate(90deg);
+}
+
 .button-toggle-label {
   padding: 0;
   margin: 0;
@@ -1472,6 +1483,10 @@ section {
   .about-section a::after,
   footer a::after,
   .navbar a::after {
+    transition: none;
+  }
+
+  .button-toggle-arrow {
     transition: none;
   }
 }

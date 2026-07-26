@@ -63,6 +63,23 @@ export default function Changelog() {
                     </p>
                 </section>
 
+                <section>
+                    <h2 className="changelog-version-heading">v1.2 - releasing letters into the cove</h2>
+                    <p className="changelog-date">Jul 26th 2026</p>
+                    <ul>
+                        <li>
+                            Writers can now release letters through Cove&apos;s guided writing flow.
+                        </li><li>
+                            An optional private token lets writers return to edit or delete their letter without creating an account.
+                        </li><li>
+                            Mobile layouts, keyboard navigation, screen reader feedback, focus states, and colour contrast have been refined throughout the space.
+                        </li>
+                    </ul>
+                    <p>
+                        This update opens the cove to new letters while keeping their writers in control.
+                    </p>
+                </section>
+
             </article>
         </div>
     )

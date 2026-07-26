@@ -5,7 +5,7 @@ const currentLinkNames: Record<string, string> = {
   '/': 'Home',
   '/submit': 'Release A Letter',
   '/about': 'About & Contact',
-  '/changelog': 'v1.1',
+  '/changelog': 'v1.2',
 };
 
 test.describe('Navbar modal overlay on mobile', () => {

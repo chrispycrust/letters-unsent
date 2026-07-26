@@ -1219,14 +1219,16 @@ textarea {
   text-align: left;
 }
 
-@keyframes spin {
-  from {
-    transform:
-      scale(1)
+@keyframes spinner-breathe {
+  0%,
+  100% {
+    opacity: 0.68;
+    transform: scale(0.9);
   }
-  to {
-    transform:
-      scale(1.5)
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
   }
 }
 
@@ -1235,7 +1237,7 @@ textarea {
   border-radius: 50%;
   width: 0.8em;
   height: 0.8em;
-  animation: spin 1000ms linear infinite;
+  animation: spinner-breathe 1600ms ease-in-out infinite;
   margin-top: 10px; /* workaround for now to get the complete spinner showing */
 }
 

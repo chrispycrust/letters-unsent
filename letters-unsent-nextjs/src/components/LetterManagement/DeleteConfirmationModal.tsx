@@ -36,7 +36,11 @@ export default function DeleteConfirmationModal({
             <h2 id="delete-confirmation-heading">Remove this letter?</h2>
             <p>This action cannot be undone. Your letter will be permanently removed.</p>
 
-            {errorMessage ? <p className="owner-area-error">{errorMessage}</p> : null}
+            {errorMessage ? (
+              <p className="owner-area-error" role="alert">
+                {errorMessage}
+              </p>
+            ) : null}
 
             <div className="delete-confirmation-actions">
 

@@ -305,9 +305,10 @@ describe("Single letter owner area", () => {
     fireEvent.click(screen.getByRole("button", { name: "I understand, please remove my letter" }))
     expect(screen.getByRole("button", { name: "Removing..." })).not.toBeNull()
 
-    await waitFor(() => {
-      expect(screen.getByText("We couldn’t verify your token.")).not.toBeNull()
-    })
+    const error = await screen.findByRole("alert")
+
+    expect(error.textContent).toBe("We couldn’t verify your token.")
+    expect(screen.getAllByRole("alert")).toHaveLength(1)
   })
 
   it("shows delete success then redirects home", async () => {

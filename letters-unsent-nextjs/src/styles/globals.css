@@ -328,14 +328,38 @@ button.is-busy:disabled {
 }
 
 .about-section a {
-  text-decoration: underline;
-  text-underline-offset: 6px;
-  transition: text-decoration;
-  transition-duration: 0.5s;
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
 }
 
-.about-section a:hover {
-  text-decoration: none;
+.about-section a::after,
+footer a::after,
+.navbar a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  pointer-events: none;
+  transform-origin: left;
+  transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+.about-section a::after,
+footer a::after {
+  transform: scaleX(1);
+  bottom: 1px;
+}
+
+.about-section a:hover::after,
+.about-section a:focus-visible::after,
+footer a:hover::after,
+footer a:focus-visible::after {
+  transform: scaleX(0);
 }
 
 .navbar, 
@@ -357,9 +381,7 @@ footer {
 }
 
 .navbar a {
-  /* padding: 20px 20px 10px 20px; */
-  transition-property: border-style;
-  transition-duration: 0.5s;
+  position: relative;
 }
 
 .navbar a
@@ -382,12 +404,9 @@ footer {
 }
 
 footer a {
-  text-decoration: underline;
-  text-underline-offset: 6px;
-}
-
-footer a:hover {
   text-decoration: none;
+  position: relative;
+  display: inline-block;
 }
 
 .footer-nav-links p {
@@ -413,14 +432,18 @@ footer a:hover {
   margin-right: 20px;
 } */
 
-.navbar a:not([aria-current="page"]):hover {
-  border-bottom: solid 1px;
+.navbar a::after {
+  transform: scaleX(0);
+}
+
+.navbar a:not([aria-current="page"]):hover::after,
+.navbar a:not([aria-current="page"]):focus-visible::after,
+.navbar a[aria-current="page"]::after {
+  transform: scaleX(1);
 }
 
 .navbar a[aria-current="page"] {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 6px;
+  text-decoration: none;
 }
 
 .letter
@@ -570,21 +593,36 @@ aside.letter-owner-area button.owner-question-trigger:not(:disabled),
 }
 
 button.owner-subtle-action {
+  position: relative;
   font-family: var(--geist);
   font-weight: 400;
-  transition-duration: 0.5s;
   text-align: left;
   background: none;
   padding: 0;
   margin: 0;
 }
 
+button.owner-subtle-action::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 button.owner-subtle-action:not(:disabled) {
   cursor: pointer;
 }
 
-button.owner-subtle-action:not(:disabled):hover {
-  font-weight: 650;
+button.owner-subtle-action:not(:disabled):hover::after,
+button.owner-subtle-action:not(:disabled):focus-visible::after {
+  transform: scaleX(1);
 }
 
 button.owner-subtle-action:focus-visible {
@@ -596,6 +634,10 @@ button.owner-subtle-action:focus-visible {
 button.owner-question-trigger {
   display: inline-flex;
   width: fit-content;
+}
+
+button.owner-question-trigger i {
+  margin-bottom: 0;
 }
 
 .owner-edit-pocket {
@@ -1421,6 +1463,16 @@ section {
 
   .spinner {
     animation: none;
+  }
+
+  button.owner-subtle-action::after {
+    transition: none;
+  }
+
+  .about-section a::after,
+  footer a::after,
+  .navbar a::after {
+    transition: none;
   }
 }
 

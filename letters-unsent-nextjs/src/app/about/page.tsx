@@ -224,18 +224,15 @@ export default function About() {
                                 className="toggle-section"
                             >
                                 <p>
-                                    <strong>Note:</strong> Submissions will be open soon.
-                                </p>
-                                <p>
-                                    <strong>Please treat submitted letters as permanent until anonymous management tools are available. 
-                                        (<Link 
-                                            href="#note-about-update-and-delete" 
-                                            onClick={() => setTogglePrivacy(true)}
-                                            tabIndex={toggleGuidelines ? undefined : -1}
-                                        >
-                                            See why here
-                                        </Link>.)
-                                    </strong>
+                                    Before releasing a letter, you can protect it with a private token so you can edit or remove it later.
+                                    A letter released without a token cannot be managed afterwards.{" "}
+                                    <Link
+                                        href="#note-about-update-and-delete"
+                                        onClick={() => setTogglePrivacy(true)}
+                                        tabIndex={toggleGuidelines ? undefined : -1}
+                                    >
+                                        Learn more about ownership tokens
+                                    </Link>.
                                 </p>
                                 <p>
                                     This space welcomes letters of diverse content, tones and subjects. However, this is also a public space.
@@ -326,25 +323,20 @@ export default function About() {
                                             No accounts are required to submit a letter.
                                         </li>
                                         <li>
-                                            No names, emails, or identifying information are collected.
+                                            No account name, email address, or contact details are requested.
                                         </li>
                                         <li>
-                                            Submissions are not linked to individuals.
+                                            An optional intended recipient and sign-off become part of the public letter,
+                                            but submissions are not linked to an account or personal profile.
                                         </li>
                                     </ul>
                                     <p
                                         id="note-about-update-and-delete"
                                     >
-                                        <strong>Note:</strong> This means that, at this stage, without proof of ownership 
-                                        I&apos;m unable to delete or edit letters on request. <Link 
-                                            href="#anon-update-and-delete" 
-                                            onClick={() => setToggleRoadmap(true)} 
-                                            tabIndex={togglePrivacy ? undefined : -1}
-                                        >
-                                            Anonymous edit and delete feature
-                                        </Link> will be built.
-                                        Until then, please only share what you&apos;re comfortable leaving in public permanently.
-                                        Once these anonymous management tools are available, I can fulfil edit/delete requests.
+                                        <strong>Ownership tokens:</strong> Before releasing a letter, you can choose a private token
+                                        as anonymous proof of ownership. Anyone with that token can edit or remove the letter,
+                                        so keep it somewhere safe. The token cannot be recovered or added after release.
+                                        Without it, I cannot verify ownership and the letter should be treated as permanent in the archive on this site.
                                     </p>
                                 </section>
                                 <section>
@@ -385,16 +377,22 @@ export default function About() {
                                         What Is Stored
                                     </h3>
                                     <p>
-                                        <strong>TL;DR:</strong> Only the final letter you choose to submit is stored.
+                                        <strong>TL;DR:</strong> The final letter, its public details, and its submission date are stored.
+                                        If you protect it, a one-way hash of your ownership token is also stored.
                                         AI-assisted conversations are not kept by me. Ability to submit without AI upcoming.
                                     </p>
                                     <p>
-                                        Only the final letter you choose to submit is stored in <Link 
+                                        The final letter, its optional intended recipient and sign-off, and its submission date are stored in <Link
                                             href="https://supabase.com/"
                                             target="_blank" 
                                             rel="noopener noreferrer"
                                             tabIndex={togglePrivacy ? undefined : -1}
                                         >an external database</Link>.
+                                    </p>
+                                    <p>
+                                        If you protect a letter via a token, the database stores a one-way hash used to verify the ownership token,
+                                        not the token itself. You can also choose to save the token in this browser profile on this device.
+                                        That local copy remains on the device and can be lost if browser storage is cleared.
                                     </p>
                                     <p>
                                         Conversations that happen during AI-assisted writing are handled differently.
@@ -489,13 +487,6 @@ export default function About() {
                                             tabIndex={togglePrivacy ? undefined : -1}
                                         >Submission Guidelines</Link>.
                                     </p>
-                                    <p>
-                                        If you change your mind and want to edit or remove a submitted letter, this is not possible at this stage. 
-                                        (Please see <Link 
-                                            href="#note-about-update-and-delete" 
-                                            tabIndex={togglePrivacy ? undefined : -1}
-                                        >this note</Link> in the &quot;Anonymity&quot; section.)
-                                    </p>
                                 </section>
                                 <section>
                                     <h3>
@@ -555,10 +546,6 @@ export default function About() {
                                         id="non-ai-assisted-option"
                                     >
                                         non AI-assisted submission option
-                                    </li><li 
-                                        id="anon-update-and-delete"
-                                    >
-                                        anonymous <strong>update</strong> and <strong>delete</strong> of submitted letters
                                     </li><li>
                                         filters, sort and search on submitted letters (based on time, themes, emotion or relationship type for example)
                                     </li>

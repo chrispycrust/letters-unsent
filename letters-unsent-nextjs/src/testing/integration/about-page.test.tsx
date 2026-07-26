@@ -60,7 +60,7 @@ describe("About page", () => {
     const privacyPanel = document.getElementById("privacy-panel") as HTMLDivElement
     expect(privacyPanel.hidden).toBe(true)
 
-    fireEvent.click(screen.getByRole("link", { name: "See why here" }))
+    fireEvent.click(screen.getByRole("link", { name: "Learn more about ownership tokens" }))
     expect(privacyPanel.hidden).toBe(false)
   })
 })

@@ -329,12 +329,6 @@ export default function Submit() {
           >
             Start conversation
           </button>
-          <div className="submission_note">
-            <p style={{ marginBottom: "0", paddingBottom: "0" }}>Submissions are not open yet.</p>
-            <p style={{ marginTop: "0", paddingTop: "0" }}>
-              You&apos;ll get a warning at the end advising that something went wrong.
-            </p>
-          </div>
         </div>
       )}
     </div>

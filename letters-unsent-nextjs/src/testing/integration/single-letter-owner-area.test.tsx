@@ -74,6 +74,20 @@ describe("Single letter owner area", () => {
     expect(document.querySelector(".letter-owner-area")?.hasAttribute("aria-live")).toBe(false)
   })
 
+  it("groups verification controls separately from the token field", () => {
+    renderOwnerArea()
+    fireEvent.click(screen.getByRole("button", { name: "Is this letter yours?" }))
+
+    const tokenInput = screen.getByLabelText("Token")
+    const cancelButton = screen.getByRole("button", { name: "Cancel" })
+    const confirmButton = screen.getByRole("button", { name: "Confirm" })
+    const controlGroup = cancelButton.closest(".owner-verification-controls")
+
+    expect(tokenInput.closest(".owner-token-field")).not.toBeNull()
+    expect(controlGroup).not.toBeNull()
+    expect(controlGroup?.contains(confirmButton)).toBe(true)
+  })
+
   it("renders editing status when parent edit state is active", () => {
     renderOwnerArea({ isEditing: true })
     expect(screen.getByText("You are editing this letter.")).not.toBeNull()

@@ -563,6 +563,31 @@ footer a {
   line-height: var(--line-height-base);
 }
 
+.owner-verification-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.owner-token-field {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.owner-verification-controls {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
 .owner-actions-separator-comma {
   margin-right: 8px;
 }
@@ -801,6 +826,20 @@ button.owner-question-trigger i {
   font-family: var(--geist);
   margin-right: 10px;
   font-size: var(--font-size-md);
+}
+
+.owner-verification-actions .owner-token-input {
+  margin-right: 0;
+}
+
+.owner-token-field .control-label,
+.owner-token-input {
+  width: min(100%, 320px);
+}
+
+.owner-token-field .control-label,
+.owner-token-input::placeholder {
+  text-align: center;
 }
 
 .owner-token-input:focus-visible {
@@ -2112,6 +2151,28 @@ button.release-link-button:not(:disabled):hover {
 
   .navbar {
     height: 70px;
+  }
+
+  .owner-verification-actions {
+    width: auto;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .owner-token-field {
+    width: auto;
+    display: block;
+  }
+
+  .owner-token-field .control-label,
+  .owner-token-input {
+    width: auto;
+  }
+
+  .owner-token-field .control-label,
+  .owner-token-input::placeholder {
+    text-align: left;
   }
 
   .letter {

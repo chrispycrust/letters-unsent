@@ -89,6 +89,10 @@ describe("ReleaseActionArea", () => {
     });
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it("shows the release choice panel with three expected actions", () => {
     renderReleaseActionArea();
 
@@ -444,7 +448,9 @@ describe("ReleaseActionArea", () => {
   });
 
   it("announces protected-release errors through one scoped alert", async () => {
-    const onSubmitLetter = jest.fn().mockRejectedValue(new Error("Protected release failed."));
+    const rawError = "PostgrestError: protected release failed.";
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const onSubmitLetter = jest.fn().mockRejectedValue(new Error(rawError));
 
     renderReleaseActionArea(onSubmitLetter);
     fireEvent.click(screen.getByRole("button", { name: "Protect this letter" }));
@@ -456,13 +462,20 @@ describe("ReleaseActionArea", () => {
 
     const alert = await screen.findByRole("alert");
 
-    expect(alert.textContent).toBe("Protected release failed.");
+    expect(alert.textContent).toBe("We couldn’t release your letter. Please try again.");
+    expect(screen.queryByText(rawError)).toBeNull();
     expect(screen.getAllByRole("alert")).toHaveLength(1);
     expect(document.querySelector(".release-panel[aria-live]")).toBeNull();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Protected letter release failed",
+      expect.any(Error),
+    );
   });
 
   it("announces unprotected-release errors through one scoped alert", async () => {
-    const onSubmitLetter = jest.fn().mockRejectedValue(new Error("Unprotected release failed."));
+    const rawError = "DatabaseError: unprotected release failed.";
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const onSubmitLetter = jest.fn().mockRejectedValue(new Error(rawError));
 
     renderReleaseActionArea(onSubmitLetter);
     fireEvent.click(screen.getByRole("button", { name: "Release without protection" }));
@@ -474,9 +487,14 @@ describe("ReleaseActionArea", () => {
 
     const alert = await screen.findByRole("alert");
 
-    expect(alert.textContent).toBe("Unprotected release failed.");
+    expect(alert.textContent).toBe("We couldn’t release your letter. Please try again.");
+    expect(screen.queryByText(rawError)).toBeNull();
     expect(screen.getAllByRole("alert")).toHaveLength(1);
     expect(document.querySelector(".release-panel[aria-live]")).toBeNull();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Unprotected letter release failed",
+      expect.any(Error),
+    );
   });
 
   it("shows unprotected warning and submits with null passphrase after confirmation", async () => {

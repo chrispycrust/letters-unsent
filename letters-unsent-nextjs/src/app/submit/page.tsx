@@ -9,6 +9,7 @@ import GuardianPanel from "@/components/LetterSubmit/GuardianPanel";
 import VisitorPanel from "@/components/LetterSubmit/VisitorPanel";
 import useConversationViewport from "@/components/LetterSubmit/useConversationViewport";
 import ReleaseActionArea from "@/components/LetterSubmit/ReleaseFlow/ReleaseActionArea";
+import { RELEASE_ERROR_MESSAGE } from "@/components/LetterSubmit/ReleaseFlow/errorMessages";
 import type {
   ReadyLetterPayload,
   ReleaseSubmitInput,
@@ -33,6 +34,11 @@ const initialConversation: ConversationMessage[] = [
     content: guardianSystemPrompt,
   },
 ];
+
+const START_CONVERSATION_ERROR_MESSAGE =
+  "We couldn’t start the conversation. Refresh the page and try again.";
+const RESPONSE_ERROR_MESSAGE =
+  "We couldn’t get a response. Your message is still here—please try sending it again.";
 
 function normaliseOptionalString(value: unknown): string | null {
   if (typeof value !== "string") {
@@ -97,10 +103,15 @@ export default function Submit() {
         setErrorMessage("");
         setCoveMessage(data.output);
       } else {
-        setErrorMessage(`Server error: ${data.error}`);
+        console.error("Guardian greeting request failed", {
+          status: res.status,
+          error: data.error,
+        });
+        setErrorMessage(START_CONVERSATION_ERROR_MESSAGE);
       }
     } catch (error) {
-      setErrorMessage(`Network error: ${error}`);
+      console.error("Guardian greeting request failed", error);
+      setErrorMessage(START_CONVERSATION_ERROR_MESSAGE);
     }
   }
 
@@ -132,8 +143,12 @@ export default function Submit() {
       const data = (await res.json()) as GuardianPostResponse;
 
       if (!res.ok) {
+        console.error("Guardian response request failed", {
+          status: res.status,
+          error: data.error,
+        });
         setCoveMessage("");
-        setErrorMessage(`Failed to load response from API: ${data.error ?? "Unknown error"}`);
+        setErrorMessage(RESPONSE_ERROR_MESSAGE);
         return;
       }
 
@@ -159,13 +174,15 @@ export default function Submit() {
         setPendingReleasePayload(releasePayload);
       }
     } catch (error) {
-      setErrorMessage(`Network error: ${error}`);
+      console.error("Guardian response request failed", error);
+      setErrorMessage(RESPONSE_ERROR_MESSAGE);
     }
   }
 
   async function handleSubmitLetter(input: ReleaseSubmitInput): Promise<ReleaseSubmitResult> {
     if (!pendingReleasePayload) {
-      throw new Error("No letter is ready to be released.");
+      console.error("Letter release attempted without a ready letter");
+      throw new Error(RELEASE_ERROR_MESSAGE);
     }
 
     const requestBody = {
@@ -176,34 +193,47 @@ export default function Submit() {
       created_at: new Date().toISOString(),
     };
 
-    const res = await fetch("/api/supabase", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
+    try {
+      const res = await fetch("/api/supabase", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok || !data.success) {
-      throw new Error(data.error ?? "Could not release your letter.");
+      if (!res.ok || !data.success) {
+        console.error("Letter release request failed", {
+          status: res.status,
+          error: data.error,
+        });
+        throw new Error(RELEASE_ERROR_MESSAGE);
+      }
+
+      const createdId =
+        (typeof data.id === "string" && data.id) ||
+        (typeof data.id === "number" && String(data.id)) ||
+        (typeof data?.data?.[0]?.id === "string" && data.data[0].id) ||
+        (typeof data?.data?.[0]?.id === "number" && String(data.data[0].id)) ||
+        null;
+
+      if (!createdId) {
+        console.error("Letter release response did not include an id", data);
+        throw new Error(RELEASE_ERROR_MESSAGE);
+      }
+
+      setReleaseLocked(true);
+
+      return { id: createdId };
+    } catch (error) {
+      if (!(error instanceof Error && error.message === RELEASE_ERROR_MESSAGE)) {
+        console.error("Letter release request failed", error);
+      }
+
+      throw new Error(RELEASE_ERROR_MESSAGE);
     }
-
-    const createdId =
-      (typeof data.id === "string" && data.id) ||
-      (typeof data.id === "number" && String(data.id)) ||
-      (typeof data?.data?.[0]?.id === "string" && data.data[0].id) ||
-      (typeof data?.data?.[0]?.id === "number" && String(data.data[0].id)) ||
-      null;
-
-    if (!createdId) {
-      throw new Error("Could not find the new letter id.");
-    }
-
-    setReleaseLocked(true);
-
-    return { id: createdId };
   }
 
   function returnToConversation() {

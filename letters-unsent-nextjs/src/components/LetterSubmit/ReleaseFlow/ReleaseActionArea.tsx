@@ -3,6 +3,7 @@ import { useState } from "react"
 import NoProtectionWarningStep from "@/components/LetterSubmit/ReleaseFlow/NoProtectionWarningStep"
 import ProtectionFlow from "@/components/LetterSubmit/ReleaseFlow/ProtectionFlow"
 import ReleaseChoicePanel from "@/components/LetterSubmit/ReleaseFlow/ReleaseChoicePanel"
+import { RELEASE_ERROR_MESSAGE } from "@/components/LetterSubmit/ReleaseFlow/errorMessages"
 import ReleaseSuccessPanel from "@/components/LetterSubmit/ReleaseFlow/ReleaseSuccessPanel"
 import type { ReadyLetterPayload, ReleaseSubmitInput, ReleaseSubmitResult } from "@/components/LetterSubmit/ReleaseFlow/types"
 
@@ -56,8 +57,11 @@ export default function ReleaseActionArea({
       setReleasedLetterId(result.id)
       setMode("released")
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Something went wrong while releasing your letter."
-      setErrorMessage(message)
+      if (!(error instanceof Error && error.message === RELEASE_ERROR_MESSAGE)) {
+        console.error("Unprotected letter release failed", error)
+      }
+
+      setErrorMessage(RELEASE_ERROR_MESSAGE)
     } finally {
       setIsSubmitting(false)
     }

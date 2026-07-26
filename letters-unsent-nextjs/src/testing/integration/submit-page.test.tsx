@@ -34,6 +34,7 @@ describe("Submit page flow", () => {
 
   afterEach(() => {
     global.fetch = originalFetch;
+    jest.restoreAllMocks();
     Object.defineProperty(window, "matchMedia", {
       configurable: true,
       value: originalMatchMedia,
@@ -241,9 +242,12 @@ describe("Submit page flow", () => {
   });
 
   it("shows an error if the initial guardian request fails", async () => {
+    const rawError = "GuardianDatabaseError: upstream connection refused";
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     const fetchMock = jest.fn().mockResolvedValueOnce({
       ok: false,
-      json: async () => ({ error: "Guardian is unavailable" }),
+      status: 503,
+      json: async () => ({ error: rawError }),
     });
     global.fetch = fetchMock as unknown as typeof fetch;
 
@@ -251,9 +255,62 @@ describe("Submit page flow", () => {
     fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
 
     const alert = await screen.findByRole("alert");
-    expect(alert.textContent).toBe("Server error: Guardian is unavailable");
+    expect(alert.textContent).toBe(
+      "We couldn’t start the conversation. Refresh the page and try again.",
+    );
+    expect(screen.queryByText(rawError)).toBeNull();
     expect(screen.getAllByRole("alert")).toHaveLength(1);
     expect(screen.getByRole("status").textContent).toBe("");
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Guardian greeting request failed",
+      {
+        status: 503,
+        error: rawError,
+      },
+    );
+  });
+
+  it("keeps technical Guardian response errors out of the visitor alert", async () => {
+    const rawError = "OpenAIError: upstream request id req_internal_123 failed";
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ output: "What would you like to release today?" }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 502,
+        json: async () => ({ error: rawError }),
+      });
+    global.fetch = fetchMock as unknown as typeof fetch;
+
+    render(<Submit />);
+    fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("What would you like to release today?")).not.toBeNull();
+    });
+
+    const textarea = screen.getByPlaceholderText("Write something") as HTMLTextAreaElement;
+    fireEvent.change(textarea, { target: { value: "I need to say goodbye." } });
+    fireEvent.click(screen.getByRole("button", { name: "Send message" }));
+
+    const alert = await screen.findByRole("alert");
+
+    expect(alert.textContent).toBe(
+      "We couldn’t get a response. Your message is still here—please try sending it again.",
+    );
+    expect(textarea.value).toBe("I need to say goodbye.");
+    expect(screen.queryByText(rawError)).toBeNull();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Guardian response request failed",
+      {
+        status: 502,
+        error: rawError,
+      },
+    );
   });
 
   it("submits visitor input and renders the assistant response", async () => {

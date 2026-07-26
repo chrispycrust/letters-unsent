@@ -2,6 +2,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react"
 
 import ConfirmProtectedReleaseStep from "@/components/LetterSubmit/ReleaseFlow/ConfirmProtectedReleaseStep"
 import CreatePassphraseStep from "@/components/LetterSubmit/ReleaseFlow/CreatePassphraseStep"
+import { RELEASE_ERROR_MESSAGE } from "@/components/LetterSubmit/ReleaseFlow/errorMessages"
 import ProtectionConfirmedStep from "@/components/LetterSubmit/ReleaseFlow/ProtectionConfirmedStep"
 import StorePassphraseStep from "@/components/LetterSubmit/ReleaseFlow/StorePassphraseStep"
 import type { ReleaseSubmitInput, ReleaseSubmitResult } from "@/components/LetterSubmit/ReleaseFlow/types"
@@ -142,8 +143,11 @@ export default function ProtectionFlow({
       setReleasedLetterId(result.id)
       setStep("confirmed")
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Something went wrong while releasing your letter."
-      setSubmitError(message)
+      if (!(error instanceof Error && error.message === RELEASE_ERROR_MESSAGE)) {
+        console.error("Protected letter release failed", error)
+      }
+
+      setSubmitError(RELEASE_ERROR_MESSAGE)
     } finally {
       setIsSubmitting(false)
     }

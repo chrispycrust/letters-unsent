@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "@jest/globals"
+import { afterEach, beforeEach, describe, expect, it } from "@jest/globals"
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import SubmitLayout from "@/app/submit/layout";
 import Submit from "@/app/submit/page";
@@ -7,6 +7,7 @@ const mockPush = jest.fn();
 
 type MockFetchResponse = {
   ok: boolean
+  status?: number
   json: () => Promise<unknown>
 }
 
@@ -49,6 +50,10 @@ describe("Submit page release flow", () => {
       },
     });
   });
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
 
   it("enters ready-to-release state without persisting directly", async () => {
     const fetchMock = mockFetchSequence(
@@ -270,5 +275,69 @@ describe("Submit page release flow", () => {
       expect(document.documentElement.classList.contains("conversation-viewport-active"))
         .toBe(true);
     });
+  });
+
+  it("keeps technical release errors out of the visitor alert", async () => {
+    const rawError = "PostgrestError: duplicate key violates internal_release_id";
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const fetchMock = mockFetchSequence(
+      {
+        ok: true,
+        json: async () => ({ output: "Welcome. I'm Cove." }),
+      },
+      {
+        ok: true,
+        json: async () => ({
+          output: "Your letter is ready.",
+          releaseReady: true,
+          letterPayload: readyLetterPayload,
+        }),
+      },
+      {
+        ok: false,
+        status: 503,
+        json: async () => ({
+          success: false,
+          error: rawError,
+        }),
+      },
+    );
+
+    global.fetch = fetchMock as unknown as typeof fetch;
+
+    render(<Submit />);
+    fireEvent.click(screen.getByRole("button", { name: "Start conversation" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Welcome. I'm Cove.")).not.toBeNull();
+    });
+
+    fireEvent.change(screen.getByPlaceholderText("Write something"), {
+      target: { value: "Please help me finish this letter." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Send message" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Keep a way back to your letter")).not.toBeNull();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Release without protection" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "I understand, release the letter without protection",
+      }),
+    );
+
+    const alert = await screen.findByRole("alert");
+
+    expect(alert.textContent).toBe("We couldn’t release your letter. Please try again.");
+    expect(screen.queryByText(rawError)).toBeNull();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Letter release request failed",
+      {
+        status: 503,
+        error: rawError,
+      },
+    );
   });
 });

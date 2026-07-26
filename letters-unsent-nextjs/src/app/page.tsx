@@ -67,6 +67,9 @@ export default function Home() {
     if (responseOk === false) {
       return <RouteLoading message="Loading letters." />
 
+    } else if (letters.length === 0) {
+      return <p>No letters</p>
+
     } else {
       return letters.map((letter) => (
         <Link 

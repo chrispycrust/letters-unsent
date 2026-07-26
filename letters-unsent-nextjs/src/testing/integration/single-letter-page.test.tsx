@@ -181,24 +181,20 @@ describe("Single letter page", () => {
     expect(screen.queryByText("You are editing this letter.")).toBeNull()
     expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
     expect(screen.getByRole("button", { name: "Remove" })).not.toBeNull()
-    expect(screen.getByRole("button", { name: "Minimise controls" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Hide controls" })).not.toBeNull()
   })
 
   it("keeps scroll stable when typing in a focused long edit textarea", async () => {
-    const originalScrollTo = window.scrollTo
-    const scrollToMock = jest.fn()
-
-    Object.defineProperty(window, "scrollTo", {
+    const originalBodyScrollLeft = Object.getOwnPropertyDescriptor(document.body, "scrollLeft")
+    const originalBodyScrollTop = Object.getOwnPropertyDescriptor(document.body, "scrollTop")
+    Object.defineProperty(document.body, "scrollLeft", {
       configurable: true,
       writable: true,
-      value: scrollToMock,
-    })
-    Object.defineProperty(window, "scrollX", {
-      configurable: true,
       value: 0,
     })
-    Object.defineProperty(window, "scrollY", {
+    Object.defineProperty(document.body, "scrollTop", {
       configurable: true,
+      writable: true,
       value: 1200,
     })
 
@@ -262,13 +258,20 @@ describe("Single letter page", () => {
       await waitFor(() => {
         expect(letterBody.style.height).toBe("2600px")
       })
-      expect(scrollToMock).toHaveBeenCalledWith(0, 1200)
+      expect(document.body.scrollLeft).toBe(0)
+      expect(document.body.scrollTop).toBe(1200)
     } finally {
-      Object.defineProperty(window, "scrollTo", {
-        configurable: true,
-        writable: true,
-        value: originalScrollTo,
-      })
+      if (originalBodyScrollLeft) {
+        Object.defineProperty(document.body, "scrollLeft", originalBodyScrollLeft)
+      } else {
+        delete (document.body as HTMLElement & { scrollLeft?: number }).scrollLeft
+      }
+
+      if (originalBodyScrollTop) {
+        Object.defineProperty(document.body, "scrollTop", originalBodyScrollTop)
+      } else {
+        delete (document.body as HTMLElement & { scrollTop?: number }).scrollTop
+      }
     }
   })
 
@@ -389,22 +392,21 @@ describe("Single letter page", () => {
     fireEvent.click(manageButton)
     expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Edit" })).not.toBeNull()
     expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Remove" })).not.toBeNull()
-    expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Minimise controls" })).not.toBeNull()
+    expect(within(topControlsBeforeManaging as HTMLElement).getByRole("button", { name: "Hide controls" })).not.toBeNull()
     expect(within(sideRail).getByRole("button", { name: "Edit" })).not.toBeNull()
     expect(within(sideRail).getByRole("button", { name: "Remove" })).not.toBeNull()
-    expect(within(sideRail).getByRole("button", { name: "Minimise controls" })).not.toBeNull()
+    expect(within(sideRail).getByRole("button", { name: "Hide controls" })).not.toBeNull()
 
     fireEvent.click(within(sideRail).getByRole("button", { name: "Edit" }))
 
     await waitFor(() => {
-      expect(screen.getByTestId("single-letter-layout").className).toContain("is-editing")
+      expect(within(topControlsBeforeManaging as HTMLElement).getByText("You are editing this letter.")).not.toBeNull()
     })
 
     const layout = screen.getByTestId("single-letter-layout")
     const balanceRail = screen.getByTestId("owner-balance-rail")
 
     expect(layout.className).toContain("single-letter-container")
-    expect(layout.className).toContain("is-editing")
     expect(balanceRail.getAttribute("aria-hidden")).toBe("true")
     const topControls = document.querySelector(".single-letter-owner-top-control")
     expect(topControls).not.toBeNull()
@@ -543,7 +545,7 @@ describe("Single letter page", () => {
     expect(sheet.getAttribute("data-sheet-snap")).toBe("full")
     expect(screen.getByRole("button", { name: "Edit" })).not.toBeNull()
     expect(screen.getByRole("button", { name: "Remove" })).not.toBeNull()
-    fireEvent.click(screen.getByRole("button", { name: "Minimise controls" }))
+    fireEvent.click(screen.getByRole("button", { name: "Hide controls" }))
 
     expect(sheet.getAttribute("data-sheet-snap")).toBe("compact")
     expect(screen.getByRole("button", { name: "Expand owner controls" })).not.toBeNull()

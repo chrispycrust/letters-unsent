@@ -1,6 +1,5 @@
 /** @jest-environment node */
-import { beforeEach, afterAll, describe, expect, it, jest } from "@jest/globals"
-import { POST } from "@/app/api/guardian/route"
+import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals"
 
 type GuardianToolCall = {
   type: "function_call";
@@ -31,6 +30,12 @@ jest.mock("openai", () => ({
     };
   },
 }));
+
+let POST: typeof import("@/app/api/guardian/route").POST
+
+beforeAll(async () => {
+  ({ POST } = await import("@/app/api/guardian/route"))
+})
 
 describe("/api/guardian route", () => {
   const originalFetch = global.fetch;

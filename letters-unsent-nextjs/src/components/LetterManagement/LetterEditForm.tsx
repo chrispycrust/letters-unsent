@@ -113,12 +113,16 @@ export default function LetterEditForm({
 
     restoreBodyScroll(scrollPositionToRestore.x, scrollPositionToRestore.y)
 
-    requestAnimationFrame(() => {
+    const animationFrameId = requestAnimationFrame(() => {
       restoreBodyScroll(scrollPositionToRestore.x, scrollPositionToRestore.y)
     })
 
     initialScrollPositionRef.current = null
     pendingScrollPositionRef.current = null
+
+    return () => {
+      cancelAnimationFrame(animationFrameId)
+    }
 
   }, [content, intendedRecipient, resizeContentTextarea])
 

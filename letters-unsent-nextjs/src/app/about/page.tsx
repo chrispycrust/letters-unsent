@@ -74,9 +74,9 @@ export default function About() {
                         A quiet home for words never sent
                     </p>
                     <p>
-                        No accounts, no tracking, no metrics.
+                        Read anonymous letters, or share one of your own.
                         <br/>
-                        Just letters, and the people who read and write them.
+                        No account required, and no popularity metrics.
                     </p>
 
                 {/* -------------------------------------------------------- */}
@@ -100,17 +100,17 @@ export default function About() {
                         <div className="toggle-panel-inner">
                             <div className="toggle-section">
                                 <p>
-                                    Esther Perel once wrote about <Link 
+                                    In <Link
                                         href="https://www.estherperel.com/blog/ull-introduction"
-                                        target="_blank" 
+                                        target="_blank"
                                         rel="noopener noreferrer"
                                         tabIndex={toggleBackground ? undefined : -1}
                                     >
-                                        the emancipating power of a letter
-                                    </Link> - 
-                                    the release and clarity that writing itself can bring, even when never sent. 
+                                        an introduction to their Unsent Love Letters project
+                                    </Link>, Esther Perel and Mary Alice Miller describe the release and clarity
+                                    that writing can bring, even when a letter is never sent.
                                 </p><p>
-                                    Spaces have emerged to hold these unsent words:
+                                    Spaces have emerged to hold unsent words:
                                 </p>
 
                                 <ul>
@@ -171,9 +171,8 @@ export default function About() {
                                     So why make this new platform?
                                 </h3>
                                 <p>
-                                    I am an artist turned engineer, interested in building emotional architecture for the web in my spare time.
-                                    For my first user-driven full-stack application, I wanted to build something meaningful 
-                                    - a space that honours a wider range of human experience, rather than a single context. 
+                                    As an artist turned engineer, I wanted my first user-driven full-stack application to be something meaningful
+                                    - a space that honours a wider range of human experience, rather than a single context.
                                     Not just romantic love, but grief, gratitude, anger, regret, bitterness, joy, and everything in between.
                                     (You can find out more about me <Link 
                                         href="https://chrispycrust.notion.site/Thought-Stack-0253a7f5960044f482fb53db397929ec?pvs=74"
@@ -183,18 +182,14 @@ export default function About() {
                                     >here on my personal website</Link>.)
                                 </p>
                                 <p>
-                                    I also wanted to create a place I wanted to exist in the world 
-                                    - one that hopefully does justice to the weight of those experiences.
-                                </p>
-                                <p>
-                                    And finally, to me, the letter format itself holds a gentle kind of power.
+                                    To me, the letter format itself holds a gentle kind of power.
                                     There is something especially moving about words that have never found their way to their person, for one reason or another.
                                     And in a time where it sometimes seems like brevity and performance are often the things we optimise for, 
                                     writing and reading letters asks for more of us - but sometimes it can offer something deeper in return.
                                 </p>
                                 <p>
-                                    I hope people find comfort here - in reading these letters
-                                    , or in sharing their own - knowing that others, too, carry words left unspoken.
+                                    I hope people find comfort here - in reading these letters,
+                                    or in sharing their own - knowing that others, too, carry words left unspoken.
                                 </p>
                             </div>
                         </div>
@@ -280,9 +275,9 @@ export default function About() {
                                     </li>
                                 </ul>
                                 <p><strong>Note: </strong>
-                                    You&apos;ll see a sample of letters tagged as &quot;AI generated.&quot; 
-                                    These are included to demonstrate the range of what can be shared here - emotions and relationship types.
-                                    These may be gradually removed as real submissions arrive.
+                                    You&apos;ll see some sample letters tagged as &quot;AI gen.&quot;
+                                    These were generated using AI to demonstrate the range of emotions and relationships that can be explored here.
+                                    They may be gradually removed as more letters are shared by visitors.
                                 </p>
                             </div>
                         </div>
@@ -310,8 +305,8 @@ export default function About() {
                         <div className="toggle-panel-inner">
                             <div className="toggle-section">
                                 <p>
-                                    Letters Unsent is a living project, designed as a quiet, anonymous space.
-                                    Care, transparency, and restraint guides how it grows.
+                                    Letters Unsent will be a continually evolving space. 
+                                    Care, transparency, and restraint guide how Letters Unsent grows.
                                 </p>
 
                                 <section>
@@ -379,7 +374,7 @@ export default function About() {
                                     <p>
                                         <strong>TL;DR:</strong> The final letter, its public details, and its submission date are stored.
                                         If you protect it, a one-way hash of your ownership token is also stored.
-                                        AI-assisted conversations are not kept by me. Ability to submit without AI upcoming.
+                                        AI-assisted conversations are not kept by me. A non-AI submission option is planned.
                                     </p>
                                     <p>
                                         The final letter, its optional intended recipient and sign-off, and its submission date are stored in <Link
@@ -399,15 +394,14 @@ export default function About() {
                                     </p>
                                     <ul>
                                         <li>
-                                            They are processed server-side to generate a response 
-                                            
+                                            They are processed server-side to generate a response.
                                         </li>
                                         <li>
-                                            They are not saved and stored to a database owned or controlled by me
+                                            They are not saved to a database owned or controlled by me
                                             - so your conversation with Cove disappears once the browser tab is closed.
                                         </li>
                                     </ul>
-                                    <h4>Storage within my control via OpenAI</h4>
+                                    <h4>How OpenAI requests are configured</h4>
                                     <p>
                                         I use the data controls provided by OpenAI&apos;s <Link
                                             href="https://platform.openai.com/docs/api-reference/responses"
@@ -421,32 +415,23 @@ export default function About() {
 
                                     <ul>
                                         <li>
-                                            disabling API call logging for this project, which means I cannot see
-                                            conversations that take place during AI-assisted writing (see{" "}
-                                            <Link
-                                                href="https://platform.openai.com/docs/guides/your-data#zero-data-retention"
-                                                target="_blank" 
-                                                rel="noopener noreferrer"
-                                                tabIndex={togglePrivacy ? undefined : -1}
-                                            >
-                                                OpenAI&apos;s data retention documentation
-                                            </Link>
-                                            )
+                                            not saving Cove conversations to a database I own or control
                                         </li>
                                         <li>
                                             setting the <code>store</code> parameter to <code>false</code> on API calls,
-                                            which disables storage for responses where supported (see <Link
-                                                href="https://platform.openai.com/docs/guides/migrate-to-responses#additional-differences"
+                                            which prevents response objects from being retained for later retrieval where supported
+                                            (see <Link
+                                                href="https://platform.openai.com/docs/models/default-usage-policies-by-endpoint"
                                                 target="_blank" 
                                                 rel="noopener noreferrer"
                                                 tabIndex={togglePrivacy ? undefined : -1}
                                             >
-                                                Responses API documentation
+                                                OpenAI&apos;s data controls documentation
                                             </Link>
                                             )
                                         </li>
                                         <li>
-                                            opting out of sharing inputs, outputs, and evaluation data with OpenAI
+                                            not opting in to share inputs, outputs, or evaluation data with OpenAI
                                         </li>
                                     </ul>
 
@@ -462,9 +447,9 @@ export default function About() {
                                         >
                                         OpenAI&apos;s API data policy
                                         </Link>
-                                        , some data may still be retained temporarily by OpenAI for operational
-                                        purposes such as abuse monitoring. I do not control this behaviour, nor do I have access to Modified Abuse Monitoring or
-                                        Data Residency controls.
+                                        , prompts and responses may be retained in abuse-monitoring logs for up to 30 days by default,
+                                        or longer where required by law. I do not control this behaviour, nor do I have access to
+                                        Modified Abuse Monitoring or Data Residency controls.
                                     </p>
                                 </section>
 
@@ -529,8 +514,8 @@ export default function About() {
                         <div className="toggle-panel-inner">
                             <div className="toggle-section">
                                 <p>
-                                    Letters Unsent is more than an archive - it&apos;s a quiet digital cove that I&apos;m tending over time. 
-                                    (You can view <Link 
+                                    Letters Unsent is more than an archive - it&apos;s a living project I&apos;m tending over time.
+                                    (You can view <Link
                                         href="/changelog"
                                         tabIndex={toggleRoadmap ? undefined : -1}
                                     >the changelog here</Link>.)
@@ -547,14 +532,14 @@ export default function About() {
                                     >
                                         non AI-assisted submission option
                                     </li><li>
-                                        filters, sort and search on submitted letters (based on time, themes, emotion or relationship type for example)
+                                        filters, sort and search on submitted letters (based on time, themes, emotion and relationship type for example)
                                     </li>
                                     <li>
                                         potentially letters that <i>have</i> been sent can also be included, with labelling
                                     </li>
                                 </ul>
                                 <p>
-                                    <strong>Experience & atmosphere</strong> (all without storing data):
+                                    <strong>Experience & atmosphere</strong> (without accounts or personal profiles):
                                 </p>
                                 <ul>
                                     <li>
@@ -566,14 +551,8 @@ export default function About() {
                                     </li>
                                 </ul>
                                 <p>
-                                    I ultimately aim to move beyond functionality without sacrificing usability - for this place to feel simple, yet quietly alive.
+                                    I ultimately aim to move beyond functionality without sacrificing usability - for this place to feel simple, yet alive.
                                 </p><p>
-                                    <strong>A gentle note:</strong> I&apos;m building this alone, alongside a full-time job, 
-                                    other creative non-technical pursuits, and personal life in general. 
-                                    Some things may arrive slowly, some may evolve along the way. 
-                                    What won&apos;t change is the commitment to keeping this a respectful, tender space that honours the emotional world of its visitors.
-                                </p>
-                                <p>
                                     Suggestions, comments or feedback for this platform 
                                     (for example, what the build priorities should be, features, guideline considerations) are welcome 
                                     - please reach out via any of the <strong>contact channels</strong> in the section just below.

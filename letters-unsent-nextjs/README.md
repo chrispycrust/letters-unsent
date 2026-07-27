@@ -7,11 +7,10 @@ The app is built with Next.js App Router, React, TypeScript, Supabase, OpenAI's 
 ## Current Status
 
 - The public archive, individual letter pages, About page, and Changelog page are implemented.
-- Cove's guided writing flow exists at `/submit`.
-- The release flow supports protected and unprotected letters in code.
+- Cove's guided writing and submit flow is open at `/submit`.
+- Writers can submit a letter with or without owner protection.
 - Protected letters use a private token so the owner can edit or remove the letter later.
-- The `/submit` page copy still warns that submissions are not open yet, so public submission availability should be treated as product/deployment controlled.
-- `ContactForm` and `ExportLetterButton` are present but not currently used on a page.
+- The writing flow, owner controls, and navigation include mobile, keyboard, screen reader, contrast, focus, and reduced-motion refinements.
 
 ## Local Setup
 
@@ -73,7 +72,8 @@ OPENAI_LETTERS_UNSENT_API_KEY_GUARDIAN=
 - `DELETE /api/supabase/singleLetter?letterId=...` - Removes a verified owner's letter.
 - `GET /api/guardian` - Gets Cove's opening message.
 - `POST /api/guardian` - Sends the writing conversation to Cove and receives either a reply or a release-ready letter payload.
-- `POST /api/events` - Receives simple event payloads, currently returning `email.received` events.
+- `POST /api/events` - Minimal event endpoint that echoes `email.received` payloads.
+- `GET /api/sentry-example-api` - Intentionally throws an error for Sentry testing.
 
 ## Architecture Maps
 
@@ -93,7 +93,7 @@ Letters Unsent App
 │  renders:
 │    desktop width -> Release A Letter link, FeatherIcon, About & Contact link
 │    mobile width -> EnvelopeClosedIcon button
-│    showModal=true -> NavigationModal
+│    showModal=true -> NavigationModal dialog with contained focus
 │
 ├─ Home Page `/`
 │  state: letters, responseOk, errorMessage
@@ -110,13 +110,16 @@ Letters Unsent App
 │  renders: Changelog + Footer from ChangelogLayout
 │
 ├─ Submit Page `/submit`
+│  loading: RouteLoading
 │  └─ Submit
 │     state:
 │       coveMessage, visitorInput, conversation, responseOk, errorMessage
-│       conversationStart, pendingReleasePayload, releaseLocked
+│       conversationStart, isComposing, isComposerExpanded
+│       pendingReleasePayload, releaseLocked
 │     functions:
 │       greetVisitor(), handleSubmit(), handleSubmitLetter()
 │       returnToConversation(), startNewLetterFlow()
+│     hook: useConversationViewport()
 │     APIs:
 │       GET /api/guardian
 │       POST /api/guardian
@@ -124,7 +127,7 @@ Letters Unsent App
 │     renders:
 │       Start conversation button
 │       GuardianPanel -> Spinner while Cove is loading
-│       VisitorPanel while no release payload exists
+│       VisitorPanel in compact or expanded mode while no release payload exists
 │       ReleaseActionArea once Cove returns a release-ready payload
 │
 │     └─ ReleaseActionArea
@@ -152,6 +155,7 @@ Letters Unsent App
 │             confirmed -> ProtectionConfirmedStep -> ProtectionStepShell
 │
 └─ Single Letter Page `/letters/[letterId]`
+   loading: RouteLoading
    └─ LetterPage
       server data: fetched letter response
       API: GET /api/supabase/singleLetter
@@ -218,7 +222,7 @@ Letters Unsent App - The full website experience.
 │  │  │  └─ About & Contact link - Opens project information and contact details.
 │  │  └─ mobile navigation - Shows a compact menu on smaller screens.
 │  │     ├─ EnvelopeClosedIcon - Opens the mobile menu.
-│  │     └─ NavigationModal - Shows mobile navigation links in an overlay.
+│  │     └─ NavigationModal - Shows mobile navigation links in a dialog, contains keyboard focus, and returns focus when closed.
 │  │        ├─ EnvelopeOpenIcon - Closes the mobile menu.
 │  │        ├─ Home link - Takes visitors back to the letter archive.
 │  │        ├─ Release A Letter link - Opens the writing and release flow.
@@ -250,13 +254,15 @@ Letters Unsent App - The full website experience.
 │  │
 │  ├─ Submit Page `/submit` - Handles writing, conversation, and releasing a letter.
 │  │  └─ SubmitLayout - Adds Submit page metadata.
+│  │     ├─ Loading - Uses RouteLoading for an announced, centred loading state.
 │  │     └─ Submit - Runs the Cove conversation and publishing flow.
+│  │        ├─ useConversationViewport - Keeps the conversation usable around mobile keyboards and scroll boundaries.
 │  │        ├─ ErrorDisplay - Shows a plain message if the flow fails.
 │  │        ├─ Start conversation button - Begins the writing conversation.
 │  │        └─ Conversation area - Shows the active writing session.
 │  │           ├─ GuardianPanel - Shows Cove's message or a loading state.
 │  │           │  └─ Spinner - Shows that Cove is still replying.
-│  │           ├─ VisitorPanel - Lets the visitor write and send replies.
+│  │           ├─ VisitorPanel - Lets the visitor write, switch between compact and expanded modes, and send replies.
 │  │           │  ├─ MaximiseIcon - Expands the writing box.
 │  │           │  ├─ MinimiseIcon - Shrinks the writing box.
 │  │           │  └─ RespondIcon - Sends the visitor's reply.
@@ -276,7 +282,7 @@ Letters Unsent App - The full website experience.
 │  │
 │  └─ Single Letter Page `/letters/[letterId]` - Shows one full letter.
 │     └─ SingleLetterLayout - Wraps the single-letter view and footer.
-│        ├─ Loading - Shows a loading state while the letter page is preparing.
+│        ├─ Loading - Uses RouteLoading for an announced, centred loading state.
 │        ├─ LetterPage - Fetches the selected letter and handles load errors.
 │        │  ├─ ErrorDisplay - Shows a plain message if the letter cannot load.
 │        │  └─ LetterViewWrapper - Keeps the letter centered, switches between reading and editing, and controls the desktop owner rail.
@@ -355,12 +361,27 @@ Submit / Release
      responseOk - Cove loading/success gate
      errorMessage - submit flow failure message
      conversationStart - start button vs active conversation
+     isComposing - whether the visitor input currently has focus
+     isComposerExpanded - compact vs expanded writing mode
      pendingReleasePayload - release-ready letter payload from Cove
      releaseLocked - prevents another release from the same ready payload
    decides:
      start view vs conversation view
      VisitorPanel vs ReleaseActionArea
+     compact vs expanded conversation layout
+   side effects:
+     useConversationViewport keeps the active conversation above mobile keyboards
+     and contains touch scrolling at conversation boundaries
 
+   ├─ VisitorPanel
+   │  owns refs:
+   │    textareaRef - active writing control
+   │    pendingEditorStateRef - focus, selection, and scroll state to restore
+   │    modeSnapshotRef - compact and expanded editor snapshots
+   │  handles:
+   │    mobile textarea resizing and keyboard-safe focus
+   │    focus, selection, and scroll preservation when changing modes
+   │
    └─ ReleaseActionArea
       owns:
         mode - release choice, protected flow, unprotected warning, or success
@@ -547,19 +568,25 @@ flowchart TD
   I --> J["Redirect home"]
 ```
 
-## Data / Moderation Flow
+## Data, Moderation, and Observability
 
 - Public letters are stored in the Supabase `letter` table.
 - The archive page fetches letters through `GET /api/supabase`.
 - Single-letter pages fetch through `GET /api/supabase/singleLetter`.
 - Cove uses OpenAI's Responses API to guide the visitor through drafting a letter.
+- The active Cove conversation is held in client state and is not saved to the project's database.
+- Conversation requests sent through `POST /api/guardian` use `store: false`, so response objects are not retained for later retrieval through the Responses API.
+- OpenAI may still retain prompts and responses in abuse-monitoring logs for up to 30 days by default, or longer where required by law or necessary to protect its services or third parties. See [OpenAI's data controls documentation](https://developers.openai.com/api/docs/guides/your-data#data-retention-controls-for-abuse-monitoring).
 - When Cove decides a letter is ready, `/api/guardian` returns a release-ready payload for the submit page.
 - Releasing a protected letter stores only a hashed owner token. The plain token is shown to the visitor and may be saved locally in their browser if they choose.
 - Owner edit and delete actions verify the token before changing stored data.
 - Edited letters are checked by `moderateLetterForArchive` before updates are accepted.
+- Sentry error monitoring is enabled for the client, server, and edge runtime. The current configuration uses `sendDefaultPii: true`, which permits default personally identifiable information to be attached where supported by the SDK; this setting should be reviewed against the project's privacy requirements.
 
 ## Known Placeholders
 
 - `src/components/ContactForm.tsx` exists but is not currently mounted on any page.
 - `src/components/LetterSubmit/ExportLetterButton.tsx` is an empty placeholder.
+- `src/app/api/events/route.ts` is a minimal event echo endpoint rather than a complete webhook integration.
+- `src/app/api/sentry-example-api/route.ts` deliberately throws an error for Sentry testing.
 - Some icon files in `public/icons` appear to be older or duplicate variants.

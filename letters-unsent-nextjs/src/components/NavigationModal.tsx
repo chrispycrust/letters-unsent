@@ -151,7 +151,7 @@ export default function NavigationModal({
               onClick={closeDialog}
               aria-current={currentPath === "/changelog" ? "page" : undefined}
             >
-              v1.1
+              v1.2
             </Link>
             ). Released 2026
           </p>

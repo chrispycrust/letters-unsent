@@ -397,7 +397,7 @@ footer {
   font-family: var(--geist);
   padding-top: 40px;
   padding-bottom: 20px;
-  font-size: var(--font-size-tiny);
+  font-size: var(--font-size-xs);
   font-weight: 300;
 }
 

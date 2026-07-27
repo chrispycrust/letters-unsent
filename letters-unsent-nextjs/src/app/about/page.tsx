@@ -71,7 +71,7 @@ export default function About() {
                         About Letters Unsent
                     </h1>
                     <p className="about-section-tagline">
-                        A quiet home for words never sent
+                        A home for words never sent
                     </p>
                     <p>
                         Read anonymous letters, or share one of your own.

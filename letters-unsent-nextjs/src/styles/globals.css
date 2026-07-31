@@ -768,6 +768,18 @@ button.owner-question-trigger i {
   cursor: auto;
 }
 
+.owner-bottom-sheet-content > * {
+  width: 100%;
+  max-width: 100%;
+}
+
+.owner-bottom-sheet-content .owner-area-title,
+.owner-bottom-sheet-content .owner-actions,
+.owner-bottom-sheet-content .owner-area-error,
+.owner-bottom-sheet-content button.owner-subtle-action {
+  text-align: center;
+}
+
 .owner-bottom-sheet.is-compact .owner-bottom-sheet-content {
   pointer-events: none;
 }

@@ -100,14 +100,15 @@ export default function About() {
                         <div className="toggle-panel-inner">
                             <div className="toggle-section">
                                 <p>
-                                    In <Link
+                                    In an introduction to their{" "}
+                                    <Link
                                         href="https://www.estherperel.com/blog/ull-introduction"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         tabIndex={toggleBackground ? undefined : -1}
                                     >
-                                        an introduction to their Unsent Love Letters project
-                                    </Link>, Esther Perel and Mary Alice Miller describe the release and clarity
+                                        Unsent Love Letters
+                                    </Link> project, Esther Perel and Mary Alice Miller describe the release and clarity
                                     that writing can bring, even when a letter is never sent.
                                 </p><p>
                                     Spaces have emerged to hold unsent words:
@@ -420,13 +421,13 @@ export default function About() {
                                         <li>
                                             setting the <code>store</code> parameter to <code>false</code> on API calls,
                                             which prevents response objects from being retained for later retrieval where supported
-                                            (see <Link
+                                            (see OpenAI&apos;s <Link
                                                 href="https://platform.openai.com/docs/models/default-usage-policies-by-endpoint"
                                                 target="_blank" 
                                                 rel="noopener noreferrer"
                                                 tabIndex={togglePrivacy ? undefined : -1}
                                             >
-                                                OpenAI&apos;s data controls documentation
+                                                data controls documentation
                                             </Link>
                                             )
                                         </li>
@@ -438,14 +439,14 @@ export default function About() {
                                     <h4>Storage outside my control via OpenAI</h4>
 
                                     <p>
-                                        According to{" "}
+                                        According to OpenAI&apos;s{" "}
                                         <Link
                                             href="https://platform.openai.com/docs/guides/your-data"
                                             target="_blank" 
                                             rel="noopener noreferrer"
                                             tabIndex={togglePrivacy ? undefined : -1}
                                         >
-                                        OpenAI&apos;s API data policy
+                                            API data policy
                                         </Link>
                                         , prompts and responses may be retained in abuse-monitoring logs for up to 30 days by default,
                                         or longer where required by law. I do not control this behaviour, nor do I have access to
@@ -484,7 +485,7 @@ export default function About() {
                                             href="#contact" 
                                             onClick={() => setToggleContact(true)}
                                             tabIndex={togglePrivacy ? undefined : -1}
-                                        >reach out to discuss anything.</Link>
+                                        >reach out</Link> to discuss anything.
                                     </p>
                                 </section>
                             </div>

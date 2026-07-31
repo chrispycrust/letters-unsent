@@ -330,39 +330,35 @@ button.is-busy:disabled {
   /* margin-bottom: 10000px; */
 }
 
-.about-section a {
-  position: relative;
-  display: inline-block;
-  text-decoration: none;
+.about-section a,
+footer a,
+.navbar a {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+  transition: text-decoration-color 1000ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.about-section a::after,
-footer a::after,
-.navbar a::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  left: 0;
-  bottom: -3px;
-  height: 1px;
-  background: currentColor;
-  pointer-events: none;
-  transform-origin: left;
-  transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+.about-section a,
+footer a,
+.navbar a[aria-current="page"] {
+  text-decoration-color: currentColor;
 }
 
-
-.about-section a::after,
-footer a::after {
-  transform: scaleX(1);
-  bottom: 1px;
+.about-section a:hover,
+.about-section a:focus-visible,
+footer a:hover,
+footer a:focus-visible {
+  text-decoration-color: transparent;
 }
 
-.about-section a:hover::after,
-.about-section a:focus-visible::after,
-footer a:hover::after,
-footer a:focus-visible::after {
-  transform: scaleX(0);
+.navbar a:not([aria-current="page"]) {
+  text-decoration-color: transparent;
+}
+
+.navbar a:not([aria-current="page"]):hover,
+.navbar a:not([aria-current="page"]):focus-visible {
+  text-decoration-color: currentColor;
 }
 
 .navbar, 
@@ -383,10 +379,6 @@ footer {
   isolation: isolate;
 }
 
-.navbar a {
-  position: relative;
-}
-
 .navbar a
 , button {
   font-weight: 500;
@@ -404,12 +396,6 @@ footer {
 .footer-nav-links {
   display:flex;
   flex-direction: column;
-}
-
-footer a {
-  text-decoration: none;
-  position: relative;
-  display: inline-block;
 }
 
 .footer-nav-links p {
@@ -434,20 +420,6 @@ footer a {
 /* .nav-links a:last-child {
   margin-right: 20px;
 } */
-
-.navbar a::after {
-  transform: scaleX(0);
-}
-
-.navbar a:not([aria-current="page"]):hover::after,
-.navbar a:not([aria-current="page"]):focus-visible::after,
-.navbar a[aria-current="page"]::after {
-  transform: scaleX(1);
-}
-
-.navbar a[aria-current="page"] {
-  text-decoration: none;
-}
 
 .letter
 , .single-letter {
@@ -1394,15 +1366,6 @@ textarea {
   margin-bottom: 20px;
 }
 
-.modal-footer p a {
-  text-decoration: underline;
-  text-underline-offset: 6px;
-}
-
-/* .navbar .modal .modal-footer p a:hover {
-  text-decoration: none;
-} */
-
 .button-change-modal-container
 , .button-change-modal {
   height: 50px;
@@ -1546,9 +1509,9 @@ section {
     transition: none;
   }
 
-  .about-section a::after,
-  footer a::after,
-  .navbar a::after {
+  .about-section a,
+  footer a,
+  .navbar a {
     transition: none;
   }
 

@@ -1556,12 +1556,12 @@ section {
   align-items: center;
   margin-bottom: 16px;
   gap: 16px;
+  font-size: var(--font-size-xs);
 }
 
 .tag
 , .contextual-tags-container {
   font-family: var(--geist);
-  font-size: var(--font-size-xs);
 }
 
 .tag {
@@ -2303,6 +2303,7 @@ button.release-link-button:not(:disabled):hover {
     align-items: flex-start;
     flex-basis: 400px;
     flex-grow: 1;
+    font-size: var(--font-size-xs)
   }
 
   .single-letter-owner-top-control {

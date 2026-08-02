@@ -493,9 +493,9 @@ footer {
 
 .single-letter-meta {
   display: flex;
-  flex-direction: column;
   gap: 6px;
-  align-items: flex-start;
+  align-items: center;
+  font-size: var(--font-size-xs);
 }
 
 .single-letter-meta .tag,
@@ -510,6 +510,7 @@ footer {
   text-align: right;
   align-self: flex-end;
   font-family: var(--geist);
+  font-size: var(--font-size-xs);
   margin-bottom: 10px;
   line-height: var(--line-height-base);
 }
@@ -759,6 +760,7 @@ button.owner-question-trigger i {
   flex-direction: column;
   gap: 10px;
   font-family: var(--geist);
+  font-size: var(--font-size-xs);
   align-items: center;
   margin: 0;
   padding: 12px 16px calc(36px + env(safe-area-inset-bottom));
@@ -798,6 +800,11 @@ button.owner-question-trigger i {
 
 .owner-verification-actions .owner-token-input {
   margin-right: 0;
+}
+
+.owner-bottom-sheet-content .control-label,
+.owner-bottom-sheet-content .owner-token-input {
+  font-size: inherit;
 }
 
 .owner-token-field .control-label,
@@ -2285,7 +2292,7 @@ button.release-link-button:not(:disabled):hover {
   }
 
   .single-letter-topline {
-    flex-direction: row;
+    flex-direction: row-reverse;
     justify-content: space-between;
     align-items: flex-end;
     gap: 14px;
@@ -2293,6 +2300,7 @@ button.release-link-button:not(:disabled):hover {
   }
 
   .single-letter-meta {
+    flex-direction: column;
     align-items: flex-start;
     flex-basis: 400px;
     flex-grow: 1;
@@ -2395,9 +2403,7 @@ button.release-link-button:not(:disabled):hover {
     font-size: var(--font-size);
   }
 
-  .letter-owner-area
-  ,.desktop-owner-rail-content
-  ,.owner-bottom-sheet-content {
+  .desktop-owner-rail-content {
     font-size: var(--font-size-tiny);
   }
 
@@ -2426,9 +2432,7 @@ button.release-link-button:not(:disabled):hover {
     padding: 30px 150px;
   }
 
-  .letter-owner-area
-  ,.desktop-owner-rail-content
-  ,.owner-bottom-sheet-content {
+  .desktop-owner-rail-content {
     font-size: var(--font-size-xs);
   }
 

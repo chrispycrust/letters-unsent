@@ -163,19 +163,6 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
 
       <div className="single-letter-main-column">
         <div className="single-letter-topline">
-          <div className="single-letter-meta">
-            {tagAIGeneratedLetters(currentLetter.id) ? <AIGenTag /> : null}
-            {currentLetter.relationship_type && currentLetter.emotional_tone ? (
-              <div
-                className="contextual-tags-container"
-                title="These are contextual tags to demonstrate the range of relationship types and emotional tones welcome on the website.
-                      These are not yet a feature to be added on submission."
-              >
-                <span>{currentLetter.relationship_type} · <i>{currentLetter.emotional_tone}</i></span>
-              </div>
-            ) : null}
-          </div>
-
           <div ref={topOwnerControlsRef} className="single-letter-owner-top-control">
             <LetterOwnerArea
               letterId={currentLetter.id}
@@ -190,6 +177,18 @@ export default function LetterViewWrapper({ letter }: LetterViewWrapperProps) {
               editFeedback={editFeedback}
               onDismissEditFeedback={() => setEditFeedback(null)}
             />
+          </div>
+          <div className="single-letter-meta">
+            {tagAIGeneratedLetters(currentLetter.id) ? <AIGenTag /> : null}
+            {currentLetter.relationship_type && currentLetter.emotional_tone ? (
+              <div
+                className="contextual-tags-container"
+                title="These are contextual tags to demonstrate the range of relationship types and emotional tones welcome on the website.
+                      These are not yet a feature to be added on submission."
+              >
+                <span>{currentLetter.relationship_type} · <i>{currentLetter.emotional_tone}</i></span>
+              </div>
+            ) : null}
           </div>
         </div>
 

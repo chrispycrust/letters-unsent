@@ -112,9 +112,10 @@ export default function StorePassphraseStep({
                 Save it on this device
               </label>
               <span id="save-token-on-device-description" className="release-option-helper">
-                Saves the token only in this browser profile on this device. If you use another device or browser,
-                or clear browser storage, you&apos;ll need to enter the token manually. We recommend saving your own copy
-                somewhere safe too.
+                Saves the token only in this browser profile on this device. 
+                If you use this option you won&apos;t need to manually enter the token.
+                If you use another device or browser, or clear browser storage, 
+                you&apos;ll need to enter the token manually.
               </span>
             </div>
           </div>
@@ -149,8 +150,8 @@ export default function StorePassphraseStep({
               </div>
 
               <span id="manual-save-option-description" className="release-option-helper">
-                Save the token somewhere safe like your notes or password manager. To continue with this option,
-                copy the token and confirm you saved it somewhere safe.
+                Save the token somewhere safe like your notes or password manager. 
+                To continue with this option, copy the token and confirm you saved it somewhere safe.
               </span>
 
               <div className="release-store-option-detail-container">

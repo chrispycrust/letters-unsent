@@ -113,7 +113,7 @@ describe("Single letter page", () => {
     expect(screen.getByText("Is this letter yours?")).not.toBeNull()
     const contextualTag = document.querySelector(".contextual-tags-container")
     expect(contextualTag?.textContent?.trim()).toBe("Friend · Reflective")
-    expect(screen.getByText("AI generated")).not.toBeNull()
+    expect(screen.getByText("AI gen")).not.toBeNull()
   })
 
   it("switches from the letter view to the inline edit form after owner edit", async () => {

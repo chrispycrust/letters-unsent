@@ -11,8 +11,8 @@ describe("About page", () => {
 
     expect(screen.getByRole("heading", { level: 1, name: "About Letters Unsent" })).not.toBeNull()
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
-    expect(screen.queryByRole("heading", { name: "A quiet home for words never sent" })).toBeNull()
-    expect(screen.getByText("A quiet home for words never sent").tagName).toBe("P")
+    expect(screen.queryByRole("heading", { name: "A home for words never sent" })).toBeNull()
+    expect(screen.getByText("A home for words never sent").tagName).toBe("P")
     expect(screen.getByRole("heading", { level: 2, name: "Background" })).not.toBeNull()
     expect(screen.getByRole("heading", { level: 2, name: "Submission Guidelines" })).not.toBeNull()
     expect(screen.getByRole("heading", { level: 2, name: "Privacy & Use" })).not.toBeNull()

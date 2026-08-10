@@ -57,7 +57,7 @@ describe("Single letter page accessibility basics", () => {
     expect(screen.getByRole("heading", { level: 1, name: "Letter" })).not.toBeNull()
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
     expect(screen.getByRole("heading", { level: 2, name: "Sam" })).not.toBeNull()
-    expect(screen.getByText("AI generated")).not.toBeNull()
+    expect(screen.getByText("AI gen")).not.toBeNull()
     expect(screen.getByText("This is a single letter body.")).not.toBeNull()
 
     const date = document.querySelector(".single-letter-date")

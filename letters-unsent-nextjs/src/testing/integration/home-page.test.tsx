@@ -29,7 +29,7 @@ describe("Home page letter feed", () => {
     await waitFor(() => {
       expect(screen.getByText("Sam")).not.toBeNull();
     });
-    expect(screen.getByText("AI generated")).not.toBeNull();
+    expect(screen.getByText("AI gen")).not.toBeNull();
     expect(screen.getByText(/This is a letter that appears/i)).not.toBeNull();
   });
 
